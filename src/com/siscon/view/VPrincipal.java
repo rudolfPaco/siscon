@@ -31,6 +31,7 @@ public class VPrincipal extends SIUPrincipal{
         super(titulo, urlIcono);
         
         construirMenuBar();
+        construirPaneles();
         addEventos();
     }    
     private void construirMenuBar(){        
@@ -63,10 +64,10 @@ public class VPrincipal extends SIUPrincipal{
         setJMenuBar(iuMenuBar);
     }
     private void construirPaneles(){
-        VTabvar iuTabvar = new VTabvar(this, "mediano");
-        iuTabvar.setVisible(true);
-        //VITabvar vTabvar = new VITabvar(this, "intermedio");
-        //vTabvar.mostrarVentana();
+        //VTabvar iuTabvar = new VTabvar(this, "mediano");
+        //iuTabvar.setVisible(true);
+        VITabvar vTabvar = new VITabvar(this, "intermedio");
+        vTabvar.mostrarVentana();
     }
     private void addEventos(){
         menuItemNuevo.addActionListener((e) -> {

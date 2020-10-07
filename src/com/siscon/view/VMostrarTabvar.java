@@ -53,7 +53,7 @@ public class VMostrarTabvar extends SIUSecundario{
         
         panelTitulo = new SIUPanel(panel, new Grid(51, 13, 0, 0, 12, 1), true);
         iuTitulo = new SIUEtiqueta(panelTitulo, "TABLA 'TABVAR'", new Grid(0, 0, 43, 12), 24, "CENTER", new Color(120, 0, 0));
-        botonSalir = new SIUBoton(panelTitulo, new Grid(44, 2, 5, 8), "Salir", "/imagenes/cerrar.png", 16, 20, 8, SwingConstants.RIGHT, SwingConstants.CENTER, 'r', "salir de la ventana");
+        botonSalir = new SIUBoton(panelTitulo, new Grid(44, 2, 5, 8), "SALIR", "/imagenes/cerrar.png", 16, 20, 8, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "salir de la ventana");
         
         panelTabla = new SIUPanel(panel, new Grid(0, 1, 12, 10), true);
         construirPanelTabla();
