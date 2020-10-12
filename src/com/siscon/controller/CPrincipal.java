@@ -7,8 +7,10 @@ package com.siscon.controller;
 
 import SIGU.main.Principal;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.tabvar.VTabvar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,7 +30,8 @@ public class CPrincipal {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         VPrincipal iuPrincipal = new VPrincipal("SISTEMA CONTABILIDAD SISCON @Version v7.1. 2020", "/imagenes/icono.png");
-        iuPrincipal.setVisible(true);
+        iuPrincipal.mostrar();
+        
     }
     
 }

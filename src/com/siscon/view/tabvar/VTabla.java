@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.siscon.view;
+package com.siscon.view.tabvar;
 
 import SIGU.botones.IUBoton;
 import SIGU.etiquetas.IUEtiqueta;
@@ -16,6 +16,7 @@ import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CTabvar;
 import com.siscon.model.Tabvar;
 import com.siscon.recursos.Ayuda;
+import com.siscon.view.VPrincipal;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.List;

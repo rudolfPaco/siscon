@@ -24,6 +24,14 @@ public class CTabvar {
         TabvarDao tabvarDao = new TabvarDao();
         return tabvarDao.getTabvar("SELECT * FROM TABVAR WHERE TIPO = "+tipo+" AND NUMERO = "+numero);
     }
+    public static String getObservacion(int tipo){
+        String observacion = "";
+        TabvarDao tabvarDao = new TabvarDao();        
+        try {
+            observacion = tabvarDao.getTabvar("SELECT * FROM TABVAR WHERE TIPO = "+tipo).getObserv();
+        } catch (Exception e) {}        
+        return observacion;
+    }
     public static boolean guardarTabvar(Tabvar tabvar){
         boolean verificador = false;
         TabvarDao tabvarDao = new TabvarDao();

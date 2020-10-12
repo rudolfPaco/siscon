@@ -5,6 +5,7 @@
  */
 package com.siscon.view;
 
+import com.siscon.view.tabvar.VTabvar;
 import SIGU.recursos.Grid;
 import SIGU.ventanas.SIUPrincipal;
 import java.awt.Image;
@@ -31,7 +32,6 @@ public class VPrincipal extends SIUPrincipal{
         super(titulo, urlIcono);
         
         construirMenuBar();
-        construirPaneles();
         addEventos();
     }    
     private void construirMenuBar(){        
@@ -66,7 +66,7 @@ public class VPrincipal extends SIUPrincipal{
     private void construirPaneles(){
         //VTabvar iuTabvar = new VTabvar(this, "mediano");
         //iuTabvar.setVisible(true);
-        VITabvar vTabvar = new VITabvar(this, "intermedio");
+        VTabvar vTabvar = new VTabvar(this, "intermedio");
         vTabvar.mostrarVentana();
     }
     private void addEventos(){
