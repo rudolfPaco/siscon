@@ -6,6 +6,7 @@
 package com.siscon.controller;
 
 import SIGU.main.Principal;
+import com.siscon.view.VLogueo;
 import com.siscon.view.VPrincipal;
 import com.siscon.view.tabvar.VTabvar;
 import java.util.logging.Level;
@@ -24,14 +25,17 @@ public class CPrincipal {
         
         try {
             // setTheme(String themeName, String licenseKey, String logoString)
-            //com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "my company");
+            com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "my company");
             UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        VPrincipal iuPrincipal = new VPrincipal("SISTEMA CONTABILIDAD SISCON @Version v7.1. 2020", "/imagenes/icono.png");
-        iuPrincipal.mostrar();
         
+        VLogueo iuLogueo = new VLogueo(null, "Sistema Contable SISCON @ Autor: Rudolf Felipez Mancilla", "grande");
+        iuLogueo.mostrarVentana();
+        if(iuLogueo.getEstado()){
+            VPrincipal iuPrincipal = new VPrincipal(iuLogueo.getTabvar(), iuLogueo.getUsuario(), "Sistema Contable SISCON @ Autor: Rudolf Felipez Mancilla", "/imagenes/icono.png");
+            iuPrincipal.mostrar();
+        }
     }
-    
 }

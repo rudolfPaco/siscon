@@ -19,14 +19,12 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -227,7 +225,7 @@ public class VTabvar extends IUSecundario{
         
         iuMONTO1 = new IUEtiqueta(panelDatosSecundariosTabvar, " d. Monto 1.:", new Area(a.X(), a.Y(4) + a.AlP(3*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
         campoMONTO1 = new IUCampoTexto(panelDatosSecundariosTabvar, 12, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(3*alto), a.AnP(30), a.AlP(alto)));
-        campoMONTO1.setRestriccionNumeroDecimal();
+        campoMONTO1.setRestriccionNumeroDecimal(2);
         
         iuMONTO2 = new IUEtiqueta(panelDatosSecundariosTabvar, "              2.:", new Area(a.X(), a.Y(5) + a.AlP(4*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
         campoMONTO2 = new IUCampoTexto(panelDatosSecundariosTabvar, 9, 16, new Area(a.X() + a.AnP(35), a.Y(5) + a.AlP(4*alto), a.AnP(35), a.AlP(alto)));

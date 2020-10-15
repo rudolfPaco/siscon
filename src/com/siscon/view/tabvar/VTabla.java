@@ -9,7 +9,6 @@ import SIGU.botones.IUBoton;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
 import SIGU.recursos.Area;
-import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
 import SIGU.ventanas.IUSecundario;
@@ -17,22 +16,14 @@ import com.siscon.controller.CTabvar;
 import com.siscon.model.Tabvar;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
-import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
-import java.awt.List;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -149,30 +140,28 @@ public class VTabla extends IUSecundario{
                texto = texto.trim();
                ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
                if(!texto.isEmpty()){
+                    String cadena = "";
                     Tabvar tabla = new Tabvar(RECORD);
                     tabla.setTipo(Integer.parseInt(registro.get(0)));
                     tabla.setNumero(Integer.parseInt(registro.get(1)));
-                    tabla.setDescri(registro.get(2));
+                    cadena = registro.get(2).replaceAll("\"", "");
+                    tabla.setDescri(cadena);
                     tabla.setCodcon(Integer.parseInt(registro.get(3)));
                     tabla.setCorrel(Integer.parseInt(registro.get(4)));
                     tabla.setMonto(Double.parseDouble(registro.get(5)));
-                    tabla.setObserv(registro.get(6));
+                    cadena = registro.get(6).replaceAll("\"", "");
+                    tabla.setObserv(cadena);
                     
-                    System.out.println(String.valueOf(registro.get(7)));
-                    String fecha1 = Ayuda.formatDate("01/01/2015");
-                    System.out.println(String.valueOf(fecha1));
-                    tabla.setFecha(fecha1);
+                    cadena = registro.get(7).replaceAll("\"", "");
+                    tabla.setFecha(Ayuda.formatDate(cadena));
                     
-                    System.out.println(String.valueOf(registro.get(8)));
-                    String fecha2 = Ayuda.formatDate("01/01/2015");
-                    System.out.println("la fecha2: "+fecha2);
-                    tabla.setFecha2(fecha2);
+                    cadena = registro.get(8).replaceAll("\"", "");
+                    tabla.setFecha2(Ayuda.formatDate(cadena));                    
                     
                     tabla.setMonto2(Double.parseDouble(registro.get(9)));
                     tabla.setTipcam(Double.parseDouble(registro.get(10)));
                     tabla.setNumnit(Integer.parseInt(registro.get(11)));
                     
-                    System.out.println("la tabla es: "+tabla.toString());
                     lista.add(tabla);
                     RECORD++;
                }
@@ -209,8 +198,18 @@ public class VTabla extends IUSecundario{
         JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado todos los datos de la tabla TABVAR...!");
         
         for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {
-            Object tabvar = iuTabla.modeloTabla.lista.get(i);
-            CTabvar.guardarTabvar((Tabvar) tabvar);
+            Tabvar tabvar = (Tabvar)iuTabla.modeloTabla.lista.get(i);
+            try {
+                if(tabvar.getFecha().isEmpty())
+                    tabvar.setFecha(null);
+            } catch (Exception e) {tabvar.setFecha(null);}
+            
+            try {
+                if(tabvar.getFecha2().isEmpty())
+                    tabvar.setFecha2(null);
+            } catch (Exception e) {tabvar.setFecha2(null);}
+            
+            CTabvar.guardarTabvar(tabvar);
         }
         
         JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla TABVAR correctamente...!");
