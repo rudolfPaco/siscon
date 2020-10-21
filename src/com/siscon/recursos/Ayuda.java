@@ -5,9 +5,8 @@
  */
 package com.siscon.recursos;
 
-import SIGU.recursos.Fecha;
 import com.siscon.bd.Conexion;
-import com.toedter.calendar.JCalendar;
+import com.siscon.view.VPrincipal;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,11 +18,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -49,11 +46,32 @@ public class Ayuda {
         }
         return dato;
     }
-    public static void mostrarMensajeError(JFrame ventana, String mensaje, String titulo){
+    public static void mostrarMensajeError(VPrincipal ventana, String mensaje, String titulo){
         JOptionPane.showMessageDialog( ventana, mensaje, titulo, JOptionPane.ERROR_MESSAGE );
     }
-    public static void mostrarMensajeInformacion(JFrame ventana, String mensaje, String titulo){
+    public static void mostrarMensajeInformacion(VPrincipal ventana, String mensaje, String titulo){
         JOptionPane.showMessageDialog( ventana , mensaje , titulo , JOptionPane.INFORMATION_MESSAGE );
+    }
+    public static boolean mostrarMensajeConfirmacion(VPrincipal ventana, String mensaje, String titulo){
+        boolean respuesta = false;
+        int resp = JOptionPane.showConfirmDialog( ventana , mensaje , titulo , JOptionPane.YES_NO_OPTION );
+        if( resp == JOptionPane.YES_OPTION ){
+            respuesta = true;
+        }
+        return respuesta;
+    }
+    public static String[] toArreglo(ArrayList<String> lista){
+        String[] arreglo = new String[lista.size()+1];
+        int indice = 0;
+        for (int i = 0; i < arreglo.length; i++) {
+            if(i == 0)
+                arreglo[i] = "";
+            else{
+                arreglo[i] = lista.get(indice);
+                indice++;
+            }
+        }
+        return arreglo;
     }
     public static String examinarArchivo(JFrame ventanaPrincipal, String direccionBuscar) {
 

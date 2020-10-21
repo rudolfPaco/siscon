@@ -145,7 +145,7 @@ public class VNuevoUsuario extends IUSecundario{
     }
     private void construirPanelContenedorDatos(Area a){
         etiquetaRAZSOC = new IUEtiqueta(panelContenedorDatos, "Razon Social", new Area(a.X(), a.Y(2), a.An(), a.AlP(7)), 16, "LEFT", true);
-        campoRAZSOC = new IUCampoTexto(panelContenedorDatos, 50, 16, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(7)));
+        campoRAZSOC = new IUCampoTexto(panelContenedorDatos, 50, 16, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(7)), SwingConstants.LEFT);
         
         etiquetaNUMERO = new IUEtiqueta(panelContenedorDatos, "Numero", new Area(a.X(), a.Y(4) + a.AlP(14), a.AnP(15), a.AlP(7)), 16, "LEFT", true);
         campoNumero = new IUComboBox(panelContenedorDatos, Ayuda.getListColumnas("NUMERO", "SELECT NUMERO FROM TABVAR WHERE TIPO = 99"), new Area(a.X(), a.Y(4) + a.AlP(21), a.AnP(15), a.AlP(7)), 16, 1);
@@ -163,20 +163,20 @@ public class VNuevoUsuario extends IUSecundario{
         panelContenedorDatos.add(campoFECHA);
         
         etiquetaTIPCAM = new IUEtiqueta(panelContenedorDatos, "Tipo Cambio", new Area(a.X(2) + a.AnP(40), a.Y(6) + a.AlP(28), a.AnP(25), a.AlP(7)), 16, "LEFT", true);
-        campoTIPCAM = new IUCampoTexto(panelContenedorDatos, 8, 16, new Area(a.X(2) + a.AnP(40), a.Y(6) + a.AlP(35), a.AnP(25), a.AlP(7)));
+        campoTIPCAM = new IUCampoTexto(panelContenedorDatos, 8, 16, new Area(a.X(2) + a.AnP(40), a.Y(6) + a.AlP(35), a.AnP(25), a.AlP(7)), SwingConstants.LEFT);
         campoTIPCAM.setRestriccionNumeroDecimal(4);
         etiquetaUNIDAD = new IUEtiqueta(panelContenedorDatos, "Bs/$us", new Area(a.X(2) + a.AnP(65), a.Y(6) + a.AlP(35), a.AnP(15), a.AlP(7)), 16, "CENTER", true);
         
         etiquetaDIRECCION = new IUEtiqueta(panelContenedorDatos, "Direccion", new Area(a.X(), a.Y(8) + a.AlP(42), a.An(), a.AlP(7)), 16, "LEFT", true);
-        campoDIRECCION = new IUCampoTexto(panelContenedorDatos, 50, 16, new Area(a.X(), a.Y(8) + a.AlP(49), a.An(), a.AlP(7)));
+        campoDIRECCION = new IUCampoTexto(panelContenedorDatos, 50, 16, new Area(a.X(), a.Y(8) + a.AlP(49), a.An(), a.AlP(7)), SwingConstants.LEFT);
         campoDIRECCION.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
         
         etiquetaCODIGO = new IUEtiqueta(panelContenedorDatos, "Codigo JJC", new Area(a.X(), a.Y(10) + a.AlP(56), a.AnP(35), a.AlP(7)), 16, "LEFT", true);
-        campoCODIGO = new IUCampoTexto(panelContenedorDatos, 6, 16, new Area(a.X(), a.Y(10) + a.AlP(63), a.AnP(35), a.AlP(7)));
+        campoCODIGO = new IUCampoTexto(panelContenedorDatos, 6, 16, new Area(a.X(), a.Y(10) + a.AlP(63), a.AnP(35), a.AlP(7)), SwingConstants.LEFT);
         campoCODIGO.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         etiquetaNUMNIT = new IUEtiqueta(panelContenedorDatos, "Numero Nit", new Area(a.X(3) + a.AnP(35), a.Y(10) + a.AlP(56), a.AnP(41), a.AlP(7)), 16, "LEFT", true);
-        campoNUMNIT = new IUCampoTexto(panelContenedorDatos, 10, 16, new Area(a.X(3) + a.AnP(35), a.Y(10) + a.AlP(63), a.AnP(41), a.AlP(7)));
+        campoNUMNIT = new IUCampoTexto(panelContenedorDatos, 10, 16, new Area(a.X(3) + a.AnP(35), a.Y(10) + a.AlP(63), a.AnP(41), a.AlP(7)), SwingConstants.LEFT);
         campoNUMNIT.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         botonGrabar = new IUBoton(panelContenedorDatos, new Area(a.X() + a.AnP(65), a.Y(8) + a.AlP(82), a.AnP(35), a.AlP(10)), "Grabar", "/imagenes/save.png", 16, 32, 12, SwingConstants.RIGHT, SwingConstants.CENTER, ' ', "");

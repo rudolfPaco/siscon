@@ -128,12 +128,12 @@ public class VTabvar extends IUSecundario{
             private IUBoton botonEliminar;
             private IUBoton botonModificar;
             private IUBoton botonGrabar;
-            private IUBoton botonMostrar;           
+            private IUBoton botonMostrar;
     
     private String estadoOp = "";
     
-    public VTabvar(VPrincipal ventanaPrincipal, String tipoSize) {
-        super(ventanaPrincipal, "", tipoSize);
+    public VTabvar(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
+        super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         
         construirPaneles();
@@ -145,8 +145,7 @@ public class VTabvar extends IUSecundario{
     private void construirPaneles(){
         panel = new IUPanel(this, new Area(0, 0, An()-6, Al()-29), true);
         
-        panelTitulo = new IUPanel(panel, new Area(2, 2, panel.area.An() - 4, panel.area.Al()/10), true);
-        panelTitulo.setBackground(new Color(232, 237, 244));
+        panelTitulo = new IUPanel(panel, new Area(2, 2, panel.area.An() - 4, panel.area.Al()/10), true, new Color(232, 237, 244));
         construirPanelTitulo(new Area(3, 3, panelTitulo.area.An() - 12, panelTitulo.area.Al() - 9));
         
         panelDatos = new IUPanel(panel, new Area(2, 4 + panelTitulo.area.Al(), panelTitulo.area.An(), (panel.area.Al() - 6) - panelTitulo.area.Al()), false);
@@ -193,42 +192,42 @@ public class VTabvar extends IUSecundario{
     private void construirPanelDatosTabvar(Area a){
         panelTipo = new IUPanel(panelDatosTabvar, new Area(a.X(), a.Y(), a.AnP(15), a.AlP(40)), true);
         iuTipo = new IUEtiqueta(panelTipo, "TIPO", new Area(panelTipo.area.An(), panelTipo.area.Al()), 14, "CENTER", false);        
-        campoTIPO = new IUCampoTexto(panelDatosTabvar, 2, 16, new Area(a.X(), a.Y() + a.AlP(40), a.AnP(15), a.AlP(60)));
+        campoTIPO = new IUCampoTexto(panelDatosTabvar, 2, 16, new Area(a.X(), a.Y() + a.AlP(40), a.AnP(15), a.AlP(60)), SwingConstants.LEFT);
         campoTIPO.setRestriccion("^([0-9]|[1-9][0-9])$");
         panelTipo.setBackground(new Color(232, 237, 244));
         
         panelNumero = new IUPanel(panelDatosTabvar, new Area(a.X(2) + a.AnP(15), a.Y(), a.AnP(20), a.AlP(40)), true);
         iuNumero = new IUEtiqueta(panelNumero, "NUMERO", new Area(panelNumero.area.An(), panelNumero.area.Al()), 14, "CENTER", false);                
-        campoNUMERO = new IUCampoTexto(panelDatosTabvar, 3, 16, new Area(a.X(2) + a.AnP(15), a.Y() + a.AlP(40), a.AnP(20), a.AlP(60)));
+        campoNUMERO = new IUCampoTexto(panelDatosTabvar, 3, 16, new Area(a.X(2) + a.AnP(15), a.Y() + a.AlP(40), a.AnP(20), a.AlP(60)), SwingConstants.LEFT);
         campoNUMERO.setRestriccion("^([0-9]|[1-9][0-9])$");
         panelNumero.setBackground(new Color(232, 237, 244));
         
         panelDescripcion = new IUPanel(panelDatosTabvar, new Area(a.X(3) + a.AnP(35), a.Y(), a.AnP(65), a.AlP(40)), true);
         iuDescripcion = new IUEtiqueta(panelDescripcion, "DESCRIPCION", new Area(panelDescripcion.area.An(), panelDescripcion.area.Al()), 14, "CENTER", false);        
-        campoDESCRIPCION = new IUCampoTexto(panelDatosTabvar, 30, 16, new Area(a.X(3) + a.AnP(35), a.Y() + a.AlP(40), a.AnP(65), a.AlP(60)));
+        campoDESCRIPCION = new IUCampoTexto(panelDatosTabvar, 30, 16, new Area(a.X(3) + a.AnP(35), a.Y() + a.AlP(40), a.AnP(65), a.AlP(60)), SwingConstants.LEFT);
         campoDESCRIPCION.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
         panelDescripcion.setBackground(new Color(232, 237, 244));
     } 
     private void construirPanelDatosSecundariosTabvar(Area a){
         int alto = 14;
         iuNOMBRE = new IUEtiqueta(panelDatosSecundariosTabvar, " a. Nombre:", new Area(a.X(), a.Y(), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
-        campoNOMBRE = new IUCampoTexto(panelDatosSecundariosTabvar, 20, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(65), a.AlP(alto)));
+        campoNOMBRE = new IUCampoTexto(panelDatosSecundariosTabvar, 20, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(65), a.AlP(alto)), SwingConstants.LEFT);
         campoNOMBRE.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
         
         iuCODCON = new IUEtiqueta(panelDatosSecundariosTabvar, " b. Cod. Contable:", new Area(a.X(), a.Y(2) + a.AlP(alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
-        campoCODCON = new IUCampoTexto(panelDatosSecundariosTabvar, 30, 16, new Area(a.X() + a.AnP(35), a.Y(2) + a.AlP(alto), a.AnP(24), a.AlP(alto)));
+        campoCODCON = new IUCampoTexto(panelDatosSecundariosTabvar, 30, 16, new Area(a.X() + a.AnP(35), a.Y(2) + a.AlP(alto), a.AnP(24), a.AlP(alto)), SwingConstants.LEFT);
         campoCODCON.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuCORREL = new IUEtiqueta(panelDatosSecundariosTabvar, " c. Correlativo:", new Area(a.X(), a.Y(3) + a.AlP(2*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
-        campoCORREL = new IUCampoTexto(panelDatosSecundariosTabvar, 6, 16, new Area(a.X() + a.AnP(35), a.Y(3) + a.AlP(2*alto), a.AnP(20), a.AlP(alto)));
+        campoCORREL = new IUCampoTexto(panelDatosSecundariosTabvar, 6, 16, new Area(a.X() + a.AnP(35), a.Y(3) + a.AlP(2*alto), a.AnP(20), a.AlP(alto)), SwingConstants.LEFT);
         campoCORREL.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuMONTO1 = new IUEtiqueta(panelDatosSecundariosTabvar, " d. Monto 1.:", new Area(a.X(), a.Y(4) + a.AlP(3*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
-        campoMONTO1 = new IUCampoTexto(panelDatosSecundariosTabvar, 12, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(3*alto), a.AnP(30), a.AlP(alto)));
+        campoMONTO1 = new IUCampoTexto(panelDatosSecundariosTabvar, 12, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(3*alto), a.AnP(30), a.AlP(alto)), SwingConstants.LEFT);
         campoMONTO1.setRestriccionNumeroDecimal(2);
         
         iuMONTO2 = new IUEtiqueta(panelDatosSecundariosTabvar, "              2.:", new Area(a.X(), a.Y(5) + a.AlP(4*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
-        campoMONTO2 = new IUCampoTexto(panelDatosSecundariosTabvar, 9, 16, new Area(a.X() + a.AnP(35), a.Y(5) + a.AlP(4*alto), a.AnP(35), a.AlP(alto)));
+        campoMONTO2 = new IUCampoTexto(panelDatosSecundariosTabvar, 9, 16, new Area(a.X() + a.AnP(35), a.Y(5) + a.AlP(4*alto), a.AnP(35), a.AlP(alto)), SwingConstants.LEFT);
         campoMONTO2.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuFECHA1 = new IUEtiqueta(panelDatosSecundariosTabvar, " d. Fecha 1.:", new Area(a.X(), a.Y(6) + a.AlP(5*alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);        
@@ -296,49 +295,49 @@ public class VTabvar extends IUSecundario{
     private void construirPanelContenedorMensajes(Area a){
         iuMensajes = new IUEtiqueta(panelContenedorMensajes, "", new Area(a.X(), a.Y(), a.AnP(92), a.Al()), 20, "LEFT", false);
                 
-        campoOPCION1 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION1 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION1.setText("S");
         campoOPCION1.setBorder(new LineBorder(Color.green, 2));
         campoOPCION1.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION1.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION1.setVisible(false);
         
-        campoOPCION2 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION2 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION2.setText("S");
         campoOPCION2.setBorder(new LineBorder(Color.green, 2));
         campoOPCION2.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION2.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION2.setVisible(false);
         
-        campoOPCION3 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION3 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION3.setText("S");
         campoOPCION3.setBorder(new LineBorder(Color.green, 2));
         campoOPCION3.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION3.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION3.setVisible(false);
         
-        campoOPCION4 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION4 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION4.setText("S");
         campoOPCION4.setBorder(new LineBorder(Color.green, 2));
         campoOPCION4.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION4.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION4.setVisible(false);
         
-        campoOPCION5 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION5 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION5.setText("S");
         campoOPCION5.setBorder(new LineBorder(Color.green, 2));
         campoOPCION5.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION5.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION5.setVisible(false);
         
-        campoOPCION6 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION6 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION6.setText("S");
         campoOPCION6.setBorder(new LineBorder(Color.green, 2));
         campoOPCION6.setFont(new Font("Verdana", Font.PLAIN, 24));        
         campoOPCION6.setHorizontalAlignment(SwingConstants.CENTER);
         campoOPCION6.setVisible(false);
         
-        campoOPCION7 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()));        
+        campoOPCION7 = new IUCampoTexto(panelContenedorMensajes, 1, 16, new Area(a.X(3) + a.AnP(96), a.Y(2), a.AnP(4), a.Al()), SwingConstants.LEFT);        
         campoOPCION7.setText("S");
         campoOPCION7.setBorder(new LineBorder(Color.green, 2));
         campoOPCION7.setFont(new Font("Verdana", Font.PLAIN, 24));        
@@ -497,7 +496,7 @@ public class VTabvar extends IUSecundario{
         }
     }
     private void mostrarTabla(){
-        VTabla iuTabla = new VTabla(ventanaPrincipal, "Tabla Principal TABVAR", "grande");
+        VTablaTabvar iuTabla = new VTablaTabvar(ventanaPrincipal, "Tabla Principal TABVAR", "grande");
         iuTabla.mostrarVentana();
     }
     

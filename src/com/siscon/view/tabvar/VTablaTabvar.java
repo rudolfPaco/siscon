@@ -31,7 +31,7 @@ import javax.swing.SwingConstants;
  *
  * @author neo
  */
-public class VTabla extends IUSecundario{
+public class VTablaTabvar extends IUSecundario{
     
     private VPrincipal ventanaPrincipal;
     private IUPanel panel;
@@ -44,7 +44,7 @@ public class VTabla extends IUSecundario{
         private IUPanel panelTabla;
         private IUTabla iuTabla;
     
-    public VTabla(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
+    public VTablaTabvar(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         construirPaneles();

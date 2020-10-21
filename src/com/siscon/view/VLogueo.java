@@ -106,7 +106,7 @@ public class VLogueo extends IUSecundario{
     }
     private void construirPanelContenedor(Area a){
         etiquetaUsuario = new IUEtiqueta(panelContenedor, "USUARIO: ", new Area(a.X(), a.Y(), a.AnP(35), a.AlP(10)), 16, "LEFT", false);
-        campoUsuario = new IUCampoTexto(panelContenedor, 1, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(10), a.AlP(10)));        
+        campoUsuario = new IUCampoTexto(panelContenedor, 1, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(10), a.AlP(10)), SwingConstants.LEFT);        
         campoUsuario.setRestriccion("^([0-9]|[1-9][0-9])$");        
         campoNivel = new IUCampoTexto(panelContenedor, "", 16, new Area(a.X() + a.AnP(35), a.Y() + a.AlP(10), a.AnP(60) + a.X(), a.AlP(10)));        
         campoNivel.setEditar(false);
@@ -129,7 +129,7 @@ public class VLogueo extends IUSecundario{
         panelContenedor.add(campoFecha);
         
         etiquetaTipoCambio = new IUEtiqueta(panelContenedor, "T.C.: ", new Area(a.X(), a.Y(4) + a.AlP(40), a.AnP(35), a.AlP(10)), 16, "LEFT", false);
-        campoTipoCambio = new IUCampoTexto(panelContenedor, 8, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(40), a.AnP(35), a.AlP(10)));
+        campoTipoCambio = new IUCampoTexto(panelContenedor, 8, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(40), a.AnP(35), a.AlP(10)), SwingConstants.LEFT);
         campoTipoCambio.setRestriccionNumeroDecimal(4);
         
         etiquetaUnidad = new IUEtiqueta(panelContenedor, "Bs/$us", new Area(a.X() + a.AnP(70), a.Y(4) + a.AlP(40), a.AnP(30), a.AlP(10)), 16, "LEFT", false);

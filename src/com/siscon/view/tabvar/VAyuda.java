@@ -203,7 +203,7 @@ public class VAyuda extends IUSecundario{
         construirContenedorMensaje(new Area(10, 4, panelContenedorMensaje.area.An() - 20, panelContenedorMensaje.area.Al() - 12));
         
         iuTituloCodigo = new IUPanelEtiqueta(panelMensajes, new Area(a.X(2) + a.AnP(70), a.Y(), a.AnP(30), a.AlP(20)), "CODIGO", 16, SwingConstants.CENTER, new Color(232, 237, 244), true);
-        iuCampoCodigo = new IUCampoTexto(panelMensajes, 8, 16, new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(20), a.AnP(30), a.AlP(30)));
+        iuCampoCodigo = new IUCampoTexto(panelMensajes, 8, 16, new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(20), a.AnP(30), a.AlP(30)), SwingConstants.LEFT);
         
         panelContenedorCampos = new IUPanel(panelMensajes, new Area(a.X(), a.Y(2) + a.AlP(50), a.An(), a.AlP(50)), true);
         construirPanelContenedorCampos(new Area(4, 4, panelContenedorCampos.area.An() - 8, panelContenedorCampos.area.Al() - 8));

@@ -14,24 +14,19 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.ventanas.IUPrincipal;
 import com.siscon.view.tabvar.VTabvar;
-import SIGU.ventanas.SIUPrincipal;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.view.conmae.VConmae;
+import com.siscon.view.tablas.VOpciones;
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -43,6 +38,7 @@ import javax.swing.SwingConstants;
 public class VPrincipal extends IUPrincipal{
     
     private VPrincipal ventanaPrincipal;
+    private final String titulo;
     
     private IUPanel panel;
         private IUPanel panelTitulo;
@@ -72,7 +68,7 @@ public class VPrincipal extends IUPrincipal{
                 private IUEtiqueta iuTipoCambio;
             private IUPanel panelEntrada;
             private IUComboBox iuEntrada;
-            private IUBoton botonEsc;
+            //private IUBoton botonEsc;
                 
             
     private ArrayList<IUPanelEtiqueta> iuLista;
@@ -91,6 +87,7 @@ public class VPrincipal extends IUPrincipal{
         super(titulo, urlIcono);        
         this.tabvar = tabvar;
         this.usuario = usuario;
+        this.titulo = titulo;
         this.iuLista = new ArrayList<>();
         construirPaneles(new Area(An()-6, Al()-29));        
         setEventos();
@@ -98,6 +95,13 @@ public class VPrincipal extends IUPrincipal{
     private void construirPaneles(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
         construirPanel(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 6));
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
+        panel.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                salirSistema();
+            }
+        });
     }
     private void construirPanel(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(8)), true, Ayuda.COLOR_FONDO);
@@ -176,17 +180,17 @@ public class VPrincipal extends IUPrincipal{
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(4) + a.AlP(63), a.An(), a.AlP(7)), "25. Actualizacion Diferida", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(5) + a.AlP(70), a.An(), a.AlP(7)), "26. Verificacion Asientos", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(6) + a.AlP(77), a.An(), a.AlP(7)), "27. Integracion Sistemas", 16, SwingConstants.LEFT, Color.WHITE, true));
-        
+        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(7) + a.AlP(84), a.An(), a.AlP(7)), "28. Cargar Tablas al Sistema", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(8) + a.AlP(91), a.An(), a.AlP(7)), "30. Respaldo - Desplazo...", 16, SwingConstants.LEFT, Color.WHITE, true));
     }
     private void construirPanelAbajo(Area a){
-        panelMensajes = new IUPanel(panelAbajo, new Area(a.X(), a.Y(), a.AnP(80), a.AlP(50)), true, Color.WHITE);
+        panelMensajes = new IUPanel(panelAbajo, new Area(a.X(), a.Y(), a.AnP(80), a.AlP(50)), false, Color.WHITE);
         construirPanelMensajes(new Area(panelMensajes.area.An() - 8, panelMensajes.area.Al()));
         
         panelInformacion = new IUPanel(panelAbajo, new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(80), a.AlP(50)), false, Ayuda.COLOR_FONDO);
         construirPanelInformacion(new Area(2, 2, panelInformacion.area.An() - 10, panelInformacion.area.Al() - 4));
         
-        panelEntrada = new IUPanel(panelAbajo, new Area(a.X(2) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), true, Ayuda.COLOR_FONDO);
+        panelEntrada = new IUPanel(panelAbajo, new Area(a.X(2) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), false, Ayuda.COLOR_FONDO);
         construirPanelEntrada(new Area(4, 4, panelEntrada.area.An() - 8, panelEntrada.area.Al() - 8));
     }
     private void construirPanelMensajes(Area a){
@@ -201,15 +205,7 @@ public class VPrincipal extends IUPrincipal{
     }
     private void construirPanelEntrada(Area a){
         iuEntrada = new IUComboBox(panelEntrada, getOpciones(), new Area(a.X(), a.Y(), a.AnP(30), a.AlP(50)), 16, 2);        
-        botonEsc = new IUBoton(panelEntrada, new Area(a.X() + a.AnP(55), a.Y(), a.AnP(45), a.AlP(70)), "ESC", "/imagenes/cerrar.png", 16, 30, 10, SwingConstants.RIGHT, SwingConstants.CENTER, ' ', "");
-        botonEsc.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
-        botonEsc.getActionMap().put( "ESC", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                botonEsc.doClick();                
-                salirSistema();
-            }
-        });
+        
     }
     private void salirSistema(){
         setOpacity(0.6f);
@@ -241,12 +237,37 @@ public class VPrincipal extends IUPrincipal{
             }
         });
     }
+    private void seleccionarOpcion(String opcion){
+        iuLista.forEach((iuDato) -> {
+            String dato = iuDato.getTexto().substring(0, 2);
+            if(opcion.equalsIgnoreCase(dato)){
+                iuDato.setBackground(Color.yellow);
+            }else{
+                iuDato.setBackground(Color.WHITE);
+            }
+        });
+    }
     private void componenteSeleccionado(String opcion){
         switch(opcion){
+            case "01":
+                setOpacity(0.6f);
+                VConmae vConmae = new VConmae(this, titulo, "mediano-grande", usuario, tabvar);
+                vConmae.mostrarVentana();
+                setOpacity(1f);
+            break;
             case "03":
                 setOpacity(0.6f);
-                VTabvar vTabvar = new VTabvar(this, "intermedio");
+                VTabvar vTabvar = new VTabvar(this, titulo, "intermedio");
                 vTabvar.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "28":
+                setOpacity(0.6f);
+                VOpciones iuOpciones = new VOpciones(this, titulo, "pequeno");
+                iuOpciones.mostrarVentana();
+                if(iuOpciones.getEstado()){
+                    
+                }
                 setOpacity(1f);
             break;
             default:
@@ -254,14 +275,5 @@ public class VPrincipal extends IUPrincipal{
             break;
         }
     }
-    private void seleccionarOpcion(String opcion){
-        for (IUPanelEtiqueta iuDato : iuLista) {
-            String dato = iuDato.getTexto().substring(0, 2);
-            if(opcion.equalsIgnoreCase(dato)){
-                iuDato.setBackground(Color.yellow);
-            }else{
-                iuDato.setBackground(Color.WHITE);
-            }
-        }
-    }
+    
 }
