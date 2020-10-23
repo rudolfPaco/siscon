@@ -87,7 +87,7 @@ public class VLogueo extends IUSecundario{
         construirPanelTitulo(new Area(10, 3, panelTitulo.area.An() - 40, panelTitulo.area.Al() - 9));
         
         panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(8), a.An(), a.AlP(65)), false);
-        construirPanelDatos(new Area(a.AnP(40), a.AlP(15), (panelDatos.area.An() - 2*a.AnP(40)), (panelDatos.area.Al() - 2*a.AlP(15))));
+        construirPanelDatos(new Area(a.AnP(35), a.AlP(15), (panelDatos.area.An() - 2*a.AnP(35)), (panelDatos.area.Al() - 2*a.AlP(15))));
         
         panelMensajes = new IUPanel(panel, new Area(a.X(), a.Y(3) + a.AlP(73), a.An(), a.AlP(27)), true, Ayuda.COLOR_FONDO);
         construirPanelMensajes(new Area(panelMensajes.area.AnP(10), panelMensajes.area.AlP(5), panelMensajes.area.An() - panelMensajes.area.AnP(10)*2, panelMensajes.area.Al() - panelMensajes.area.AlP(5)*2));
@@ -106,7 +106,7 @@ public class VLogueo extends IUSecundario{
     }
     private void construirPanelContenedor(Area a){
         etiquetaUsuario = new IUEtiqueta(panelContenedor, "USUARIO: ", new Area(a.X(), a.Y(), a.AnP(35), a.AlP(10)), 16, "LEFT", false);
-        campoUsuario = new IUCampoTexto(panelContenedor, 1, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(10), a.AlP(10)), SwingConstants.LEFT);        
+        campoUsuario = new IUCampoTexto(panelContenedor, 1, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(10), a.AlP(10)), SwingConstants.LEFT);
         campoUsuario.setRestriccion("^([0-9]|[1-9][0-9])$");        
         campoNivel = new IUCampoTexto(panelContenedor, "", 16, new Area(a.X() + a.AnP(35), a.Y() + a.AlP(10), a.AnP(60) + a.X(), a.AlP(10)));        
         campoNivel.setEditar(false);

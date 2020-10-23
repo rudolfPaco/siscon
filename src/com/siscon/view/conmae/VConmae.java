@@ -21,8 +21,11 @@ import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import SIGU.tablas.RendererDatosTabla;
+import SIGU.tablas.IUTabla;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -39,11 +42,14 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -190,63 +196,64 @@ public class VConmae extends IUSecundario{
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(2, 2, panelTitulo.area.An() - 4, panelTitulo.area.Al() - 4));
         
-        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), true, Ayuda.COLOR_FONDO);
+        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), false);
         construirPanelDatos(new Area(2, 2, panelDatos.area.An() - 4, panelDatos.area.Al() - 10));
     }
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "PROCESOS PLAN DE CUENTAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.1. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
         
-        iuTitulo = new IUEtiqueta(panelTitulo, "USUARIO: "+tabvar.getDescri(), new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "FECHA: "+new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(50), a.AnP(40), a.AlP(50)), 16, "CENTER", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "CONMAM1", new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        //iuTitulo = new IUEtiqueta(panelTitulo, "FECHA: "+new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(50), a.AnP(40), a.AlP(50)), 16, "CENTER", false);
     }
     private void construirPanelDatos(Area a){
-        primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(12)), false, Ayuda.COLOR_FONDO);
+        primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(12)), false);
         construirPrimerPanel(new Area(2, 2, primerPanel.area.An() - 4, primerPanel.area.Al() - 6));
         
-        segundoPanel = new IUPanel(panelDatos, new Area(a.X(2), a.Y(2) + a.AlP(12), a.An() - a.X(2), a.AlP(21)), false, Ayuda.COLOR_FONDO);
+        segundoPanel = new IUPanel(panelDatos, new Area(a.X(2), a.Y(2) + a.AlP(12), a.An() - a.X(2), a.AlP(21)), false);
         construirSegundoPanel(new Area(2, 2, segundoPanel.area.An() - 22, segundoPanel.area.Al() - 12));
         
-        tercerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(33), a.An(), a.AlP(15)), false, Ayuda.COLOR_FONDO);
+        tercerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(33), a.An(), a.AlP(15)), false);
         construirTercerPanel(new Area(2, 2, tercerPanel.area.An() - 6, tercerPanel.area.Al() - 8));
         
-        cuartoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(48), a.An(), a.AlP(52)), false, Ayuda.COLOR_FONDO);
+        cuartoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(48), a.An(), a.AlP(52)), false);
         construirCuartoPanel(new Area(2, 2, cuartoPanel.area.An() - 4, cuartoPanel.area.Al() - 6));
     }
     private void construirPrimerPanel(Area a){
-        panelCabecera = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.AlP(35)), false, Ayuda.COLOR_FONDO);
+        panelCabecera = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.AlP(35)), false);
         construirPanelCabecera(new Area(2, 2, panelCabecera.area.An() - 12, panelCabecera.area.Al() - 4));
         
-        panelPrimerRegistro = new IUPanel(primerPanel, new Area(a.X(), a.Y(2) + a.AlP(35), a.An(), a.AlP(65)), false, Ayuda.COLOR_FONDO);
+        panelPrimerRegistro = new IUPanel(primerPanel, new Area(a.X(), a.Y(2) + a.AlP(35), a.An(), a.AlP(65)), false);
         construirPanelPrimerRegistro(new Area(2, 2, panelPrimerRegistro.area.An() - 20, panelPrimerRegistro.area.Al() - 6));
     }
     private void construirPanelCabecera(Area a){
-        etiquetaCodigo = new IUPanelEtiqueta(panelCabecera, new Area(a.X(), a.Y(), a.AnP(26), a.Al()), "CODIGO", 18, SwingConstants.CENTER, Color.orange, true);
-        etiquetaDescripcion = new IUPanelEtiqueta(panelCabecera, new Area(a.X(2) + a.AnP(26), a.Y(), a.AnP(44), a.Al()), "DESCRIPCION", 18, SwingConstants.CENTER, Color.orange, true);
-        etiquetaNivel = new IUPanelEtiqueta(panelCabecera, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), "NIVEL", 18, SwingConstants.CENTER, Color.orange, true);
-        etiquetaActividad = new IUPanelEtiqueta(panelCabecera, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), "ACTIVI", 18, SwingConstants.CENTER, Color.orange, true);
-        etiquetaPresup = new IUPanelEtiqueta(panelCabecera, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), "LUGAR", 18, SwingConstants.CENTER, Color.orange, true);
+        etiquetaCodigo = new IUPanelEtiqueta(panelCabecera, new Area(a.X(), a.Y(), a.AnP(26), a.Al()), "CODIGO", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        etiquetaDescripcion = new IUPanelEtiqueta(panelCabecera, new Area(a.X(2) + a.AnP(26), a.Y(), a.AnP(44), a.Al()), "DESCRIPCION", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        etiquetaNivel = new IUPanelEtiqueta(panelCabecera, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), "NIVEL", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        etiquetaActividad = new IUPanelEtiqueta(panelCabecera, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), "ACTIVI", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        etiquetaPresup = new IUPanelEtiqueta(panelCabecera, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), "LUGAR", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
     }
     private void construirPanelPrimerRegistro(Area a){
-        etiquetaG = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(2), a.Y(), a.AnP(5), a.AlP(40)), "G", 16, SwingConstants.CENTER, Color.orange, true);
+        etiquetaG = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(2), a.Y(), a.AnP(5), a.AlP(40)), "G", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         campoG = new IUCampoTexto(panelPrimerRegistro, 1, 16, new Area(a.X(2), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
         campoG.setRestriccion("^([1-4]|[1-4])$");
         
-        etiquetaS = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(3) + a.AnP(5), a.Y(), a.AnP(5), a.AlP(40)), "S", 16, SwingConstants.CENTER, Color.orange, true);
+        etiquetaS = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(3) + a.AnP(5), a.Y(), a.AnP(5), a.AlP(40)), "S", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         campoS = new IUCampoTexto(panelPrimerRegistro, 1, 16, new Area(a.X(3) + a.AnP(5), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
         campoS.setRestriccion("^([0-9]|[0-9])$");
         
-        etiquetaMy = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(4) + a.AnP(10), a.Y(), a.AnP(5), a.AlP(40)), "My", 16, SwingConstants.CENTER, Color.orange, true);
+        etiquetaMy = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(4) + a.AnP(10), a.Y(), a.AnP(5), a.AlP(40)), "My", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         campoMy = new IUCampoTexto(panelPrimerRegistro, 2, 16, new Area(a.X(4) + a.AnP(10), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
         campoMy.setRestriccion("^([0-99]|[0-99])$");
         
-        etiquetaAn = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(5) + a.AnP(15), a.Y(), a.AnP(5), a.AlP(40)), "An", 16, SwingConstants.CENTER, Color.orange, true);
+        etiquetaAn = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(5) + a.AnP(15), a.Y(), a.AnP(5), a.AlP(40)), "An", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         campoAn = new IUCampoTexto(panelPrimerRegistro, 2, 16, new Area(a.X(5) + a.AnP(15), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
         campoAn.setRestriccion("^([0-99]|[0-99])$");
         
-        etiquetaSa = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(6) + a.AnP(20), a.Y(), a.AnP(5), a.AlP(40)), "Sa", 16, SwingConstants.CENTER, Color.orange, true);
+        etiquetaSa = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(6) + a.AnP(20), a.Y(), a.AnP(5), a.AlP(40)), "Sa", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         campoSa = new IUCampoTexto(panelPrimerRegistro, 2, 16, new Area(a.X(6) + a.AnP(20), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
         campoSa.setRestriccion("^([0-99]|[0-99])$");
         
@@ -271,8 +278,8 @@ public class VConmae extends IUSecundario{
             }
         });
         
-        campoLugar = new IUCampoTexto(panelPrimerRegistro, 2, 16, new Area(a.X(11) + a.AnP(92), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
-        campoLugar.setRestriccion("^([0-99]|[0-99])$");
+        campoLugar = new IUCampoTexto(panelPrimerRegistro, 1, 16, new Area(a.X(11) + a.AnP(92), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
+        campoLugar.setRestriccion("^([1-2]|[1-2])$");
     }
     
     private void construirSegundoPanel(Area a){
@@ -432,11 +439,16 @@ public class VConmae extends IUSecundario{
     
     private void construirCuartoPanel(Area a){
         iuTituloTabla = new IUEtiqueta(cuartoPanel, "PLAN DE CUENTAS", new Area(a.X(), a.Y(), a.An(), a.AlP(5)), 16, "CENTER", false);
+        iuTituloTabla.setSubrayarTexto(true);
         iuTabla = new IUTabla(
         cuartoPanel, 
         new Area(a.X(), a.Y(2) + a.AlP(5), a.An(), a.AlP(95)), 
-        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "LUGAR"}, new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
-        new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, new ArrayList(), new ModeloTabla<Conmae>(){
+        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "LUGAR"}, 
+        new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
+        new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, 
+        new ArrayList(), 
+        new ModeloTabla<Conmae>(){
+            
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 switch (columnIndex) {
@@ -465,7 +477,9 @@ public class VConmae extends IUSecundario{
                 }
             }
         });
-        iuTabla.tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
+            iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RendererDatosTabla());
+        }
     }
     
     private void algoritmoInicial(){
@@ -604,13 +618,23 @@ public class VConmae extends IUSecundario{
                         campoActividad.setText("1");
                         
                         if(An > 0){
-                            campoNivel.setText("4");
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An));
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 4);
+                            campoNivel.setText("4");                            
                         }else{
                             iuTabla.actualizarTabla(new ArrayList());
-                        }                        
-                        campoAn.transferFocus();
+                        }     
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An));                            
+                        Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        
+                        if(conmae != null){
+                            if(conmae.getActivi() == 2){
+                                iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, digite otro numero SUBANALITICO.");
+                                campoAn.setText("0");
+                            }else{
+                                cargarDatos(conmae, 4);
+                                campoAn.transferFocus();
+                            }
+                        }else
+                            campoAn.transferFocus();
                     }
                 }else                    
                     if(KeyEvent.VK_F5 == e.getKeyCode()){
@@ -642,8 +666,14 @@ public class VConmae extends IUSecundario{
                         
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa));
                         Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
-                        if(conmae != null){                                
-                            focoCampoS_N1(conmae);
+                        if(conmae != null){
+                            if(conmae.getActivi() == 2){
+                                iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, digite otro numero SUBANALITICO.");
+                                campoSa.setText("0");
+                            }else{
+                                focoCampoS_N1(conmae);
+                            }
+                            
                         }else{
                             OPCION = "GUARDAR";
                             focoCampoDescripcion();
@@ -979,8 +1009,8 @@ public class VConmae extends IUSecundario{
         campoNivel.setEditar(false);
         campoActividad.setEditar(false);
         campoLugar.setEditar(false);
-        iuTabla.tabla.setFocusable(false);
-        iuTabla.tabla.setEnabled(false);
+        iuTabla.setFocusable(false);
+        iuTabla.setEnabled(false);
         switch(campo){
             case "G":
                 campoG.setEditar(respuesta);
@@ -1010,8 +1040,8 @@ public class VConmae extends IUSecundario{
                 campoLugar.setEditar(respuesta);
             break;
             case "tabla":
-                iuTabla.tabla.setFocusable(respuesta);
-                iuTabla.tabla.setEnabled(respuesta);
+                iuTabla.setFocusable(respuesta);
+                iuTabla.setEnabled(respuesta);
             break;
             
             default:
@@ -1020,20 +1050,20 @@ public class VConmae extends IUSecundario{
     }
     
     private void focoCampoTabla(String tipo, int numero){
-        iuTabla.tabla.setFocusable(true);
+        iuTabla.setFocusable(true);
         iuMensaje.setTexto("Navegue hacia arriba y abajo con las teclas [UP]=Arriba y [DOWN]=Abajo.");
         iuInformacion.setTexto("para seleccionar un registro presione la tecla [Enter]=Seleccionar");
-        iuTabla.tabla.requestFocus();
-        iuTabla.tabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        iuTabla.requestFocus();
+        iuTabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(iuTabla.isFilaSeleccionado()){
-                    indice = iuTabla.tabla.getSelectedRow();
+                    indice = iuTabla.getSelectedRow();
                 }
             }
         });
-        iuTabla.tabla.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
-        iuTabla.tabla.getActionMap().put("Enter", new AbstractAction() {
+        iuTabla.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+        iuTabla.getActionMap().put("Enter", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 switch(tipo){
@@ -1054,7 +1084,7 @@ public class VConmae extends IUSecundario{
                         cargarDatos((Conmae) iuTabla.modeloTabla.getFila(indice), numero);
                     break;
                 }
-                iuTabla.tabla.setFocusable(false);
+                iuTabla.setFocusable(false);
                 iuTabla.modeloTabla.fireTableDataChanged();
             }
         });

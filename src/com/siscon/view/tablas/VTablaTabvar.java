@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.siscon.view.tabvar;
+package com.siscon.view.tablas;
 
 import SIGU.botones.IUBoton;
 import SIGU.etiquetas.IUEtiqueta;

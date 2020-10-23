@@ -13,7 +13,6 @@ import SIGU.recursos.Area;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
-import com.siscon.view.tabvar.VTablaTabvar;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -73,14 +72,8 @@ public class VOpciones extends IUSecundario{
         construirPanelBoton(new Area(panelBoton.area.AnP(40), 2, panelBoton.area.An() - panelBoton.area.AnP(40)*2, panelBoton.area.Al() - 4));
     }
     private void construirPanelDatos(Area a){
-        botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "TABVAR [T]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, 'T', "");
-        botonTabvar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_T, 0 ), "T" );        
-        
-        botonConmae = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "CONMAE [C]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, 'C', "");
-        botonConmae.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_C, 0 ), "C" );        
-        
-        //botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(50), a.An(), a.AlP(25)), "TABVAR [T]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, 'T', "");
-        //botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(75), a.An(), a.AlP(25)), "TABVAR [T]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, 'T', "");
+        botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "TABVAR (TABLA)", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");        
+        botonConmae = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "CONMAE (TABLA)", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
     }
     private void construirPanelBoton(Area a){
         botonSalir = new IUBoton(panelBoton, new Area(a.X(), a.Y(), a.An(), a.Al()), "Salir", "/imagenes/cerrar.png", 16, 30, 20, SwingConstants.RIGHT, SwingConstants.CENTER, '{', "");        

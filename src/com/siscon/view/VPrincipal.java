@@ -251,13 +251,13 @@ public class VPrincipal extends IUPrincipal{
         switch(opcion){
             case "01":
                 setOpacity(0.6f);
-                VConmae vConmae = new VConmae(this, titulo, "mediano-grande", usuario, tabvar);
+                VConmae vConmae = new VConmae(this, titulo, "grande", usuario, tabvar);
                 vConmae.mostrarVentana();
                 setOpacity(1f);
             break;
             case "03":
                 setOpacity(0.6f);
-                VTabvar vTabvar = new VTabvar(this, titulo, "intermedio");
+                VTabvar vTabvar = new VTabvar(this, titulo, "grande", usuario, tabvar);
                 vTabvar.mostrarVentana();
                 setOpacity(1f);
             break;

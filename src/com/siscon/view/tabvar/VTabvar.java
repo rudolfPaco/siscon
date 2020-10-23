@@ -5,6 +5,7 @@
  */
 package com.siscon.view.tabvar;
 
+import com.siscon.view.tablas.VTablaTabvar;
 import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
@@ -14,6 +15,7 @@ import SIGU.recursos.Fecha;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CTabvar;
 import com.siscon.model.Tabvar;
+import com.siscon.model.Usuario;
 import com.siscon.view.VPrincipal;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
@@ -131,19 +133,30 @@ public class VTabvar extends IUSecundario{
             private IUBoton botonMostrar;
     
     private String estadoOp = "";
+    private final Usuario usuario;
+    private final Tabvar tabvar;
     
-    public VTabvar(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
+    public VTabvar(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
+        this.usuario = usuario;
+        this.tabvar = tabvar;
         
         construirPaneles();
-        setEventos();
+        //setEventos();
         setEventosTeclado();
         setEstadosIniciales(false);
-        setEstadoBotonesIniciales(false);
+        //setEstadoBotonesIniciales(false);        
     }
     private void construirPaneles(){
         panel = new IUPanel(this, new Area(0, 0, An()-6, Al()-29), true);
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
+        panel.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                dispose();
+            }
+        });
         
         panelTitulo = new IUPanel(panel, new Area(2, 2, panel.area.An() - 4, panel.area.Al()/10), true, new Color(232, 237, 244));
         construirPanelTitulo(new Area(3, 3, panelTitulo.area.An() - 12, panelTitulo.area.Al() - 9));
@@ -153,12 +166,12 @@ public class VTabvar extends IUSecundario{
         
     }
     private void construirPanelTitulo(Area a){
-        iuTitulo = new IUEtiqueta(panelTitulo, "CAMARA FORESTAL", new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
         iuTitulo = new IUEtiqueta(panelTitulo, "PROCESOS DE PARAMETROS - TABLAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.1. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
         
-        iuTitulo = new IUEtiqueta(panelTitulo, "EJECUTIVO", new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "EJECUTIVO: "+tabvar.getDescri(), new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
         iuTitulo = new IUEtiqueta(panelTitulo, "FECHA: "+new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(50), a.AnP(40), a.AlP(50)), 16, "CENTER", false);
     }
     private void construirPanelDatos(Area a){
@@ -172,8 +185,8 @@ public class VTabvar extends IUSecundario{
         panelBotonesInstrucciones = new IUPanel(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(74), a.An(), a.AlP(8)), false);
         construirPanelBotonesInstrucciones(new Area(4, 4, panelBotonesInstrucciones.area.An() - 40, panelBotonesInstrucciones.area.Al() - 8));
         
-        panelBotones = new IUPanel(panelDatos, new Area(a.X(), a.Y(1) + a.AlP(85), a.An(), a.AlP(15)), false);
-        construirPanelBotones(new Area(4, 4, panelBotones.area.An() - 24, panelBotones.area.Al() - 12));
+        //panelBotones = new IUPanel(panelDatos, new Area(a.X(), a.Y(1) + a.AlP(85), a.An(), a.AlP(15)), false);
+        //construirPanelBotones(new Area(4, 4, panelBotones.area.An() - 24, panelBotones.area.Al() - 12));
     }
     private void construirPanelTabvar(Area a){
         panelTablaTabvar = new IUPanel(panelPrincipal, new Area(a.X(), a.Y(), a.AnP(45), a.Al()), false);
@@ -372,6 +385,9 @@ public class VTabvar extends IUSecundario{
         
         botonF9 = new IUBoton(panelBotonesInstrucciones, new Area(a.X(9) + a.AnP(40), a.Y(), a.AnP(5), a.Al()), "[F9]", "", 16, 30, 5, SwingConstants.RIGHT, SwingConstants.CENTER, ' ', "boton de ayuda.");
         botonF9.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F9, 0 ), "F9" );                
+        
+        botonESC = new IUBoton(panelBotonesInstrucciones, new Area(a.X(9) + a.AnP(45), a.Y(), a.AnP(5), a.Al()), "ESC", "", 16, 30, 5, SwingConstants.RIGHT, SwingConstants.CENTER, ' ', "boton de ayuda.");
+        botonESC.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );                
     }
     
     private void construirPanelBotones(Area a){
@@ -403,7 +419,7 @@ public class VTabvar extends IUSecundario{
         campoFECHA1.setCalendar(null);
         campoFECHA2.setCalendar(null);
         setEstadosIniciales(false);
-        setEstadoBotonesIniciales(false);
+        //setEstadoBotonesIniciales(false);
     }
     private void setEstadosIniciales(boolean estado){
         campoDESCRIPCION.setEditar(estado);
@@ -604,7 +620,7 @@ public class VTabvar extends IUSecundario{
     private void setEventos(){
         botonSalir.addActionListener((ActionEvent e) -> {
             dispose();
-        });
+        });        
         botonLimpiar.addActionListener((ActionEvent e) -> {
             limpiarCampos();
         });
@@ -644,6 +660,20 @@ public class VTabvar extends IUSecundario{
         });*/
     }
     private void setEventosTeclado(){
+        botonF3.getActionMap().put( "F3", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                botonF1.doClick();
+                limpiarCampos();
+            }
+        });
+        botonESC.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                botonF1.doClick();
+                dispose();
+            }
+        });
         
         campoOPCION1.addKeyListener(new KeyAdapter() {
             @Override
@@ -965,7 +995,7 @@ public class VTabvar extends IUSecundario{
     private void habilitar_deshabilitarBotones(boolean estado){
         botonF1.setEnabled(estado);
         botonF2.setEnabled(estado);
-        botonF3.setEnabled(estado);
+        //botonF3.setEnabled(estado);
         botonF4.setEnabled(estado);
         botonF5.setEnabled(estado);
         botonF6.setEnabled(estado);

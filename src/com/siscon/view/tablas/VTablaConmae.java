@@ -18,7 +18,10 @@ import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -64,7 +68,7 @@ public class VTablaConmae extends IUSecundario{
         panel.getActionMap().put("Enter", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent ae) {                
-                iuTabla.tabla.setFocusable(false);
+                iuTabla.setFocusable(false);
                 iuTabla.modeloTabla.fireTableDataChanged();
             }
         });
@@ -82,17 +86,52 @@ public class VTablaConmae extends IUSecundario{
         construirPanelBotones(new Area(2, 2, panelBotones.area.An() - 10, panelBotones.area.Al() - 4));
     }
     private void construirPanelBotones(Area a){
-        iuBotonEliminar = new IUBoton(panelBotones, new Area(a.X() + a.AnP(20), a.Y(), a.AnP(20), a.Al()), "ELIMINAR", "/imagenes/delete.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'E', "boton que elimina todos los registros de la tabla");
+        iuBotonEliminar = new IUBoton(panelBotones, new Area(a.X() + a.AnP(20), a.Y(), a.AnP(20), a.Al()), "F3 ELIMINAR", "/imagenes/delete.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'E', "boton que elimina todos los registros de la tabla");
+        iuBotonEliminar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F3, 0 ), "F3" );
+        iuBotonEliminar.getActionMap().put( "F3", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                iuBotonEliminar.doClick();
+                eliminarArchivo();
+            }
+        });
+        
         iuBotonGrabar = new IUBoton(panelBotones, new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(20), a.Al()), "GRABAR", "/imagenes/save.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'G', "boton que guarda todos los registros que estan en la tabla");
+        iuBotonGrabar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_G, 0 ), "G" );
+        iuBotonGrabar.getActionMap().put( "G", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                iuBotonGrabar.doClick();
+                guardarArchivo();
+            }
+        });
+        
         iuBotonCargar = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(20), a.Al()), "CARGAR .TXT", "/imagenes/bajar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'C', "boton que carga el archivo principal .txt");
-        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "SALIR", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "boton para salir de la ventana");        
+        iuBotonCargar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_C, 0 ), "C" );
+        iuBotonCargar.getActionMap().put( "C", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                iuBotonCargar.doClick();
+                cargarArchivoTxt();
+            }
+        });
+        
+        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "ESC", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "boton para salir de la ventana");        
+        iuBotonSalir.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
+        iuBotonSalir.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                iuBotonSalir.doClick();
+                dispose();
+            }
+        });
     }
     private void construirPanelTabla(Area a){
         ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE");
         
         iuTabla = new IUTabla(panelTabla,
                 new Area(a.X(), a.Y(), a.An(), a.Al()), 
-                new String[]{"ID", "GRUP", "SUBGRU", "MAYOR", "CUENTA", "SUBCTA", "CUETOT", "NUMCUE", "DESCRI", "ACTVI", "NIVEL", "LUGAR", "PRESUP", "SALINI", "ANTDIA", "ANTMES", "SALACT", "DEBANO", "CREANO", "DEBMES", "CREMES", "DEBDIA", "CREDIA", "INDICA", "SALIN2", "DEBME2", "ANTME2","CREME2", "SALAC2", "FECHA", "NOMPRE", "DEBAN2", "CREAN2", "ANTDI2", "DEBDI2", "CREDI2", "FECHA2"}, 
+                new String[]{"ID", "G", "S", "My", "An", "Sa", "CUETOT", "NUMCUE", "DESCRI", "ACTVI", "NIVEL", "LUGAR", "PRESUP", "SALINI", "ANTDIA", "ANTMES", "SALACT", "DEBANO", "CREANO", "DEBMES", "CREMES", "DEBDIA", "CREDIA", "INDICA", "SALIN2", "DEBME2", "ANTME2","CREME2", "SALAC2", "FECHA", "NOMPRE", "DEBAN2", "CREAN2", "ANTDI2", "DEBDI2", "CREDI2", "FECHA2"}, 
                 new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Double.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Integer.class, Double.class, Double.class, Double.class, Double.class, Double.class, String.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, String.class}, 
                 new int[]{2,2,2,2,2,2,6,2,16,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5,2,2,2,2,2,2,5}, 
                 lista, new ModeloTabla<Conmae>(){
@@ -181,17 +220,42 @@ public class VTablaConmae extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(0, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(6, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(8, SwingConstants.LEFT);
-        iuTabla.tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        iuTabla.tabla.setFocusable(true);
+        iuTabla.setFocusable(true);
         
         if(!lista.isEmpty()){
-            iuBotonGrabar.setEnabled(false);
-            iuBotonEliminar.setEnabled(false);
-            iuBotonCargar.setEnabled(false);
-        }
-        else{
-            iuBotonEliminar.setEnabled(true);
-            iuBotonGrabar.setEnabled(false);
+            showHideBotones("LISTA_CON_DATOS");
+        }else
+            showHideBotones("LISTA_VACIA");
+    }
+    private void showHideBotones(String operacion){
+        switch(operacion){
+            case "GUARDAR":
+                iuBotonGrabar.setEnabled(false);
+                iuBotonCargar.setEnabled(false);
+                iuBotonEliminar.setEnabled(true);
+                
+            break;
+            case "LISTA_CON_DATOS":
+                iuBotonCargar.setEnabled(false);
+                iuBotonGrabar.setEnabled(false);
+                iuBotonEliminar.setEnabled(true);                
+            break;
+            case "LISTA_VACIA":
+                iuBotonCargar.setEnabled(true);
+                iuBotonGrabar.setEnabled(false);
+                iuBotonEliminar.setEnabled(false);
+            break;
+            case "ELIMINAR":
+                iuBotonEliminar.setEnabled(false);
+                iuBotonGrabar.setEnabled(false);
+                iuBotonCargar.setEnabled(true);
+                iuTabla.modeloTabla.limpiarTabla();
+            break;
+            case "CARGAR":
+                iuBotonCargar.setEnabled(false);
+                iuBotonGrabar.setEnabled(true);
+                iuBotonEliminar.setEnabled(false);
+            break;
         }
     }
     private void cargarArchivoTxt(){
@@ -260,46 +324,67 @@ public class VTablaConmae extends IUSecundario{
                 }
             }
             iuTabla.actualizarTabla(lista);
-            iuBotonGrabar.setEnabled(true);
+            showHideBotones("CARGAR");
         }else{
             JOptionPane.showMessageDialog( ventanaPrincipal, "Error: El Archivo que cargo. no es un archivo con nombre CONMAE que pertenezca a la tabla...! \ningrese otro archivo con el nombre CONMAE", "ERROR DE ARCHIVO", JOptionPane.ERROR_MESSAGE );
         }        
     }
     private void eliminarArchivo(){
-        /*ArrayList<Tabvar> listaTabvar = CTabvar.getLista();
-        listaTabvar.forEach((tabvar) -> {
-            CTabvar.eliminarTabvar(tabvar);
-        });
-        
-        JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado todos los datos de la tabla TABVAR...!");*/
-    }
-    private void guardarArchivo(){                
-        for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {
-            Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
-            try {
-                if(conmae.getFecha().isEmpty())
-                    conmae.setFecha(null);
-            } catch (Exception e) {conmae.setFecha(null);}
-            
-            try {
-                if(conmae.getFecha2().isEmpty())
-                    conmae.setFecha2(null);
-            } catch (Exception e) {conmae.setFecha2(null);}
-            
-            CConmae.guardarConmae(conmae);
+        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
+            ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
+            listaConmae.forEach((conmae) -> {
+                CConmae.eliminarConmae(conmae);
+            });
+            iuTabla.modeloTabla.limpiarTabla();
+            JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado TODOS LOS REGISTROS DE LA TABLA CONMAE...!");
+            showHideBotones("ELIMINAR");
         }
+    }
+    private void guardarArchivo(){ 
+        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+            for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {
+                Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
+                try {
+                    if(conmae.getFecha().isEmpty())
+                        conmae.setFecha(null);
+                } catch (Exception e) {conmae.setFecha(null);}
+
+                try {
+                    if(conmae.getFecha2().isEmpty())
+                        conmae.setFecha2(null);
+                } catch (Exception e) {conmae.setFecha2(null);}
+
+                CConmae.guardarConmae(conmae);
+            }
+        }
+        showHideBotones("GUARDAR");
         
         JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONMAE correctamente...!");
     }
     private void setEventos(){
-        iuBotonSalir.addActionListener((ActionEvent e) -> {
-            dispose();
+        iuBotonSalir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                dispose();
+            }
         });
-        iuBotonCargar.addActionListener((ActionEvent e) -> {
-            cargarArchivoTxt();
+        iuBotonCargar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                cargarArchivoTxt();
+            }
         });
-        iuBotonGrabar.addActionListener((ActionEvent e) -> {
-            guardarArchivo();
+        iuBotonGrabar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                guardarArchivo();
+            }
+        });
+        iuBotonEliminar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                eliminarArchivo();
+            }
         });
     }
     
