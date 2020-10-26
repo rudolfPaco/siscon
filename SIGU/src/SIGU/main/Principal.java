@@ -29,13 +29,13 @@ public class Principal {
 
     public static void main(String[] arg){
         
-        try {
+        /*try {
             // setTheme(String themeName, String licenseKey, String logoString)
             //com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "my company");
             UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
         IUPrincipal sec = new IUPrincipal("Titulo de la Ventana", "/img/tienda.png");
         

@@ -13,12 +13,15 @@ import SIGU.paneles.IUPanelEtiqueta;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.ventanas.IUPrincipal;
-import com.siscon.view.tabvar.VTabvar;
+import com.siscon.controller.CConmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.conmae.VConmae;
+import com.siscon.view.conmae.VEliminarGrupoConmae;
 import com.siscon.view.tablas.VOpciones;
+import com.siscon.view.tabvar.VEliminarGrupoTabvar;
+import com.siscon.view.tabvar.VTabvar;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -254,6 +257,8 @@ public class VPrincipal extends IUPrincipal{
                 VConmae vConmae = new VConmae(this, titulo, "grande", usuario, tabvar);
                 vConmae.mostrarVentana();
                 setOpacity(1f);
+            break;
+            case "02":                
             break;
             case "03":
                 setOpacity(0.6f);

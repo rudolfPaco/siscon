@@ -23,6 +23,9 @@ public class ModeloTabla<T> extends AbstractTableModel{
         this.tipoColumnas = tipoColumnas;
         this.lista = lista;        
     }
+    public void setUpdate(ArrayList<T> lista){
+        this.lista = lista;
+    }
     public boolean isVacia(){
         return lista.isEmpty();
     }    

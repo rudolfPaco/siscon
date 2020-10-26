@@ -38,6 +38,7 @@ public class IUPrincipal extends JFrame{
         setSize(area.An(), area.Al());
         setAlwaysOnTop(true);
         setResizable(false);
+        setUndecorated(true);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(this);

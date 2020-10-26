@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 public class CTabvar {
 
-    public static ArrayList<Tabvar> getLista(){
+    public static ArrayList<Tabvar> getLista(String sql){
         TabvarDao tabvarDao = new TabvarDao();
-        return tabvarDao.getAllList("SELECT * FROM TABVAR");
+        return tabvarDao.getAllList(sql);
     }
     
     public static Tabvar getTabvar(int tipo, int numero){

@@ -71,7 +71,7 @@ public class VTablaTabvar extends IUSecundario{
         iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "SALIR", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "boton para salir de la ventana");
     }
     private void construirPanelTabla(Area a){
-        ArrayList<Tabvar> lista = CTabvar.getLista();
+        ArrayList<Tabvar> lista = CTabvar.getLista("SELECT * FROM TABVAR");
         
         iuTabla = new IUTabla(panelTabla,
                 new Area(a.X(), a.Y(), a.An(), a.Al()), 
@@ -190,7 +190,7 @@ public class VTablaTabvar extends IUSecundario{
         iuTabla.actualizarTabla(lista);
     }
     private void reemplazarArchivo(){
-        ArrayList<Tabvar> listaTabvar = CTabvar.getLista();
+        ArrayList<Tabvar> listaTabvar = CTabvar.getLista("SELECT * FROM TABVAR");
         listaTabvar.forEach((tabvar) -> {
             CTabvar.eliminarTabvar(tabvar);
         });

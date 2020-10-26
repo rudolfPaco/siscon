@@ -39,8 +39,8 @@ public class IUSecundario extends JDialog{
             case "grande":
                 area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
             break;
-            case "mediano-grande":
-                area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width - Toolkit.getDefaultToolkit().getScreenSize().width/7, Toolkit.getDefaultToolkit().getScreenSize().height);
+            case "semi-grande":
+                area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height - Toolkit.getDefaultToolkit().getScreenSize().height/7);
             break;
             case "mediano":
                 area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width - Toolkit.getDefaultToolkit().getScreenSize().width/7, Toolkit.getDefaultToolkit().getScreenSize().height - Toolkit.getDefaultToolkit().getScreenSize().height/7);
@@ -54,7 +54,7 @@ public class IUSecundario extends JDialog{
         }
         
         setSize(new Dimension(area.An(), area.Al()));
-        //setUndecorated(false);        
+        setUndecorated(true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
         //setAlwaysOnTop(true);        

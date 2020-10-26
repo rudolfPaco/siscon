@@ -13,8 +13,8 @@ import SIGU.recursos.Area;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -43,6 +43,7 @@ public class VOpciones extends IUSecundario{
         private IUBoton botonSalir;
         
     private String titulo;
+    private String OPCION;
     
     /**
      *
@@ -54,11 +55,12 @@ public class VOpciones extends IUSecundario{
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.titulo = titulo;
+        this.OPCION = "PRIMERA";
         construirPaneles(new Area(An()-6, Al()-29));
         setEventos();
     }
     private void construirPaneles(Area a){
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
+        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
         construirPanel(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 8));
     }
     private void construirPanel(Area a){
@@ -72,8 +74,9 @@ public class VOpciones extends IUSecundario{
         construirPanelBoton(new Area(panelBoton.area.AnP(40), 2, panelBoton.area.An() - panelBoton.area.AnP(40)*2, panelBoton.area.Al() - 4));
     }
     private void construirPanelDatos(Area a){
-        botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "TABVAR (TABLA)", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");        
-        botonConmae = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "CONMAE (TABLA)", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
+        botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "TABLA [TABVAR]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");        
+        botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
+        botonConmae = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "TABLA [CONMAE]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
     }
     private void construirPanelBoton(Area a){
         botonSalir = new IUBoton(panelBoton, new Area(a.X(), a.Y(), a.An(), a.Al()), "Salir", "/imagenes/cerrar.png", 16, 30, 20, SwingConstants.RIGHT, SwingConstants.CENTER, '{', "");        
@@ -93,24 +96,41 @@ public class VOpciones extends IUSecundario{
                 dispose();
             }
         });
-        
-        botonTabvar.getActionMap().put("T", new AbstractAction(){
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_UP, 0 ), "UP" );
+        panel.getActionMap().put( "UP", new AbstractAction(){
             @Override
             public void actionPerformed( ActionEvent e ){                
-                botonTabvar.doClick();
-                VTablaTabvar iuTabla = new VTablaTabvar(ventanaPrincipal, "Tabla Principal TABVAR", "grande");
-                iuTabla.mostrarVentana();
-                dispose();
+                botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
+                botonConmae.setBackground(null);
+                OPCION = "PRIMERA";
             }
         });
-        botonConmae.getActionMap().put( "C", new AbstractAction(){
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_DOWN, 0 ), "DOWN" );
+        panel.getActionMap().put( "DOWN", new AbstractAction(){
             @Override
             public void actionPerformed( ActionEvent e ){                
-                botonConmae.doClick();
-                VTablaConmae iuComnae = new VTablaConmae(ventanaPrincipal, titulo, "grande");
-                iuComnae.mostrarVentana();
-                dispose();
+                botonConmae.setBackground(Ayuda.COLOR_ATENCION);
+                botonTabvar.setBackground(null);
+                OPCION = "SEGUNDA";
             }
         });
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 ), "ENTER" );
+        panel.getActionMap().put( "ENTER", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                switch(OPCION){
+                    case "PRIMERA":
+                        VTablaTabvar  iuTabvar = new VTablaTabvar(ventanaPrincipal, titulo, "grande");
+                        iuTabvar.mostrarVentana();
+                        dispose();
+                    break;
+                    case "SEGUNDA":
+                        VTablaConmae iuComnae = new VTablaConmae(ventanaPrincipal, titulo, "grande");
+                        iuComnae.mostrarVentana();
+                        dispose();
+                    break;
+                }
+            }
+        });        
     }
 }

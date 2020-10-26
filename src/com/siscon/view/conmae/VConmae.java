@@ -23,6 +23,7 @@ import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import SIGU.tablas.RendererDatosTabla;
 import SIGU.tablas.IUTabla;
+import SIGU.tablas.RendererColumnaTabla;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,6 +47,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -83,7 +85,7 @@ public class VConmae extends IUSecundario{
                     private IUCampoTexto campoDescripcion;
                     private IUCampoTexto campoNivel;
                     private IUCampoTexto campoActividad;
-                    private IUCampoTexto campoLugar;
+                    private IUCampoTexto campoPresup;
             private IUPanel segundoPanel;
                 private IUCampoTexto campoG1;
                 private IUCampoTexto campoS1;
@@ -135,7 +137,7 @@ public class VConmae extends IUSecundario{
                 private IUCampoTexto campoActividad5;
                 private IUCampoTexto campoLugar5;
                 
-            private IUPanel tercerPanel;
+            private IUPanel cuartoPanel;
                 private IUEtiqueta iuTituloMensaje;
                 private IUPanelEtiqueta iuMensaje;
                 private IUPanelEtiqueta iuInformacion;
@@ -145,7 +147,7 @@ public class VConmae extends IUSecundario{
                 private IUCampoTexto campoS_N4;
                 private IUCampoTexto campoS_N5;
             
-            private IUPanel cuartoPanel;
+            private IUPanel tercerPanel;
                 private IUEtiqueta iuTituloTabla;
                 private IUTabla iuTabla;
         
@@ -155,9 +157,11 @@ public class VConmae extends IUSecundario{
     private int An;
     private int Sa;
     
+    private boolean restringir;
     private int indice;
     private String descripcion;
     private String OPCION;
+    private String titulo;
     
     private final Usuario usuario;
     private final Tabvar tabvar;
@@ -167,6 +171,7 @@ public class VConmae extends IUSecundario{
         super(ventanaPrincipal, titulo, tipoSize);
                
         this.ventanaPrincipal = ventanaPrincipal;
+        this.titulo = titulo;
         this.usuario = usuario;
         this.tabvar = tabvar;
         this.conmae = null;
@@ -176,21 +181,29 @@ public class VConmae extends IUSecundario{
         this.An = 0;
         this.Sa = 0;
         this.indice = 0;
+        this.restringir = true;
         this.descripcion = "";
         this.OPCION = "";        
         construirPanel(new Area(An()-6, Al()-29));
         algoritmoInicial();
     }
     private void construirPanel(Area a){
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
         panel.getActionMap().put( "ESC", new AbstractAction(){
             @Override
             public void actionPerformed( ActionEvent e ){                
                 dispose();
             }
+        });        
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F8, 0 ), "F8" );
+        panel.getActionMap().put( "F8", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                limpiarCampos();
+            }
         });
+        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
     }
     private void construirPaneles(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
@@ -216,12 +229,15 @@ public class VConmae extends IUSecundario{
         segundoPanel = new IUPanel(panelDatos, new Area(a.X(2), a.Y(2) + a.AlP(12), a.An() - a.X(2), a.AlP(21)), false);
         construirSegundoPanel(new Area(2, 2, segundoPanel.area.An() - 22, segundoPanel.area.Al() - 12));
         
-        tercerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(33), a.An(), a.AlP(15)), false);
-        construirTercerPanel(new Area(2, 2, tercerPanel.area.An() - 6, tercerPanel.area.Al() - 8));
+        tercerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(33), a.An(), a.AlP(52)), false);
+        construirTercerPanel(new Area(2, 2, tercerPanel.area.An() - 4, tercerPanel.area.Al() - 6));
         
-        cuartoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(48), a.An(), a.AlP(52)), false);
-        construirCuartoPanel(new Area(2, 2, cuartoPanel.area.An() - 4, cuartoPanel.area.Al() - 6));
+        cuartoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(85), a.An(), a.AlP(15)), false);
+        construirCuartoPanel(new Area(2, 2, cuartoPanel.area.An() - 6, cuartoPanel.area.Al() - 8));
+        
+        
     }
+    
     private void construirPrimerPanel(Area a){
         panelCabecera = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.AlP(35)), false);
         construirPanelCabecera(new Area(2, 2, panelCabecera.area.An() - 12, panelCabecera.area.Al() - 4));
@@ -234,7 +250,7 @@ public class VConmae extends IUSecundario{
         etiquetaDescripcion = new IUPanelEtiqueta(panelCabecera, new Area(a.X(2) + a.AnP(26), a.Y(), a.AnP(44), a.Al()), "DESCRIPCION", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         etiquetaNivel = new IUPanelEtiqueta(panelCabecera, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), "NIVEL", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         etiquetaActividad = new IUPanelEtiqueta(panelCabecera, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), "ACTIVI", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        etiquetaPresup = new IUPanelEtiqueta(panelCabecera, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), "LUGAR", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        etiquetaPresup = new IUPanelEtiqueta(panelCabecera, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), "PRESUP", 18, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
     }
     private void construirPanelPrimerRegistro(Area a){
         etiquetaG = new IUPanelEtiqueta(panelPrimerRegistro, new Area(a.X(2), a.Y(), a.AnP(5), a.AlP(40)), "G", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
@@ -269,17 +285,28 @@ public class VConmae extends IUSecundario{
         campoActividad.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoActividad.setText("S");
+                if (KeyEvent.VK_1 == e.getKeyCode() || KeyEvent.VK_NUMPAD1 == e.getKeyCode()){
+                    campoActividad.setText("1");
                 }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoActividad.setText("N");
+                if(KeyEvent.VK_2 == e.getKeyCode() || KeyEvent.VK_NUMPAD2 == e.getKeyCode()){
+                    campoActividad.setText("2");
                 }
             }
         });
         
-        campoLugar = new IUCampoTexto(panelPrimerRegistro, 1, 16, new Area(a.X(11) + a.AnP(92), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
-        campoLugar.setRestriccion("^([1-2]|[1-2])$");
+        campoPresup = new IUCampoTexto(panelPrimerRegistro, 1, 16, new Area(a.X(11) + a.AnP(92), a.Y(2) + a.AlP(40), a.AnP(5), a.AlP(60)), SwingConstants.CENTER);
+        campoPresup.setRestriccion("^([0-1]|[0-1])$");
+        campoPresup.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_0 == e.getKeyCode() || KeyEvent.VK_NUMPAD0 == e.getKeyCode()){
+                    campoPresup.setText("0");
+                }
+                if(KeyEvent.VK_1 == e.getKeyCode() || KeyEvent.VK_NUMPAD1 == e.getKeyCode()){
+                    campoPresup.setText("1");
+                }
+            }
+        });
     }
     
     private void construirSegundoPanel(Area a){
@@ -380,70 +407,12 @@ public class VConmae extends IUSecundario{
     }
     
     private void construirTercerPanel(Area a){
-        iuTituloMensaje = new IUEtiqueta(tercerPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(80), a.AlP(20)), 16, "CENTER", false);
-        iuMensaje = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(80), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
-        iuInformacion = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(80), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);
-        campoS_N1 = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(80), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
-        campoS_N1.setVisible(false);
-        campoS_N1.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoS_N1.setText("S");
-                }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoS_N1.setText("N");
-                }
-            }
-        });
-        campoS_N2 = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(80), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
-        campoS_N2.setVisible(false);
-        campoS_N2.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoS_N2.setText("S");
-                }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoS_N2.setText("N");
-                }
-            }
-        });
-        campoS_N3 = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(80), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
-        campoS_N3.setVisible(false);
-        campoS_N3.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoS_N3.setText("S");
-                }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoS_N3.setText("N");
-                }
-            }
-        });
-        campoS_N4 = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(80), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
-        campoS_N4.setVisible(false);
-        campoS_N4.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoS_N4.setText("S");
-                }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoS_N4.setText("N");
-                }
-            }
-        });
-    }
-    
-    private void construirCuartoPanel(Area a){
-        iuTituloTabla = new IUEtiqueta(cuartoPanel, "PLAN DE CUENTAS", new Area(a.X(), a.Y(), a.An(), a.AlP(5)), 16, "CENTER", false);
+        iuTituloTabla = new IUEtiqueta(tercerPanel, "PLAN DE CUENTAS", new Area(a.X(), a.Y(), a.An(), a.AlP(5)), 16, "CENTER", false);
         iuTituloTabla.setSubrayarTexto(true);
         iuTabla = new IUTabla(
-        cuartoPanel, 
+        tercerPanel, 
         new Area(a.X(), a.Y(2) + a.AlP(5), a.An(), a.AlP(95)), 
-        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "LUGAR"}, 
+        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "PRESUP"}, 
         new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
         new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, 
         new ArrayList(), 
@@ -471,7 +440,7 @@ public class VConmae extends IUSecundario{
                     case 8:
                         return lista.get(rowIndex).getActivi();
                     case 9:
-                        return lista.get(rowIndex).getLugar();
+                        return lista.get(rowIndex).getPresup();
                     default:
                         return null;
                 }
@@ -482,10 +451,86 @@ public class VConmae extends IUSecundario{
         }
     }
     
+    private void construirCuartoPanel(Area a){
+        iuTituloMensaje = new IUEtiqueta(cuartoPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
+        iuMensaje = new IUPanelEtiqueta(cuartoPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
+        iuInformacion = new IUPanelEtiqueta(cuartoPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);
+        campoS_N1 = new IUCampoTexto(cuartoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
+        campoS_N1.setVisible(false);
+        campoS_N1.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N1.setText("S");
+                }
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N1.setText("N");
+                }
+            }
+        });
+        campoS_N2 = new IUCampoTexto(cuartoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
+        campoS_N2.setVisible(false);
+        campoS_N2.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N2.setText("S");
+                }
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N2.setText("N");
+                }
+            }
+        });
+        campoS_N3 = new IUCampoTexto(cuartoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
+        campoS_N3.setVisible(false);
+        campoS_N3.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N3.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N3.setText("S");
+                }
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N3.setText("N");
+                }
+            }
+        });
+        campoS_N4 = new IUCampoTexto(cuartoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
+        campoS_N4.setVisible(false);
+        campoS_N4.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N4.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N4.setText("S");
+                }
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N4.setText("N");
+                }
+            }
+        });
+        campoS_N5 = new IUCampoTexto(cuartoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);        
+        campoS_N5.setVisible(false);
+        campoS_N5.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N5.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N5.setText("S");
+                }
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N5.setText("N");
+                }
+            }
+        });
+    }
+        
     private void algoritmoInicial(){
         campoDescripcion.setEditar(false);
         campoActividad.setEditar(false);
-        campoLugar.setEditar(false);
+        campoPresup.setEditar(false);
         
         campoG.addFocusListener(new FocusAdapter() {
             @Override
@@ -518,10 +563,10 @@ public class VConmae extends IUSecundario{
             }
         });
     }
-    private void focoCampoG(){
-        iuMensaje.setTexto("Digite GRUPO (n1), [F1]=Ayuda, [F7]=Consulta o [F8]=Limpia Campos");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede o [Esc]=Suspende Programa.");
-        
+    
+    private void focoCampoG(){        
+        iuMensaje.setTexto("Digite GRUPO (n1)");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos o [Esc]=Suspende Programa.");        
         campoG.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -529,10 +574,9 @@ public class VConmae extends IUSecundario{
                     if(!campoG.getText().isEmpty()){
                         G = Integer.parseInt(campoG.getText());
                         
-                        campoLugar.setText(String.valueOf(G));
                         campoNivel.setText("1");
                         
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G));                        
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G));
                         cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);
                         campoG.transferFocus();
                     }
@@ -540,9 +584,9 @@ public class VConmae extends IUSecundario{
             }
         });
     }
-    private void focoCampoS(){
+    private void focoCampoS(){        
         iuMensaje.setTexto("Digite el SUBGRUPO de la cuenta (n1).");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
         campoS.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -551,7 +595,7 @@ public class VConmae extends IUSecundario{
                         G = Integer.parseInt(campoG.getText());
                         S = Integer.parseInt(campoS.getText());
                         
-                        campoLugar.setText(String.valueOf(G));
+                        campoPresup.setText(String.valueOf(G));
                         
                         campoActividad.setText("1");
                         
@@ -570,11 +614,10 @@ public class VConmae extends IUSecundario{
                     }
             }
         });
-    }
-    
+    }    
     private void focoCampoMy(){
         iuMensaje.setTexto("Digite el MAYOR de la cuenta (n2).");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
         campoMy.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -604,7 +647,7 @@ public class VConmae extends IUSecundario{
     }
     private void focoCampoAn(){
         iuMensaje.setTexto("Digite el ANALITICO de la cuenta (n2).");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
         campoAn.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -627,8 +670,7 @@ public class VConmae extends IUSecundario{
                         
                         if(conmae != null){
                             if(conmae.getActivi() == 2){
-                                iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, digite otro numero SUBANALITICO.");
-                                campoAn.setText("0");
+                                focoCampoS_N4(conmae);
                             }else{
                                 cargarDatos(conmae, 4);
                                 campoAn.transferFocus();
@@ -642,10 +684,10 @@ public class VConmae extends IUSecundario{
                     }
             }
         });
-    }
+    }    
     private void focoCampoSa(){
         iuMensaje.setTexto("Confirme o Digite el SUBANALITICO de la cuenta (n2).");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos, [Esc]=Suspende Programa o [F5]=Seleccionar Registro en la Tabla");
         campoSa.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -667,9 +709,9 @@ public class VConmae extends IUSecundario{
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa));
                         Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(conmae != null){
-                            if(conmae.getActivi() == 2){
-                                iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, digite otro numero SUBANALITICO.");
-                                campoSa.setText("0");
+                            if(conmae.getActivi() == 2 && restringir){
+                                iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, tome en cuenta a futuros procesos. Vuelva a presionar la tecla Enter.");
+                                restringir = false;                                    
                             }else{
                                 focoCampoS_N1(conmae);
                             }
@@ -690,7 +732,7 @@ public class VConmae extends IUSecundario{
         restringirCampos("Descripcion", true);
         campoDescripcion.requestFocus();
         iuMensaje.setTexto("Digite DESCRIPCION  de la Cuenta (x28) o [F7]=Anterior");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [Esc]=Suspende Programa.");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F8]=Limpia Campos, [Esc]=Suspende Programa.");
         
         campoDescripcion.addKeyListener(new KeyAdapter() {
             @Override
@@ -716,13 +758,13 @@ public class VConmae extends IUSecundario{
         campoActividad.setEditar(true);
         campoActividad.requestFocus();
         iuMensaje.setTexto("Opciones: 1=NO Apropiable o 2=APROPIABLE en Comprobantes.");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede o [Esc]=Suspende Programa.");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F8]=Limpia Campos o [Esc]=Suspende Programa.");
         campoActividad.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!campoActividad.getText().isEmpty()){
-                        focoCampoLugar();
+                        focoCampoPresup();
                     }
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
@@ -731,16 +773,17 @@ public class VConmae extends IUSecundario{
             }
         });
     }
-    private void focoCampoLugar(){
+    private void focoCampoPresup(){
         restringirCampos("Actividad", true);
-        campoLugar.setEditar(true);
-        campoLugar.requestFocus();
-        iuMensaje.setTexto("Lugar en Flujo Fondos: 1=al DEBE o 2=al HABER.....");
-        campoLugar.addKeyListener(new KeyAdapter() {
+        campoPresup.setEditar(true);
+        campoPresup.requestFocus();
+        iuMensaje.setTexto("PRESUPUESTO de la Cuenta: 0=NO Tiene PRESUPUESTO o 1=SI Tiene PRESUPUESTO.....");
+        iuInformacion.setTexto("ATENCION:  [F2]=Retrocede, [F8]=Limpia Campos o [Esc]=Suspende Programa.");
+        campoPresup.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    if(!campoLugar.getText().isEmpty()){
+                    if(!campoPresup.getText().isEmpty()){
                         switch(OPCION){
                             case "MODIFICAR":
                                 modificarConmae();                                
@@ -757,6 +800,7 @@ public class VConmae extends IUSecundario{
             }
         });
     }
+    
     private void guardarConmae(){
         Conmae c = new Conmae(0);
         c.setGrup(Integer.parseInt(campoG.getText()));
@@ -769,8 +813,8 @@ public class VConmae extends IUSecundario{
         c.setDescri(campoDescripcion.getText());
         c.setNivel(Integer.parseInt(campoNivel.getText()));
         c.setActivi(Integer.parseInt(campoActividad.getText()));
-        c.setLugar(Integer.parseInt(campoLugar.getText()));
-        c.setPresup(0);
+        c.setLugar(0);
+        c.setPresup(Integer.parseInt(campoPresup.getText()));
         c.setSalini(0);
         c.setAntdia(0);
         c.setAntmes(0);
@@ -801,7 +845,6 @@ public class VConmae extends IUSecundario{
             if(CConmae.guardarConmae(c)){
                 Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "CORRECTO");
                 limpiarCampos();
-                algoritmoInicial();
             }
         }
         setOpacity(1f);
@@ -809,7 +852,7 @@ public class VConmae extends IUSecundario{
     private void modificarConmae(){
         conmae.setDescri(campoDescripcion.getText());
         conmae.setActivi(Integer.parseInt(campoActividad.getText()));
-        conmae.setLugar(Integer.parseInt(campoLugar.getText()));
+        conmae.setPresup(Integer.parseInt(campoPresup.getText()));
         
         setOpacity(0.5f);
         if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea MODIFICAR los datos del Registro PLAN DE CUENTAS...?", "CONFIRMACION")){
@@ -819,7 +862,6 @@ public class VConmae extends IUSecundario{
         }
         setOpacity(1f);
         limpiarCampos();
-        algoritmoInicial();
         
     }
     private void eliminarConmae(){
@@ -831,14 +873,15 @@ public class VConmae extends IUSecundario{
         }
         setOpacity(1f);
         limpiarCampos();
-        algoritmoInicial();
     }
+    
     private void focoCampoS_N1(Conmae c){
         restringirCampos("", false);
         campoS_N1.setVisible(true);
         campoS_N1.requestFocus();
         campoS_N1.setText("S");
         iuMensaje.setTexto("CUENTA EXISTE LA RECUPERO?? ....... S/N");        
+        iuInformacion.setTexto("");
         
         campoS_N1.addKeyListener(new KeyAdapter() {
             @Override
@@ -878,38 +921,94 @@ public class VConmae extends IUSecundario{
                         case "N":
                             conmae = c;
                             campoS_N2.setVisible(false);
-                            focoCampoS_N3();
+                            focoCampoS_N3(c);
                         break;
                     }
                 }
             }
         });
     }
-    private void focoCampoS_N3(){
+    private void focoCampoS_N3(Conmae c){
         campoS_N3.setVisible(true);
         campoS_N3.requestFocus();
         campoS_N3.setText("N");
-        iuMensaje.setTexto("ENTONCES ELIMINO???......S/N");
+        iuMensaje.setTexto("DESEA ELIMINAR POR GRUPO DE CUENTAS?.......S/N");        
         campoS_N3.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyPressed(KeyEvent e) {                
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     switch(campoS_N3.getText()){
                         case "S":
-                            eliminarConmae();
+                            campoS_N3.setVisible(false);
+                            eliminarGrupoPlanCuentas(c);
                         break;
                         case "N":
-                            limpiarCampos();
-                            algoritmoInicial();
+                            campoS_N3.setVisible(false);
+                            focoCampoS_N5();
                         break;
                     }
                 }
             }
         });
     }
+    private void focoCampoS_N5(){
+        campoS_N5.setVisible(true);
+        campoS_N5.requestFocus();
+        campoS_N5.setText("S");
+        iuMensaje.setTexto("ENTONCES ELIMINO???......S/N");
+        campoS_N5.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {                
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N5.getText()){
+                        case "S":
+                            campoS_N5.setVisible(false);
+                            eliminarConmae();
+                        break;
+                        case "N":                            
+                            limpiarCampos();
+                        break;
+                    }
+                }
+            }
+        });
+        
+    }
+    private void eliminarGrupoPlanCuentas(Conmae c){
+        setOpacity(0.5f);
+        VEliminarGrupoConmae iuEliminar = new VEliminarGrupoConmae(ventanaPrincipal, titulo, "semi-grande", c);
+        iuEliminar.mostrarVentana();
+        setOpacity(1f);
+        limpiarCampos();
+    }
+    
+    private void focoCampoS_N4(Conmae c){
+        campoS_N4.setVisible(true);
+        campoS_N4.requestFocus();
+        campoS_N4.setText("S");
+        iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, quiere MODIFICAR.?  S/N");
+        campoS_N4.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N4.getText()){
+                        case "S":
+                            campoSa.setText("0");
+                            focoCampoS_N1(c);
+                        break;
+                        case "N":
+                            limpiarCampos();
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    
     private void limpiarCampos(){
         OPCION = "";        
         conmae = null;
+        restringir = true;
         
         campoS_N1.setVisible(false);
         campoS_N2.setVisible(false);
@@ -924,7 +1023,7 @@ public class VConmae extends IUSecundario{
         campoDescripcion.setText("");
         campoNivel.setText("");
         campoActividad.setText("");
-        campoLugar.setText("");
+        campoPresup.setText("");
         iuTabla.actualizarTabla(new ArrayList());
         
         campoG.setEditar(true);
@@ -935,7 +1034,7 @@ public class VConmae extends IUSecundario{
         
         campoDescripcion.setEditar(false);
         campoActividad.setEditar(false);
-        campoLugar.setEditar(false);
+        campoPresup.setEditar(false);
         
         campoG.requestFocus();
         
@@ -998,7 +1097,9 @@ public class VConmae extends IUSecundario{
         campoNivel5.setText("");
         campoActividad5.setText("");
         campoLugar5.setText("");
+        focoCampoG();
     }
+    
     private void restringirCampos(String campo, boolean respuesta){
         campoG.setEditar(false);
         campoS.setEditar(false);
@@ -1008,7 +1109,7 @@ public class VConmae extends IUSecundario{
         campoDescripcion.setEditar(false);
         campoNivel.setEditar(false);
         campoActividad.setEditar(false);
-        campoLugar.setEditar(false);
+        campoPresup.setEditar(false);
         iuTabla.setFocusable(false);
         iuTabla.setEnabled(false);
         switch(campo){
@@ -1037,7 +1138,7 @@ public class VConmae extends IUSecundario{
                 campoActividad.setEditar(respuesta);
             break;
             case "Lugar":
-                campoLugar.setEditar(respuesta);
+                campoPresup.setEditar(respuesta);
             break;
             case "tabla":
                 iuTabla.setFocusable(respuesta);
@@ -1047,12 +1148,12 @@ public class VConmae extends IUSecundario{
             default:
             break;
         }
-    }
+    }    
     
     private void focoCampoTabla(String tipo, int numero){
         iuTabla.setFocusable(true);
         iuMensaje.setTexto("Navegue hacia arriba y abajo con las teclas [UP]=Arriba y [DOWN]=Abajo.");
-        iuInformacion.setTexto("para seleccionar un registro presione la tecla [Enter]=Seleccionar");
+        iuInformacion.setTexto("para seleccionar un registro presione la tecla [Enter]=Seleccionar. [F2]=Volver");
         iuTabla.requestFocus();
         iuTabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -1088,7 +1189,29 @@ public class VConmae extends IUSecundario{
                 iuTabla.modeloTabla.fireTableDataChanged();
             }
         });
-    }
+        iuTabla.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
+        iuTabla.getActionMap().put("F2", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                switch(tipo){
+                    case "S":
+                        campoS.requestFocus();
+                    break;
+                    case "My":
+                        campoMy.requestFocus();
+                    break;
+                    case "An":
+                        campoAn.requestFocus();
+                    break;
+                    case "Sa":
+                        campoSa.requestFocus();
+                    break;
+                }
+                iuTabla.setFocusable(false);
+                iuTabla.modeloTabla.fireTableDataChanged();
+            }
+        });
+    }    
     
     private void cargarDatos(Conmae c, int nroRegistro){
         if(c != null){
@@ -1102,7 +1225,7 @@ public class VConmae extends IUSecundario{
                     campoDescripcion.setText(c.getDescri());
                     campoNivel.setText(String.valueOf(c.getNivel()));
                     campoActividad.setText(String.valueOf(c.getActivi()));
-                    campoLugar.setText(String.valueOf(c.getLugar()));
+                    campoPresup.setText(String.valueOf(c.getLugar()));
                 break;
                 case 1:
                     campoG1.setText(String.valueOf(c.getGrup()));
