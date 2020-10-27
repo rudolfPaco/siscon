@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -37,7 +38,7 @@ import javax.swing.border.LineBorder;
  * @author neo
  */
 public class VEliminarGrupoTabvar extends IUSecundario{
-    private VPrincipal ventanaPrincipal;
+    private IUSecundario ventanaPrincipal;
     
     private IUPanel panel;
         private IUPanel panelTitulo;
@@ -71,7 +72,7 @@ public class VEliminarGrupoTabvar extends IUSecundario{
     
     private final Tabvar tabvar;
     
-    public VEliminarGrupoTabvar(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Tabvar tabvar) {
+    public VEliminarGrupoTabvar(IUSecundario ventanaPrincipal, String titulo, String tipoSize, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.tabvar = tabvar;
@@ -194,15 +195,16 @@ public class VEliminarGrupoTabvar extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     int[] multipleSeleccion = iuTabla.getSelectedRows();
                     if(multipleSeleccion.length > 0){
-                        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del TABVAR...?", "CONFIRMACION")){
+                        int resp = JOptionPane.showConfirmDialog( ventanaPrincipal , "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del TABVAR...?", "CONFIRMACION" , JOptionPane.YES_NO_OPTION );
+                        if( resp == JOptionPane.YES_OPTION ){
                             for (int i = 0; i < multipleSeleccion.length; i++) {
                                 int indice = multipleSeleccion[i];
                                 Tabvar t = (Tabvar) iuTabla.modeloTabla.getFila(indice);
                                 CTabvar.eliminarTabvar(t);
                             }
-                            Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha ELIMINADO LAS "+multipleSeleccion.length+" Registros de la TABLA TABVAR.", "CORRECTO");
+                            JOptionPane.showMessageDialog( ventanaPrincipal , "Se ha ELIMINADO LAS "+multipleSeleccion.length+" Registros de la TABLA TABVAR.", "CORRECTO" , JOptionPane.INFORMATION_MESSAGE );
                             iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+tabvar.getTipo()));
-                        }                        
+                        }
                     }
                 }
             }

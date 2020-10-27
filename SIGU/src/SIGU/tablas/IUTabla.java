@@ -82,7 +82,7 @@ public class IUTabla extends JTable{
         setFuenteCabecera(new Font("Verdana", Font.PLAIN, 14), colorFondoCabecera, colorLetraCabecera, false, 0, Color.WHITE);
         
         deslizador = new JScrollPane(this, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);        
-        deslizador.setFocusable(false);
+        //deslizador.setFocusable(false);
         panel.agregar(deslizador, area);        
         /*final TableRowSorter<TableModel> sorter = new TableRowSorter<>(iuTabla.tabla.getModel());
         iuTabla.tabla.setRowSorter(sorter);

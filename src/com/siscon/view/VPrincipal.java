@@ -5,7 +5,6 @@
  */
 package com.siscon.view;
 
-import SIGU.botones.IUBoton;
 import SIGU.comboBox.IUComboBox;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
@@ -13,14 +12,11 @@ import SIGU.paneles.IUPanelEtiqueta;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.ventanas.IUPrincipal;
-import com.siscon.controller.CConmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.conmae.VConmae;
-import com.siscon.view.conmae.VEliminarGrupoConmae;
 import com.siscon.view.tablas.VOpciones;
-import com.siscon.view.tabvar.VEliminarGrupoTabvar;
 import com.siscon.view.tabvar.VTabvar;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -164,7 +160,7 @@ public class VPrincipal extends IUPrincipal{
         tituloB = new IUEtiqueta(panelB, "PROCESOS", new Area(a.X() + a.AnP(30), a.Y(4), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
         tituloB.setSubrayarTexto(true);
         iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y() + a.AlP(21), a.An(), a.AlP(7)), "11. Asiento Simple", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "12. Asiento Multiple", 16, SwingConstants.LEFT, Color.WHITE, true));
+        //iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "12. Asiento Multiple", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "13. Asiento de Ajuste", 16, SwingConstants.LEFT, Color.WHITE, true));
         
         tituloB = new IUEtiqueta(panelB, "REPORTES", new Area(a.X() + a.AnP(30), a.Y(7) + a.AlP(42), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
@@ -270,9 +266,6 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(0.6f);
                 VOpciones iuOpciones = new VOpciones(this, titulo, "pequeno");
                 iuOpciones.mostrarVentana();
-                if(iuOpciones.getEstado()){
-                    
-                }
                 setOpacity(1f);
             break;
             default:
@@ -280,5 +273,4 @@ public class VPrincipal extends IUPrincipal{
             break;
         }
     }
-    
 }

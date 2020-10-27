@@ -9,6 +9,8 @@ import SIGU.paneles.IUPanel;
 import SIGU.recursos.Area;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -28,6 +30,13 @@ public class IUSecundario extends JDialog{
      * @param tipoSize
      */
     public IUSecundario(JFrame ventanaPrincipal, String titulo, String tipoSize){
+        super(ventanaPrincipal, titulo, true);
+        this.tipoSize = tipoSize;
+        this.estado = false;
+        
+        construirVentanaSecundaria();        
+    }
+    public IUSecundario(JDialog ventanaPrincipal, String titulo, String tipoSize){
         super(ventanaPrincipal, titulo, true);
         this.tipoSize = tipoSize;
         this.estado = false;
@@ -73,6 +82,9 @@ public class IUSecundario extends JDialog{
     }
     public void mostrarVentana(){
         setVisible(true);
+    }
+    public void cerrarVentana(){
+        this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));        
     }
     public int An(){
         return area.An();

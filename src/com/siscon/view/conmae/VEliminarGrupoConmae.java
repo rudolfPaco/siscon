@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -74,23 +75,15 @@ public class VEliminarGrupoConmae extends IUSecundario{
     
     private final Conmae conmae;
     
-    public VEliminarGrupoConmae(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Conmae tabvar) {
+    public VEliminarGrupoConmae(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Conmae conmae) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
-        this.conmae = tabvar;
+        this.conmae = conmae;
         construirPanel(new Area(An()-6, Al()-29));        
         algoritmoInicial();
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
-        panel.getActionMap().put( "ESC", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                dispose();
-            }
-        });        
-        
         construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));        
     }
     private void construirPaneles(Area a){
@@ -154,7 +147,7 @@ public class VEliminarGrupoConmae extends IUSecundario{
         new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "PRESUP"}, 
         new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
         new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()), 
+        CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "), 
         new ModeloTabla<Conmae>(){
             
             @Override
@@ -204,16 +197,21 @@ public class VEliminarGrupoConmae extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     int[] multipleSeleccion = iuTabla.getSelectedRows();
                     if(multipleSeleccion.length > 0){
-                        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del PLAN DE CUENTAS...?", "CONFIRMACION")){
+                        int resp = JOptionPane.showConfirmDialog( ventanaPrincipal , "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del PLAN DE CUENTAS...?", "CONFIRMACION" , JOptionPane.YES_NO_OPTION );
+                        if( resp == JOptionPane.YES_OPTION ){
                             for (int i = 0; i < multipleSeleccion.length; i++) {
                                 int indice = multipleSeleccion[i];
                                 Conmae c = (Conmae) iuTabla.modeloTabla.getFila(indice);
                                 CConmae.eliminarConmae(c);
                             }
-                            Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha ELIMINADO (EL) LOS "+multipleSeleccion.length+" Registros de la TABLA CONMAE.", "CORRECTO");
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()));
-                        }                        
+                            JOptionPane.showMessageDialog( ventanaPrincipal , "Se ha ELIMINADO (EL) LOS "+multipleSeleccion.length+" Registros de la TABLA CONMAE.", "CORRECTO" , JOptionPane.INFORMATION_MESSAGE );
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "));
+                        }
+                                                
                     }
+                }
+                if(KeyEvent.VK_ESCAPE == e.getKeyCode()){
+                    cerrarVentana();
                 }
             }
         });

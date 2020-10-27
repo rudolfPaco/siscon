@@ -67,15 +67,15 @@ public class VTabvar extends IUSecundario{
                     private IUEtiqueta iuNumero;
                     private IUCampoTexto campoNUMERO;
                     private String numero = "";
-                    private IUPanel panelNombre;
-                    private IUEtiqueta iuNombre;
-                    private IUCampoTexto campoDESCRIPCION;
-                    private String descripcion = "";
+                    private IUPanel panelObservacion;
+                    private IUEtiqueta iuObservacion;
+                    private IUCampoTexto campoOBSERVACION;
+                    private String observacion = "";
                     
                 private IUPanel panelDatosSecundariosTabvar;
                     private IUEtiqueta iuDescripcion;
-                    private IUCampoTexto campoNOMBRE;
-                    private String nombre = "";
+                    private IUCampoTexto campoDESCRIPCION;
+                    private String descripcion = "";
                     private IUEtiqueta iuCODCON;
                     private IUCampoTexto campoCODCON;                    
                     private String codcon = "";
@@ -97,7 +97,7 @@ public class VTabvar extends IUSecundario{
                     private IUEtiqueta iuIntrucciones;
                     private IUEtiqueta iuFormato;
                 private IUPanel panelEtiquetaInstrucciones;
-                    private IUEtiqueta etiquetaNOMBRE;
+                    private IUEtiqueta etiquetaDESCRIPCION;
                     private IUEtiqueta etiquetaCODCON;
                     private IUEtiqueta etiquetaCORREL;
                     private IUEtiqueta etiquetaMONTO1;
@@ -199,17 +199,17 @@ public class VTabvar extends IUSecundario{
         campoNUMERO.setRestriccion("^([0-9]|[1-9][0-9])$");
         panelNumero.setBackground(new Color(232, 237, 244));
         
-        panelNombre = new IUPanel(panelDatosTabvar, new Area(a.X(3) + a.AnP(35), a.Y(), a.AnP(65), a.AlP(40)), true);
-        iuNombre = new IUEtiqueta(panelNombre, "NOMBRE", new Area(panelNombre.area.An(), panelNombre.area.Al()), 14, "CENTER", false);        
-        campoNOMBRE = new IUCampoTexto(panelDatosTabvar, 20, 16, new Area(a.X(3) + a.AnP(35), a.Y() + a.AlP(40), a.AnP(65), a.AlP(60)), SwingConstants.LEFT);
-        campoNOMBRE.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
+        panelObservacion = new IUPanel(panelDatosTabvar, new Area(a.X(3) + a.AnP(35), a.Y(), a.AnP(65), a.AlP(40)), true);
+        iuObservacion = new IUEtiqueta(panelObservacion, "OBSERVACION", new Area(panelObservacion.area.An(), panelObservacion.area.Al()), 14, "CENTER", false);        
+        campoOBSERVACION = new IUCampoTexto(panelDatosTabvar, 30, 16, new Area(a.X(3) + a.AnP(35), a.Y() + a.AlP(40), a.AnP(65), a.AlP(60)), SwingConstants.LEFT);
+        campoOBSERVACION.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
         
-        panelNombre.setBackground(new Color(232, 237, 244));
+        panelObservacion.setBackground(new Color(232, 237, 244));
     } 
     private void construirPanelDatosSecundariosTabvar(Area a){
         int alto = 14;
         iuDescripcion = new IUEtiqueta(panelDatosSecundariosTabvar, " a. Descripcion:", new Area(a.X(), a.Y(), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);        
-        campoDESCRIPCION = new IUCampoTexto(panelDatosSecundariosTabvar, 30, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(65), a.AlP(alto)), SwingConstants.LEFT);
+        campoDESCRIPCION = new IUCampoTexto(panelDatosSecundariosTabvar, 20, 16, new Area(a.X() + a.AnP(35), a.Y(), a.AnP(65), a.AlP(alto)), SwingConstants.LEFT);
         campoDESCRIPCION.setRestriccion("[\\p{Alpha}\\p{Alnum}\\p{Space}\\.\\/\\(\\)\\-]");
         
         iuCODCON = new IUEtiqueta(panelDatosSecundariosTabvar, " b. Cod. Contable:", new Area(a.X(), a.Y(2) + a.AlP(alto), a.AnP(35), a.AlP(alto)), 16, "LEFT", true);
@@ -257,8 +257,8 @@ public class VTabvar extends IUSecundario{
     }
     private void construirEtiquetasInstrucciones(Area a){
         int alto = 14;
-        etiquetaNOMBRE = new IUEtiqueta(panelEtiquetaInstrucciones, "Denominacion del Parametro - Tabla", new Area(a.X(), a.Y(), a.AnP(80), a.AlP(alto)), 16, "LEFT", true);
-        etiquetaNOMBRE = new IUEtiqueta(panelEtiquetaInstrucciones, "x15", new Area(a.X(2) + a.AnP(80), a.Y(), a.AnP(20), a.AlP(alto)), 16, "CENTER", true);
+        etiquetaDESCRIPCION = new IUEtiqueta(panelEtiquetaInstrucciones, "Denominacion del Parametro - Tabla", new Area(a.X(), a.Y(), a.AnP(80), a.AlP(alto)), 16, "LEFT", true);
+        etiquetaDESCRIPCION = new IUEtiqueta(panelEtiquetaInstrucciones, "x15", new Area(a.X(2) + a.AnP(80), a.Y(), a.AnP(20), a.AlP(alto)), 16, "CENTER", true);
         
         etiquetaCODCON = new IUEtiqueta(panelEtiquetaInstrucciones, "Campo para Integrar la Contabilidad", new Area(a.X(), a.Y(2) + a.AlP(alto), a.AnP(80), a.AlP(alto)), 16, "LEFT", true);
         etiquetaCODCON = new IUEtiqueta(panelEtiquetaInstrucciones, "n8", new Area(a.X(2) + a.AnP(80), a.Y(2) + a.AlP(alto), a.AnP(20), a.AlP(alto)), 16, "CENTER", true);
@@ -426,8 +426,8 @@ public class VTabvar extends IUSecundario{
         OPCION = "";
         campoTIPO.setText("");
         campoNUMERO.setText("");
+        campoOBSERVACION.setText("");
         campoDESCRIPCION.setText("");
-        campoNOMBRE.setText("");
         campoCODCON.setText("");
         campoCORREL.setText("");
         campoMONTO1.setText("");
@@ -443,6 +443,10 @@ public class VTabvar extends IUSecundario{
         campoS_N6.setVisible(false);
         campoS_N7.setVisible(false);
         
+        panel.removeAll();
+        panel.updateUI();
+        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        
         restringirCampos("TIPO", true);
         focoCampoTIPO();
     }
@@ -452,8 +456,8 @@ public class VTabvar extends IUSecundario{
             case "TIPO":
                 campoTIPO.setEditar(condicion);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -466,8 +470,8 @@ public class VTabvar extends IUSecundario{
             case "NUMERO":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(condicion);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -480,8 +484,8 @@ public class VTabvar extends IUSecundario{
             case "NOMBRE":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(condicion);
-                campoDESCRIPCION.setEditar(false);
+                campoDESCRIPCION.setEditar(condicion);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -494,8 +498,8 @@ public class VTabvar extends IUSecundario{
             case "DESCRIPCION":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
-                campoDESCRIPCION.setEditar(condicion);
+                campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(condicion);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -508,8 +512,8 @@ public class VTabvar extends IUSecundario{
             case "CODCON":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(condicion);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -522,8 +526,8 @@ public class VTabvar extends IUSecundario{
             case "CORREL":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(condicion);
                 campoMONTO1.setEditar(false);
@@ -536,8 +540,8 @@ public class VTabvar extends IUSecundario{
             case "MONTO1":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(condicion);
@@ -550,8 +554,8 @@ public class VTabvar extends IUSecundario{
             case "MONTO2":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -564,8 +568,8 @@ public class VTabvar extends IUSecundario{
             case "FECHA1":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -578,8 +582,8 @@ public class VTabvar extends IUSecundario{
             case "FECHA2":
                 campoTIPO.setEditar(false);
                 campoNUMERO.setEditar(false);
-                campoNOMBRE.setEditar(false);
                 campoDESCRIPCION.setEditar(false);
+                campoOBSERVACION.setEditar(false);
                 campoCODCON.setEditar(false);
                 campoCORREL.setEditar(false);
                 campoMONTO1.setEditar(false);
@@ -593,25 +597,13 @@ public class VTabvar extends IUSecundario{
     }
     private void algoritmoInicial(){
         restringirCampos("TIPO", true);
-        
-        campoTIPO.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                focoCampoTIPO();
-            }
-        });
-        campoNUMERO.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                focoCampoNUMERO();
-            }
-        });
+        focoCampoTIPO();
     }
     private void mostrarDatosTabvar(Tabvar tabvar){        
         campoTIPO.setText(String.valueOf(tabvar.getTipo()));
         campoNUMERO.setText(String.valueOf(tabvar.getNumero()));
-        campoNOMBRE.setText(tabvar.getDescri());
-        campoDESCRIPCION.setText(tabvar.getObserv());
+        campoDESCRIPCION.setText(tabvar.getDescri());
+        campoOBSERVACION.setText(tabvar.getObserv());
         campoCODCON.setText(String.valueOf(tabvar.getCodcon()));        
         campoCORREL.setText(String.valueOf(tabvar.getCorrel()));
         campoMONTO1.setText(String.valueOf(tabvar.getMonto()));
@@ -638,11 +630,11 @@ public class VTabvar extends IUSecundario{
     }
     private void eliminarRegistro(Tabvar t){        
         if(t.getTipo() > 0 && t.getNumero() > 0){
-            int resp = JOptionPane.showConfirmDialog(ventanaPrincipal, "¿Esta seguro que desea ELIMINAR el Registro...?", "Alerta!", JOptionPane.YES_NO_OPTION);
+            int resp = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea ELIMINAR el Registro...?", "Alerta!", JOptionPane.YES_NO_OPTION);
             if(resp == 0){
                 if(CTabvar.eliminarTabvar(t)){
-                    JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado los datos del registro TABVAR correctamente...!");
-                    limpiarCampos();                    
+                    JOptionPane.showMessageDialog(this, "se ha eliminado los datos del registro TABVAR correctamente...!");
+                    limpiarCampos();
                 }
             }
         }
@@ -662,7 +654,7 @@ public class VTabvar extends IUSecundario{
                             t.setTipo(Integer.parseInt(campoTIPO.getText()));
                             t.setNumero(Integer.parseInt(campoNUMERO.getText()));
                             t.setDescri(campoDESCRIPCION.getText());
-                            t.setObserv(campoNOMBRE.getText());
+                            t.setObserv(campoOBSERVACION.getText());
 
                             if(campoCODCON.getText().isEmpty())
                                 t.setCodcon(0);
@@ -709,8 +701,8 @@ public class VTabvar extends IUSecundario{
             Tabvar t = new Tabvar(0);
             t.setTipo(Integer.parseInt(campoTIPO.getText()));
             t.setNumero(Integer.parseInt(campoNUMERO.getText()));
-            t.setDescri(campoNOMBRE.getText());
-            t.setObserv(campoDESCRIPCION.getText());
+            t.setDescri(campoDESCRIPCION.getText());
+            t.setObserv(campoOBSERVACION.getText());
             
             if(campoCODCON.getText().isEmpty())
                 t.setCodcon(0);
@@ -793,6 +785,8 @@ public class VTabvar extends IUSecundario{
                         case "N":
                             focoCampoTIPO();
                         break;
+                        default:
+                        break;
                     }
                 }
             }
@@ -811,9 +805,9 @@ public class VTabvar extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!campoTIPO.getText().isEmpty()){
                         tipo = campoTIPO.getText();
-                        String campo_Descripcion = CTabvar.getObservacion(Integer.parseInt(campoTIPO.getText()));
-                        if(!campo_Descripcion.isEmpty()){
-                            campoDESCRIPCION.setText(campo_Descripcion);                            
+                        String campo_Observacion = CTabvar.getObservacion(Integer.parseInt(campoTIPO.getText()));
+                        if(!campo_Observacion.isEmpty()){
+                            campoOBSERVACION.setText(campo_Observacion);                            
                         }
                         iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+campoTIPO.getText()));
                     }else{
@@ -856,7 +850,7 @@ public class VTabvar extends IUSecundario{
                             }else{
                                 OPCION = "GUARDAR";
                                 campoCORREL.setText(campoNUMERO.getText());
-                                focoCampoNOMBRE();
+                                focoCampoOBSERVACION();
                             }
                         }
                     }
@@ -904,6 +898,8 @@ public class VTabvar extends IUSecundario{
                         case "N":
                             focoCampoNUMERO();
                         break;
+                        default:
+                        break;
                     }
                 }
             }
@@ -925,18 +921,20 @@ public class VTabvar extends IUSecundario{
                         case "S":
                             OPCION = "MODIFICAR";
                             tabvar = t;
-                            focoCampoNOMBRE();
+                            focoCampoOBSERVACION();
                         break;
-                        case "N":
+                        case "N":                            
+                            campoS_N2.setVisible(false);
                             focoCampoS_N3(t);
+                        break;
+                        default:
                         break;
                     }
                 }
             }
         });
     }
-    private void focoCampoS_N3(Tabvar t){
-        campoS_N2.setVisible(false);
+    private void focoCampoS_N3(Tabvar t){        
         campoS_N3.setVisible(true);
         campoS_N3.requestFocus();
         campoS_N3.setText("S");
@@ -947,20 +945,23 @@ public class VTabvar extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     switch(campoS_N3.getText()){
-                        case "S":
+                        case "S":                            
+                            campoS_N3.setVisible(false);
                             eliminarGrupoRegistros(t);
                         break;
                         case "N":
                             focoCampoS_N4(t);
+                        break;
+                        default:
                         break;
                     }
                 }
             }
         });
     }
-    private void eliminarGrupoRegistros(Tabvar t){
+    private void eliminarGrupoRegistros(Tabvar t){        
         setOpacity(0.5f);
-        VEliminarGrupoTabvar iuEliminar = new VEliminarGrupoTabvar(ventanaPrincipal, titulo, "semi-grande", t);
+        VEliminarGrupoTabvar iuEliminar = new VEliminarGrupoTabvar(this, titulo, "semi-grande", t);
         iuEliminar.mostrarVentana();
         setOpacity(1f);
         limpiarCampos();
@@ -983,42 +984,46 @@ public class VTabvar extends IUSecundario{
                         case "N":
                             limpiarCampos();
                         break;
+                        default:
+                        break;
                     }
                 }
             }
         });
-    }
-    private void focoCampoNOMBRE(){
-        campoS_N2.setVisible(false);
-        campoTIPO.setEditar(false);
-        campoNUMERO.setEditar(false);
-        
-        campoNOMBRE.setEditar(true);
-        campoNOMBRE.requestFocus();
-        iuMensaje.setTexto("CAMPO NOMBRE: DESCRIPCION GENERICO DEL PARAMETRO(x20)");
+    }    
+    private void focoCampoOBSERVACION(){
+        campoOBSERVACION.setEditar(true);
+        campoOBSERVACION.requestFocus();
+        iuMensaje.setTexto("CAMPO OBSERVACION: DESCRIPCION GENERICO DEL PARAMETRO(x20)");
         iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F3]=Limpia Campos, [F5]=Navegar TABLA, [F7]=Anterior o [Esc]=Suspende Programa.");
         
-        campoNOMBRE.addKeyListener(new KeyAdapter() {
+        
+        campoOBSERVACION.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    nombre = campoNOMBRE.getText();
-                    if(!campoNOMBRE.getText().isEmpty())
+                    observacion = campoOBSERVACION.getText();
+                    if(!campoOBSERVACION.getText().isEmpty()){
                         focoCampoDESCRIPCION();
-                }
+                    }                    
+                }                
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
                     limpiarCampos();
                 }
-                if(KeyEvent.VK_F5 == e.getKeyCode()){
-                    focoTabla("NOMBRE");
+                if(KeyEvent.VK_5 == e.getKeyCode()){
+                    focoTabla("OBSERVACION");
                 }
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
-                    campoNOMBRE.setText(nombre);
+                    campoOBSERVACION.setText(observacion);
                 }
             }
         });
     }
     private void focoCampoDESCRIPCION(){
+        campoS_N2.setVisible(false);
+        campoTIPO.setEditar(false);
+        campoNUMERO.setEditar(false);
+        
         campoDESCRIPCION.setEditar(true);
         campoDESCRIPCION.requestFocus();
         iuMensaje.setTexto("CAMPO DESCRIPCION: Digite caracteres ALPHA NUMERICOS, DESCRIPCION DEL PARAMETRO (x25)");
@@ -1029,17 +1034,16 @@ public class VTabvar extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     descripcion = campoDESCRIPCION.getText();
-                    if(!campoDESCRIPCION.getText().isEmpty()){
+                    if(!campoDESCRIPCION.getText().isEmpty())
                         focoCampoCODCON();
-                    }                    
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    focoCampoNOMBRE();
+                    focoCampoOBSERVACION();
                 }
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
                     limpiarCampos();
                 }
-                if(KeyEvent.VK_5 == e.getKeyCode()){
+                if(KeyEvent.VK_F5 == e.getKeyCode()){
                     focoTabla("DESCRIPCION");
                 }
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
@@ -1048,7 +1052,6 @@ public class VTabvar extends IUSecundario{
             }
         });
     }
-    
     private void focoCampoCODCON(){
         campoCODCON.setEditar(true);
         campoCODCON.requestFocus();        
@@ -1205,6 +1208,8 @@ public class VTabvar extends IUSecundario{
                             if(OPCION.equalsIgnoreCase("GUARDAR"))
                                 grabarDatosTabvar();
                         break;
+                        default:
+                        break;
                     }
                 }
             }
@@ -1270,6 +1275,8 @@ public class VTabvar extends IUSecundario{
                                 case "GUARDAR":
                                     grabarDatosTabvar();
                                 break;
+                                default:
+                                break;
                             }                            
                         }else{
                             campoFECHA2.setDateFormatString("yyyy-MM-dd");
@@ -1314,12 +1321,12 @@ public class VTabvar extends IUSecundario{
                         case "NUMERO":
                             focoCampoNUMERO();                            
                         break;
-                        case "NOMBRE":
-                            focoCampoNOMBRE();
+                        case "OBSERVACION":
+                            focoCampoOBSERVACION();
                         break;
                         case "DESCRIPCION":
                             focoCampoDESCRIPCION();
-                        break;
+                        break;                        
                         case "CODCON":
                             focoCampoCODCON();
                         break;
@@ -1337,6 +1344,8 @@ public class VTabvar extends IUSecundario{
                         break;
                         case "FECHA2":
                             focoCampoFECHA2();
+                        break;
+                        default:
                         break;
                     }
                     iuTabla.setFocusable(false);

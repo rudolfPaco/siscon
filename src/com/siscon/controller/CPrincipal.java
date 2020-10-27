@@ -8,10 +8,8 @@ package com.siscon.controller;
 import SIGU.main.Principal;
 import com.siscon.view.VLogueo;
 import com.siscon.view.VPrincipal;
-import com.siscon.view.tabvar.VTabvar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -31,11 +29,11 @@ public class CPrincipal {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        VLogueo iuLogueo = new VLogueo(null, "Sistema Contable SISCON Ver. 7.2 @ Autor: Juan Jose Caballero Reyna", "grande");
+        VLogueo iuLogueo = new VLogueo(null, "Sistema Contable SISCON Ver. 7.2 @ Diseño:Juan Jose Caballero Reyna, Programacion:Rudolf Felipez Mancilla", "grande");
         iuLogueo.mostrarVentana();
         if(iuLogueo.getEstado()){
-            VPrincipal iuPrincipal = new VPrincipal(iuLogueo.getTabvar(), iuLogueo.getUsuario(), "Sistema Contable SISCON Ver. 7.2 @ Autor: Juan Jose Caballero Reyna", "/imagenes/icono.png");
+            VPrincipal iuPrincipal = new VPrincipal(iuLogueo.getTabvar(), iuLogueo.getUsuario(), "Sistema Contable SISCON Ver. 7.2 @ Diseño:Juan Jose Caballero Reyna Programacion:Rudolf Felipez Mancilla" , "/imagenes/icono.png");
             iuPrincipal.mostrar();
-        }
+        }        
     }
 }
