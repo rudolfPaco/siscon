@@ -15,6 +15,7 @@ import SIGU.ventanas.IUPrincipal;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.view.asientoSimple.VAsientoSimple;
 import com.siscon.view.conmae.VConmae;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
@@ -260,6 +261,12 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(0.6f);
                 VTabvar vTabvar = new VTabvar(this, titulo, "grande", usuario, tabvar);
                 vTabvar.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "11":
+                setOpacity(0.6f);
+                VAsientoSimple iuSimple = new VAsientoSimple(this, titulo, "grande", usuario, tabvar);
+                iuSimple.mostrarVentana();
                 setOpacity(1f);
             break;
             case "28":

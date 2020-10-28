@@ -117,7 +117,7 @@ public class VTabvar extends IUSecundario{
             private IUCampoTexto campoS_N4;
             private IUCampoTexto campoS_N5;
             private IUCampoTexto campoS_N6;
-            private IUCampoTexto campoS_N7;            
+            private IUCampoTexto campoS_N7;
             
     private final Usuario usuario;
     private Tabvar tabvar;

@@ -292,7 +292,7 @@ public class Fecha {
     public String getFecha1(){
         Calendar calendario = Calendar.getInstance();
         calendario.setTime(getDate(fecha));
-        return new SimpleDateFormat("EEEE dd 'de' MMMM 'del' YYYY", Locale.getDefault()).format(calendario.getTime()).toLowerCase();
+        return new SimpleDateFormat("EEEE dd 'de' MMMM 'del' YYYY", Locale.getDefault()).format(calendario.getTime()).toUpperCase();
     }
 
     /**
