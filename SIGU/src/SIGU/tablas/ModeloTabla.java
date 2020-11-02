@@ -33,6 +33,10 @@ public class ModeloTabla<T> extends AbstractTableModel{
         lista.add(elemento);
         fireTableDataChanged();
     }
+    public void setUpdateFila(int indice, T elemento){
+        lista.set(indice, elemento);
+    }
+    
     public void removeFila(int rowIndex) {
         lista.remove(rowIndex);
         fireTableDataChanged();

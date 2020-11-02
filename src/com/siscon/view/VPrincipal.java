@@ -15,8 +15,10 @@ import SIGU.ventanas.IUPrincipal;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
-import com.siscon.view.asientoSimple.VAsientoSimple;
+import com.siscon.view.contra.VContra;
 import com.siscon.view.conmae.VConmae;
+import com.siscon.view.contra.VAsientoTipo;
+import com.siscon.view.contra.VAyudaContra;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
 import java.awt.Color;
@@ -255,7 +257,7 @@ public class VPrincipal extends IUPrincipal{
                 vConmae.mostrarVentana();
                 setOpacity(1f);
             break;
-            case "02":                
+            case "02":
             break;
             case "03":
                 setOpacity(0.6f);
@@ -264,8 +266,8 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(1f);
             break;
             case "11":
-                setOpacity(0.6f);
-                VAsientoSimple iuSimple = new VAsientoSimple(this, titulo, "grande", usuario, tabvar);
+                setOpacity(0.6f);                
+                VContra iuSimple = new VContra(this, titulo, "grande", usuario, tabvar);
                 iuSimple.mostrarVentana();
                 setOpacity(1f);
             break;

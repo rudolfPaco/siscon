@@ -23,6 +23,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -36,7 +38,8 @@ public class IUComboBox extends JComboBox<String> {
     private int size;
     private Color colorLetra = new Color(2, 67, 109);
     private ArrayList<String> opciones = new ArrayList<>();
-    private int nroColumnas = 0;
+    private int nroColumnas = 0;    
+    private Border bordeComponente;
     
     /**
      * Interfaz de Usuario Combo Box, componente que hereda del JComboBox, recibe dos parametros; una lista de opciones y su limitacion. por defecto es editable, pero se puede restringir numeros decimales, enteros o letras, mayusculas.
@@ -75,8 +78,10 @@ public class IUComboBox extends JComboBox<String> {
         //setOpaque(false);        
         setFont(new Font("Verdana", Font.PLAIN, size));
         //setBorder(new BevelBorder(BevelBorder.RAISED, Color.LIGHT_GRAY, Color.WHITE, Color.LIGHT_GRAY, Color.WHITE));
-        setColorLetra(colorLetra);
+        //setColorLetra(colorLetra);
+        setForeground(colorLetra);
         setTipo("");        
+        setBordeComponente(getBorder());
         //setDeshabilitarTexto(true);
         //setOpacidad(false);                
     }
@@ -98,7 +103,7 @@ public class IUComboBox extends JComboBox<String> {
     public String getTexto(){
         return ((JTextField)getEditor().getEditorComponent()).getText();
     }
-    public void setColorLetra(Color colorLetra){
+    public void setColorLetra(Color colorLetra){        
         ((JTextField)getEditor().getEditorComponent()).setForeground(colorLetra);
     }
     public void setOpacidad(boolean opacidad){
@@ -107,7 +112,8 @@ public class IUComboBox extends JComboBox<String> {
     
     public void setEditar(boolean estado){
         setFocusable(estado);
-        setEditable(estado);
+        setEnabled(estado);
+        ((JTextField)getEditor().getEditorComponent()).setEditable(estado);        
     }
     private void setEventos(){
         
@@ -117,8 +123,8 @@ public class IUComboBox extends JComboBox<String> {
                 //if(KeyEvent.VK_ENTER == e.getKeyCode()){
                 //    transferFocus();
                 //}
-                if(KeyEvent.VK_F2 == e.getKeyCode())
-                    transferFocusBackward();
+                //if(KeyEvent.VK_F2 == e.getKeyCode())
+                  //  transferFocusBackward();
             }
         });
         addKeyListener(new KeyAdapter() {
@@ -199,4 +205,13 @@ public class IUComboBox extends JComboBox<String> {
     public void setDeshabilitarTexto(boolean estado) {
         this.estadoTexto = estado;
     }
+
+    public Border getBordeComponente() {
+        return bordeComponente;
+    }
+
+    public void setBordeComponente(Border bordeComponente) {
+        this.bordeComponente = bordeComponente;
+    }
+    
 }

@@ -76,7 +76,7 @@ public class VEliminarGrupoTabvar extends IUSecundario{
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.tabvar = tabvar;
-        construirPanel(new Area(An()-6, Al()-29));        
+        construirPanel(new Area(An()-6, Al()-29));
         algoritmoInicial();
     }
     private void construirPanel(Area a){

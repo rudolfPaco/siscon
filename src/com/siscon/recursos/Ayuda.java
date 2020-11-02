@@ -11,6 +11,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,6 +75,7 @@ public class Ayuda {
         }
         return arreglo;
     }
+    
     public static String examinarArchivo(JFrame ventanaPrincipal, String direccionBuscar) {
 
         String direccionArchivo = "";
@@ -95,6 +98,24 @@ public class Ayuda {
             }
         }
         return direccionArchivo;
+    }
+    public static ArrayList<String> aOpciones(ArrayList<String> lista, String primeraOpcion){
+        String[] arreglo = new String[lista.size()+1];
+        int indice = 0;
+        for (int i = 0; i < arreglo.length; i++) {
+            if(i == 0)
+                arreglo[i] = primeraOpcion;
+            else{
+                arreglo[i] = lista.get(indice);
+                indice++;
+            }
+        }
+        ArrayList<String> opciones = new ArrayList<>();
+        for (int i = 0; i < arreglo.length; i++) {
+            String dato = arreglo[i];
+            opciones.add(dato);
+        }
+        return opciones;
     }
     public static ArrayList<String> getListColumnas(String columna, String sql){        
         ArrayList<String> lista = new ArrayList<>();
@@ -172,7 +193,10 @@ public class Ayuda {
         }else
             return "";        
     }
-
+    public static double acotarNumero(double numero, int cota){
+        BigDecimal big = new BigDecimal(numero);
+        return big.setScale(cota, RoundingMode.HALF_UP).doubleValue();
+    }
     public static void main(String[] arg) {
         String fecha = "01/01/2015";
         System.out.println("la fecha es: " + fecha);

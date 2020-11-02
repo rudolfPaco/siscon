@@ -20,7 +20,10 @@ import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import sun.swing.SwingAccessor;
 
 /**
  *
@@ -31,7 +34,8 @@ public class IUCampoTexto extends JTextField{
     private int nroColumnas;
     private  int size;
     private Area area;
-    private int posicionH;
+    private int posicionH = SwingConstants.LEFT;
+    private Border bordeComponente;
         
     /**
      * Interfaz de Usuario Campo de Texto, se crea el componente al inicio de tipo texto, pero se puede restringir los datos de entrada al campo de texto.
@@ -80,6 +84,7 @@ public class IUCampoTexto extends JTextField{
         setSelectionColor(new Color(0, 0, 0, 0));
         setMargin(new Insets(0, 0, 0, 0));
         setBorder(new BevelBorder(BevelBorder.RAISED, Color.LIGHT_GRAY, Color.WHITE, Color.LIGHT_GRAY, Color.WHITE));        
+        setBordeComponente(getBorder());
     }    
     public void setEditar(boolean estado){
         setFocusable(estado);
@@ -93,17 +98,19 @@ public class IUCampoTexto extends JTextField{
                 //if(KeyEvent.VK_ENTER == e.getKeyCode()){
                 //    transferFocus();
                 //}
-                if(KeyEvent.VK_F2 == e.getKeyCode())
-                    transferFocusBackward();
+                //if(KeyEvent.VK_F2 == e.getKeyCode())
+                    //transferFocusBackward();
             }
         });
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if(getText().length() == nroColumnas)
-                    e.consume();
-            }
-        });
+        if(nroColumnas > 0){
+            addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if(getText().length() == nroColumnas)
+                        e.consume();
+                }
+            });
+        }
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -162,4 +169,13 @@ public class IUCampoTexto extends JTextField{
             }
         });
     }
+
+    public Border getBordeComponente() {
+        return bordeComponente;
+    }
+
+    public void setBordeComponente(Border bordeComponente) {
+        this.bordeComponente = bordeComponente;
+    }
+    
 }

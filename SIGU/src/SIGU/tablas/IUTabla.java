@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -24,6 +25,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -83,13 +86,14 @@ public class IUTabla extends JTable{
         
         deslizador = new JScrollPane(this, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);        
         //deslizador.setFocusable(false);
-        panel.agregar(deslizador, area);        
-        /*final TableRowSorter<TableModel> sorter = new TableRowSorter<>(iuTabla.tabla.getModel());
-        iuTabla.tabla.setRowSorter(sorter);
+        panel.agregar(deslizador, area);
+        /*
+        final TableRowSorter<TableModel> sorter = new TableRowSorter<>(getModel());
+        setRowSorter(sorter);
         try {
             sorter.setRowFilter(RowFilter.regexFilter(dato));
-        } catch (Exception ex) {System.out.println("Error: Tabla Plan de Cuentas"+ex.getMessage());}*/
-        
+        } catch (Exception ex) {System.out.println("Error: Tabla Plan de Cuentas"+ex.getMessage());}
+        */
         
         /*iuTabla.tabla.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e) {                
