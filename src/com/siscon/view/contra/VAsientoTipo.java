@@ -147,12 +147,15 @@ public class VAsientoTipo extends IUSecundario{
     }
     private void construirTercerPanel(Area a){
         iuTituloMensaje = new IUEtiqueta(tercerPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
-        iuTituloMensaje.setSubrayarTexto(true);
+        iuTituloMensaje.setSubrayarTexto(true);        
         iuMensaje = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(95), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
+        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
         iuInformacion = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(95), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);       
+        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));        
         campoS_N = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(95), a.Y(2) + a.AlP(20), a.AnP(5), a.AlP(40)), SwingConstants.CENTER);
         campoS_N.setVisible(false);
-        campoS_N.setBorder(new LineBorder(Color.GREEN, 2));
+        campoS_N.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N.setBackground(new Color(255, 210, 0));
         campoS_N.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -164,6 +167,7 @@ public class VAsientoTipo extends IUSecundario{
                 }
             }
         });
+        campoS_N.setForeground(Color.BLACK);
     }
     private void algoritmoInicial(){
         focoCampoTabla1();
@@ -171,6 +175,7 @@ public class VAsientoTipo extends IUSecundario{
     private void focoCampoTabla1(){
         iuTabla1.setFocusable(true);
         iuTabla1.requestFocus();
+        iuInformacion.setVisible(true);
         iuMensaje.setTexto("CAMPO TABLA: Seleccione un Registro de ASIENTO TIPO. Utilize las Teclas con Flecha Arriba y Abajo.");
         iuInformacion.setTexto("ATENCION: ENTER=Aceptar Asiento Seleccionado, ESC=Suspender.");
         iuTabla1.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
@@ -197,8 +202,9 @@ public class VAsientoTipo extends IUSecundario{
         campoS_N.setEditar(true);
         campoS_N.requestFocus();
         campoS_N.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("CONFIRMACION: Esta seguro que desea Utilizar los ASIENTOS TIPO seleccionados.?  S/N");
-        iuInformacion.setTexto("");
+        iuInformacion.setVisible(false);
         campoS_N.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

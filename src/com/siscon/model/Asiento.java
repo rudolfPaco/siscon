@@ -13,7 +13,7 @@ public class Asiento {
     private int nro;
     private long codigo;
     private String cuenta;
-    private double deber;
+    private double debe;
     private double haber;
     private double monto;
 
@@ -45,12 +45,12 @@ public class Asiento {
         this.cuenta = cuenta;
     }
 
-    public double getDeber() {
-        return deber;
+    public double getDebe() {
+        return debe;
     }
 
-    public void setDeber(double deber) {
-        this.deber = deber;
+    public void setDebe(double debe) {
+        this.debe = debe;
     }
 
     public double getHaber() {
@@ -69,6 +69,6 @@ public class Asiento {
     }
     @Override
     public String toString() {
-        return "Asiento{" + "nro=" + nro + ", codigo=" + codigo + ", cuenta=" + cuenta + ", deber=" + deber + ", haber=" + haber + ", monto=" + monto + '}';
+        return "Asiento{" + "nro=" + nro + ", codigo=" + codigo + ", cuenta=" + cuenta + ", deber=" + debe + ", haber=" + haber + ", monto=" + monto + '}';
     }
 }

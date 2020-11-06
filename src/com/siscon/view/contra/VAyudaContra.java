@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
@@ -112,7 +113,7 @@ public class VAyudaContra extends IUSecundario{
         new String[]{"CODIGO", "DESCRIPCION"}, 
         new Class[]{Long.class, String.class}, 
         new int[]{30, 70}, 
-        CConmae.getLista("SELECT * FROM CONMAE"), 
+        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2"), 
         new ModeloTabla<Conmae>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
@@ -141,11 +142,14 @@ public class VAyudaContra extends IUSecundario{
     private void construirTercerPanel(Area a){
         iuTituloMensaje = new IUEtiqueta(tercerPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
         iuTituloMensaje.setSubrayarTexto(true);
-        iuMensaje = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
-        iuInformacion = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(95), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);       
-        campoS_N = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(95), a.Y(2) + a.AlP(20), a.AnP(5), a.AlP(40)), SwingConstants.CENTER);
+        iuMensaje = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(93), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
+        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
+        iuInformacion = new IUPanelEtiqueta(tercerPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(93), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);       
+        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));
+        campoS_N = new IUCampoTexto(tercerPanel, 1, 20, new Area(a.X(2) + a.AnP(93), a.Y(2) + a.AlP(20), a.AnP(7), a.AlP(40)), SwingConstants.CENTER);
         campoS_N.setVisible(false);
-        campoS_N.setBorder(new LineBorder(Color.GREEN, 2));
+        campoS_N.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N.setBackground(new Color(255, 210, 0));
         campoS_N.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -157,6 +161,7 @@ public class VAyudaContra extends IUSecundario{
                 }
             }
         });
+        campoS_N.setForeground(Color.BLACK);
     }
     private void algoritmoInicial(){
         focoCampoBusqueda();
@@ -183,6 +188,7 @@ public class VAyudaContra extends IUSecundario{
         iuBusqueda.requestFocus();
         //iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE"));
         iuTabla.setFocusable(false);        
+        iuInformacion.setVisible(true);
         iuMensaje.setTexto("CAMPO BUSQUEDA: Realize la busqueda por CODIGO o DESCRIPCION.");
         iuInformacion.setTexto("ATENCION: ENTER=Aceptar Codigo, F5=Navegar Tabla, ESC=Suspender.");
         iuBusqueda.addKeyListener(new KeyAdapter() {
@@ -216,7 +222,9 @@ public class VAyudaContra extends IUSecundario{
         campoS_N.setEditar(true);
         campoS_N.setText("S");
         campoS_N.requestFocus();
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("DESEA CONFIRMAR LA SELECCION DEL CODIGO Y DESCRIPCION?   S/N");
+        iuInformacion.setVisible(false);
         iuInformacion.setTexto("");
         campoS_N.addKeyListener(new KeyAdapter() {
             @Override
@@ -250,23 +258,27 @@ public class VAyudaContra extends IUSecundario{
         iuTabla.requestFocus();
         iuMensaje.setTexto("CAMPO TABLA: Seleccione un CODIGO de la TABLA, y PRESIONE ENTER.");
         iuInformacion.setTexto("ATENCION: ENTER=Aceptar Codigo, F2=Retroceder, ESC=Suspender.");
+        iuTabla.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+        iuTabla.getActionMap().put("Enter", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(iuTabla.isFilaSeleccionado()){
+                    if(iuTabla.getRowSorter() != null){
+                        conmae = (Conmae) iuTabla.modeloTabla.getFila(iuTabla.getRowSorter().convertRowIndexToModel(iuTabla.getSelectedRow()));                            
+                    }else{
+                        conmae = (Conmae) iuTabla.modeloTabla.getFila(iuTabla.getSelectedRow());
+                    }
+                    iuCodigo.setText(String.valueOf(conmae.getCuetot()));
+                    iuDescripcion.setText(conmae.getDescri());
+                    iuCodigo.setBorder(new LineBorder(Color.GREEN));
+                    iuDescripcion.setBorder(new LineBorder(Color.GREEN));                    
+                    focoCampoN_S();
+                }               
+            }
+        });
         iuTabla.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    if(iuTabla.isFilaSeleccionado()){
-                        if(iuTabla.getRowSorter() != null){
-                            conmae = (Conmae) iuTabla.modeloTabla.getFila(iuTabla.getRowSorter().convertRowIndexToModel(iuTabla.getSelectedRow()));                            
-                        }else{
-                            conmae = (Conmae) iuTabla.modeloTabla.getFila(iuTabla.getSelectedRow());
-                        }
-                        iuCodigo.setText(String.valueOf(conmae.getCuetot()));
-                        iuDescripcion.setText(conmae.getDescri());
-                        iuCodigo.setBorder(new LineBorder(Color.GREEN));
-                        iuDescripcion.setBorder(new LineBorder(Color.GREEN));
-                        focoCampoN_S();
-                    }                    
-                }
+            public void keyPressed(KeyEvent e) {                
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoBusqueda();
                 }

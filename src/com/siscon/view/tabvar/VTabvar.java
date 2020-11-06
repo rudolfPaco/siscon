@@ -5,7 +5,6 @@
  */
 package com.siscon.view.tabvar;
 
-import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
@@ -14,22 +13,16 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
-import SIGU.tablas.RendererDatosTabla;
 import SIGU.ventanas.IUSecundario;
-import com.siscon.controller.CConmae;
 import com.siscon.controller.CTabvar;
-import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
-import com.siscon.view.tablas.VTablaTabvar;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -792,7 +785,15 @@ public class VTabvar extends IUSecundario{
             }
         });
     }
-    
+    private void actualizarCamposConsultas(){
+        panelDatosTabvar.removeAll();
+        construirPanelDatosTabvar(new Area(4, 4, panelDatosTabvar.area.An() - 16, panelDatosTabvar.area.Al() -8));
+        panelDatosTabvar.updateUI();
+        
+        campoTIPO.setText(tipo);
+        campoNUMERO.setText(numero);
+        campoDESCRIPCION.setText(descripcion);
+    }
     private void focoCampoTIPO(){
         iuTabla.actualizarTabla(new ArrayList());
         campoTIPO.setEditar(true);
@@ -809,7 +810,10 @@ public class VTabvar extends IUSecundario{
                         if(!campo_Observacion.isEmpty()){
                             campoOBSERVACION.setText(campo_Observacion);                            
                         }
-                        iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+campoTIPO.getText()));
+                        iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+campoTIPO.getText()));                       
+                        
+                        actualizarCamposConsultas();                        
+                        
                     }else{
                         campoTIPO.setText("0");
                     }
@@ -843,7 +847,6 @@ public class VTabvar extends IUSecundario{
                         int tipo = Integer.parseInt(campoTIPO.getText());
                         int numero = Integer.parseInt(campoNUMERO.getText());
                         if(tipo > 0 && numero > 0){
-
                             Tabvar t = CTabvar.getTabvar(tipo, numero);
                             if(t != null){                                
                                 focoCampoN_S1(t);

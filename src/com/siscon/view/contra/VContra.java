@@ -16,6 +16,7 @@ import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
 import SIGU.ventanas.IUSecundario;
+import com.siscon.controller.CConmae;
 import com.siscon.controller.CTabvar;
 import com.siscon.model.Asiento;
 import com.siscon.model.Conmae;
@@ -33,10 +34,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -104,12 +108,12 @@ public class VContra extends IUSecundario{
                         private IUPanelEtiqueta iuEtiquetaHaber;
                         private IUCampoTexto iuHaber;
                         private IUPanelEtiqueta iuEtiquetaMontoDolares;
-                        private IUCampoTexto iuMontoDolares;
+                        private IUCampoTexto iuDolares;
                     private IUTabla iuTabla;
                         private IUEtiqueta iuTotalComprobante;
                         private IUEtiqueta iuTotalDebe;
                         private IUEtiqueta iuTotalHaber;
-                        private IUEtiqueta iuTotalMontoDolares;
+                        private IUEtiqueta iuTotalDolares;
                 
                 private IUPanel quintoPanelC;
                 private IUPanel sextoPanelC;
@@ -192,11 +196,16 @@ public class VContra extends IUSecundario{
     private void construirSegundoPanel(Area a){
         iuTituloMensaje = new IUEtiqueta(segundoPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
         iuTituloMensaje.setSubrayarTexto(true);
-        iuMensaje = new IUPanelEtiqueta(segundoPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_ATENCION, true);
+        iuMensaje = new IUPanelEtiqueta(segundoPanel, new Area(a.X(), a.Y(2) + a.AlP(20), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Color.BLACK, true);
+        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
         iuInformacion = new IUPanelEtiqueta(segundoPanel, new Area(a.X(), a.Y(3) + a.AlP(60), a.AnP(97), a.AlP(40)), "", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);       
+        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));        
+        iuInformacion.setFuente(new Font("LMicrosoft Sans Serif", Font.PLAIN, 16));
+        
         campoS_N1 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N1.setVisible(false);
-        campoS_N1.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N1.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N1.setBackground(new Color(255, 210, 0));        
         campoS_N1.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -208,23 +217,29 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        campoS_N1.setForeground(Color.BLACK);
+        
         campoS_N2 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N2.setVisible(false);
-        campoS_N2.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N2.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N2.setBackground(new Color(255, 210, 0));
         campoS_N2.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_S == e.getKeyCode()){
-                    campoS_N2.setText("S");
+                if (KeyEvent.VK_D == e.getKeyCode()){
+                    campoS_N2.setText("D");
                 }
-                if(KeyEvent.VK_N == e.getKeyCode()){
-                    campoS_N2.setText("N");
+                if(KeyEvent.VK_H == e.getKeyCode()){
+                    campoS_N2.setText("H");
                 }
             }
         });
+        campoS_N2.setForeground(Color.BLACK);
+        
         campoS_N3 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N3.setVisible(false);
-        campoS_N3.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N3.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N3.setBackground(new Color(255, 210, 0));
         campoS_N3.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -236,9 +251,12 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        campoS_N3.setForeground(Color.BLACK);
+        
         campoS_N4 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N4.setVisible(false);
-        campoS_N4.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N4.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N4.setBackground(new Color(255, 210, 0));
         campoS_N4.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -250,9 +268,12 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        campoS_N4.setForeground(Color.BLACK);
+        
         campoS_N5 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N5.setVisible(false);
-        campoS_N5.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N5.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N5.setBackground(new Color(255, 210, 0));
         campoS_N5.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -264,9 +285,12 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        campoS_N5.setForeground(Color.BLACK);
+        
         campoS_N6 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N6.setVisible(false);
-        campoS_N6.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N6.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N6.setBackground(new Color(255, 210, 0));
         campoS_N6.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -278,9 +302,12 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        campoS_N6.setForeground(Color.BLACK);
+        
         campoS_N7 = new IUCampoTexto(segundoPanel, 1, 20, new Area(a.X(2) + a.AnP(97), a.Y(2) + a.AlP(20), a.AnP(3), a.AlP(40)), SwingConstants.CENTER);
         campoS_N7.setVisible(false);
-        campoS_N7.setBorder(new LineBorder(Color.GREEN, 3));
+        campoS_N7.setBorder(new LineBorder(Color.BLACK, 3));
+        campoS_N7.setBackground(new Color(255, 210, 0));
         campoS_N7.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -292,6 +319,7 @@ public class VContra extends IUSecundario{
                 }
             }
         });        
+        campoS_N7.setForeground(Color.BLACK);
     }
     private void construirPanelComprobante(Area a){
         primerPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(), a.An(), a.AlP(5)), false);
@@ -388,7 +416,7 @@ public class VContra extends IUSecundario{
                     case 2:
                         return lista.get(rowIndex).getCuenta();
                     case 3:
-                        return lista.get(rowIndex).getDeber();
+                        return lista.get(rowIndex).getDebe();
                     case 4:
                         return lista.get(rowIndex).getHaber();
                     case 5:
@@ -402,38 +430,55 @@ public class VContra extends IUSecundario{
         iuTotalComprobante = new IUEtiqueta(cuartoPanelC, "Total Comprobante (en Bolivianos)    ", new Area(a.X() + a.AnP(20), a.Y(2) + a.AlP(90), a.AnP(50), a.AlP(10)), 16, "RIGHT", Ayuda.COLOR_ROJO);
         iuTotalDebe = new IUEtiqueta(cuartoPanelC, "0.0", new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 16, "RIGHT", true);
         iuTotalHaber = new IUEtiqueta(cuartoPanelC, "0.0", new Area(a.X(3) + a.AnP(80), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 16, "RIGHT", true);
-        iuTotalMontoDolares = new IUEtiqueta(cuartoPanelC, "0.0", new Area(a.X(4) + a.AnP(90), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 16, "RIGHT", true);
+        iuTotalDolares = new IUEtiqueta(cuartoPanelC, "0.0", new Area(a.X(4) + a.AnP(90), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 16, "RIGHT", true);
     }
     private void construirQuintoPanelC(Area a){
         iuEtiquetaNro = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(), a.Y(), a.AnP(5), a.AlP(45)), "No", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);        
-        iuNro = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(), a.Y() + a.AlP(45), a.AnP(5), a.AlP(55)), SwingConstants.CENTER);
+        iuNro = new IUCampoTexto(quintoPanelC, 0, 16, new Area(a.X(), a.Y() + a.AlP(45), a.AnP(5), a.AlP(55)), SwingConstants.CENTER);
         iuNro.setEditar(false);
+        //iuNro.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuEtiquetaCodigo = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(2) + a.AnP(5), a.Y(), a.AnP(15), a.AlP(45)), "CODIGO", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuCodigo = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(2) + a.AnP(5), a.Y() + a.AlP(45), a.AnP(15), a.AlP(55)), SwingConstants.CENTER);
+        iuCodigo = new IUCampoTexto(quintoPanelC, 0, 16, new Area(a.X(2) + a.AnP(5), a.Y() + a.AlP(45), a.AnP(15), a.AlP(55)), SwingConstants.CENTER);
         iuCodigo.setEditar(false);
         
         iuEtiquetaDescripcion = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(3) + a.AnP(20), a.Y(), a.AnP(50), a.AlP(45)), "DESCRIPCION DE CUENTA", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuDescripcion = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(3) + a.AnP(20), a.Y() + a.AlP(45), a.AnP(50), a.AlP(55)), SwingConstants.LEFT);
+        iuDescripcion = new IUCampoTexto(quintoPanelC, 0, 16, new Area(a.X(3) + a.AnP(20), a.Y() + a.AlP(45), a.AnP(50), a.AlP(55)), SwingConstants.LEFT);
         iuDescripcion.setEditar(false);
         
         iuEtiquetaDebe = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(4) + a.AnP(70), a.Y(), a.AnP(10), a.AlP(45)), "DEBE", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuDebe = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(4) + a.AnP(70), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
+        iuDebe = new IUCampoTexto(quintoPanelC, 12, 16, new Area(a.X(4) + a.AnP(70), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
         iuDebe.setEditar(false);
         
         iuEtiquetaHaber = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(5) + a.AnP(80), a.Y(), a.AnP(10), a.AlP(45)), "HABER", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuHaber = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(5) + a.AnP(80), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
+        iuHaber = new IUCampoTexto(quintoPanelC, 12, 16, new Area(a.X(5) + a.AnP(80), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
         iuHaber.setEditar(false);
         
         iuEtiquetaMontoDolares = new IUPanelEtiqueta(quintoPanelC, new Area(a.X(6) + a.AnP(90), a.Y(), a.AnP(10), a.AlP(45)), "MONTO $us", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuMontoDolares = new IUCampoTexto(quintoPanelC, 2, 16, new Area(a.X(6) + a.AnP(90), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
-        iuMontoDolares.setEditar(false);
+        iuDolares = new IUCampoTexto(quintoPanelC, 12, 16, new Area(a.X(6) + a.AnP(90), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
+        iuDolares.setEditar(false);
     }
     
     private void algoritmoInicial(){
         restringirCampos("TIPDOC", true);
         focoCampoTipoDocumento(); 
-        
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
+        panel.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                if(!iuMonto.getText().isEmpty() && !iuTotalDebe.getText().isEmpty() && !iuTotalHaber.getText().isEmpty() && !iuTotalDolares.getText().isEmpty()){
+                    double montoTotal = Double.parseDouble(iuMonto.getText());
+                    double debeTotal = Double.parseDouble(iuTotalDebe.getText());
+                    double haberTotal = Double.parseDouble(iuTotalHaber.getText());
+                    double dolaresTotal = Double.parseDouble(iuTotalDolares.getText());
+                    if((montoTotal == debeTotal && montoTotal  == haberTotal) && dolaresTotal == 0){
+                        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION"))
+                            Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");                     
+                    }
+                }
+                dispose();
+            }
+        }); 
     }
     private void restringirCampos(String campo, boolean state){        
         iuTipDoc.setEditar(false);
@@ -449,7 +494,7 @@ public class VContra extends IUSecundario{
         iuDescripcion.setEditar(false);
         iuDebe.setEditar(false);
         iuHaber.setEditar(false);
-        iuMontoDolares.setEditar(false);
+        iuDolares.setEditar(false);
         switch(campo){
             case"TIPDOC":
                 iuTipDoc.setEditar(state);
@@ -491,14 +536,14 @@ public class VContra extends IUSecundario{
                 iuHaber.setEditar(state);
             break;
             case "MONTO_DOLARES":
-                iuMontoDolares.setEditar(state);
+                iuDolares.setEditar(state);
             break;
             default:                
             break;
         }
     }
     private void pintarBordeCampo(String campo){
-        Border borde = new LineBorder(Color.GREEN);        
+        Border borde = new LineBorder(Color.blue, 2);        
         
         iuTipDoc.setBorder(iuTipDoc.getBordeComponente());
         iuMonto.setBorder(iuMonto.getBordeComponente());
@@ -508,13 +553,21 @@ public class VContra extends IUSecundario{
         iuCuenta.setBorder(iuCuenta.getBordeComponente());
         iuBanco.setBorder(iuBanco.getBordeComponente());
         iuCheque.setBorder(iuCheque.getBordeComponente());
+        
         iuNro.setBorder(iuNro.getBordeComponente());
+        iuNro.setEditar(false);
         iuCodigo.setBorder(iuCodigo.getBordeComponente());
+        iuCodigo.setEditar(false);
         iuDescripcion.setBorder(iuDescripcion.getBordeComponente());
+        iuDescripcion.setEditar(false);
         iuDebe.setBorder(iuDebe.getBordeComponente());
+        iuDebe.setEditar(false);
         iuHaber.setBorder(iuHaber.getBordeComponente());
-        iuMontoDolares.setBorder(iuMontoDolares.getBordeComponente());
-        iuTabla.setSelectionBackground(null);
+        iuHaber.setEditar(false);
+        iuDolares.setBorder(iuDolares.getBordeComponente());
+        iuDolares.setEditar(false);
+        iuTabla.setSelectionBackground(iuTabla.getSelectionBackground());
+        iuTabla.setEnabled(false);
         switch(campo){
             case"TIPDOC":
                 iuTipDoc.setBorder(borde);
@@ -542,24 +595,31 @@ public class VContra extends IUSecundario{
             break;
             case "TABLA": 
                 iuTabla.setSelectionBackground(Color.GREEN);
+                iuTabla.setEnabled(true);
             break;
             case "NRO":
                 iuNro.setBorder(borde);
+                iuNro.setEditar(true);
             break;
             case "CODIGO":
                 iuCodigo.setBorder(borde);
+                iuCodigo.setEditar(true);
             break;
             case "DESCRIPCION":
                 iuDescripcion.setBorder(borde);
+                iuDescripcion.setEditar(true);
             break;
             case "DEBE":
                 iuDebe.setBorder(borde);
+                iuDebe.setEditar(true);
             break;
             case "HABER":
                 iuHaber.setBorder(borde);
+                iuHaber.setEditar(true);
             break;
             case "MONTO_DOLARES":
-                iuMontoDolares.setBorder(borde);
+                iuDolares.setBorder(borde);
+                iuDolares.setEditar(true);
             break;
             default:
             break;
@@ -692,7 +752,7 @@ public class VContra extends IUSecundario{
                         switch(iuTipDoc.getTexto()){
                             case "INGRESOS":
                                 iuEtiquetaDocRef.setTexto("Recibido de: ");
-                                camposDocumentoConcluidos();
+                                campoS_N1();
                             break;
                             case "EGRESOS":
                                 iuEtiquetaDocRef.setTexto("Pagado a: ");
@@ -774,7 +834,7 @@ public class VContra extends IUSecundario{
                     if(iuCheque.getText().isEmpty()){
                         iuCheque.setText("0");                        
                     }
-                    camposDocumentoConcluidos();
+                    campoS_N1();
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoBanco();
@@ -782,66 +842,46 @@ public class VContra extends IUSecundario{
             }
         });
     }
-    private void camposDocumentoConcluidos(){
-        boolean verificador = false;
-        if(!iuMonto.getText().isEmpty()){
-            if(!iuDocRef.getText().isEmpty()){
-                if(!iuConcepto.getText().isEmpty()){
-                    verificador = true;
-                }else{
-                    iuMensaje.setTexto("el CAMPO CONCEPTO: NO puede estar vacio.");
-                    focoCampoConcepto();
-                }
-            }else{
-                iuMensaje.setTexto("el CAMPO "+iuEtiquetaDocRef.getTexto().toUpperCase()+" NO puede estar vacio.");
-                focoCampoDocRef();
-            }
-        }else{
-            iuMensaje.setTexto("el CAMPO MONTO: NO puede estar vacio. ");
-            focoCampoMonto();
-        }
-        if(verificador){
-            restringirCampos("", false);
-            pintarBordeCampo("");
-            campoS_N1.setVisible(true);
-            campoS_N1.requestFocus();
-            campoS_N1.setText("S");
-            iuMensaje.setTexto("Esta CONFORME con los Datos Generales del Asiento Contable. ?    S/N");
-            iuInformacion.setTexto("");
-            campoS_N1.addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                        switch(campoS_N1.getText()){
-                            case "S":
-                                deshabilitarCampoS_N();
-                                focoCampoNro();
-                                inhabilitarCampos();
-                            break;
-                            case "N":
-                                focoCampoTipoDocumento();
-                            break;                            
-                            default:
-                            break;
-                        }
+    private void campoS_N1(){
+        restringirCampos("", false);
+        pintarBordeCampo("");
+        campoS_N1.setVisible(true);
+        campoS_N1.setEditar(true);
+        campoS_N1.requestFocus();
+        campoS_N1.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("Esta CONFORME con los Datos Generales del Asiento Contable. ?    S/N");
+        iuInformacion.setVisible(false);
+        campoS_N1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
+                    iuInformacion.setVisible(true);
+                    switch(campoS_N1.getText()){
+                        case "S":
+                            deshabilitarCampoS_N();
+                            focoCampoNro();
+                            inhabilitarCampos();
+                        break;
+                        case "N":
+                            focoCampoTipoDocumento();
+                        break;                            
+                        default:
+                        break;
                     }
                 }
-            });
-        }
+            }
+        });
     }
     private void focoCampoNro(){        
         pintarBordeCampo("NRO");
+        deshabilitarCampoS_N();
         iuNro.setEditar(true);
-        iuNro.requestFocus();
-        
-        //iuCodigo.setText("");
-        //iuDescripcion.setText("");
-        //iuDebe.setText("");
-        //iuHaber.setText("");
-        //iuMontoDolares.setText("");
+        iuNro.requestFocus();        
         
         iuMensaje.setTexto("CAMPO No: REGISTRO DEL COMPROBANTE.");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, ESC=Suspender");
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, ESC=Suspender o Finalizar");
         iuNro.setText(String.valueOf(indice));
         iuNro.addKeyListener(new KeyAdapter() {
             @Override
@@ -854,33 +894,64 @@ public class VContra extends IUSecundario{
     }
     private void focoCampoCodigo(){
         iuNro.setText(String.valueOf(indice));
-        pintarBordeCampo("CODIGO");
+        deshabilitarCampoS_N();
+        pintarBordeCampo("CODIGO");        
         iuCodigo.setEditar(true);
         iuCodigo.requestFocus();
-        iuMensaje.setTexto("CAMPO CODIGO DE CUENTA: En este Campo podra Crear cuenta, elegir Asientos Tipo y consultar a la Ayuda.");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F7=Crear Cuenta, F8=ASIENTOS TIPO, ESC=Suspender");
+        iuMensaje.setTexto("CAMPO CODIGO: En este Campo podra Crear cuenta, elegir Asientos Tipo y consultar a la Ayuda.");
+        if(indice > 1)
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F10=BANCO, ↑=Entra a TABLA, ↓=Entra a TABLA, ESC=Suspender o Finalizar");
+        else
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F8=ASIENTOS TIPO, ↑=Entra a TABLA, ↓=Entra a TABLA, ESC=Suspender o Finalizar");
         iuCodigo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    
+                    if(!iuCodigo.getText().isEmpty()){
+                        if(existeItemTabla(iuCodigo.getText())){
+                            focoCampoS_N2();
+                        }else{
+                            if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()).isEmpty())
+                                focoCampoS_N2();
+                        }
+                    }
+                }
+                if(KeyEvent.VK_UP == e.getKeyCode() || KeyEvent.VK_DOWN == e.getKeyCode()){
+                    if(!iuTabla.modeloTabla.isVacia())
+                        focoCampoTabla();
                 }
                 if(KeyEvent.VK_F1 == e.getKeyCode()){
+                    Conmae c = new Conmae(indice);
                     setOpacity(0.5f);
                     VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande");
                     iuAyuda.mostrarVentana();
                     if(iuAyuda.getEstado()){
-                        Conmae c = iuAyuda.getConmae();
-                        iuCodigo.setText(String.valueOf(c.getCuetot()));
-                        iuDescripcion.setText(c.getDescri());
-                        focoCampoDebe();
-                    }                        
+                        c = iuAyuda.getConmae();
+                        actualizarPanelFila();
+                    }else{
+                        if(!iuCodigo.getText().isEmpty())
+                            c.setCuetot(Long.parseLong(iuCodigo.getText()));
+                        if(!iuDescripcion.getText().isEmpty())
+                            c.setDescri(iuDescripcion.getText());
+                        if(!iuDebe.getText().isEmpty())
+                            c.setSalini(Double.parseDouble(iuDebe.getText()));
+                        if(!iuHaber.getText().isEmpty())
+                            c.setSalin2(Double.parseDouble(iuHaber.getText()));                        
+                        actualizarPanelFila();
+                    }
+                    
+                    iuNro.setText(String.valueOf(indice));
+                    iuCodigo.setText(String.valueOf(c.getCuetot()));
+                    iuDescripcion.setText(c.getDescri());
+                    iuDebe.setText(String.valueOf(c.getSalini()));
+                    iuHaber.setText(String.valueOf(c.getSalin2()));
+                    if(!iuDescripcion.getText().isEmpty())
+                        focoCampoS_N2();
+                    else
+                        focoCampoCodigo();
                     setOpacity(1f);
                 }
-                if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    focoCampoNro();
-                }
-                if(KeyEvent.VK_F7 == e.getKeyCode()){
+                /*if(KeyEvent.VK_F7 == e.getKeyCode()){
                     Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Atencion: Para seleccionar el codigo de asiento NECESARIAMENTE DEBE CREAR UNA NUEVA CUENTA, en el plan de cuentas respectivamente.", "ADVERTENCIA");                    
                     setOpacity(0.6f);
                     VNuevoPlanCuentas vConmae = new VNuevoPlanCuentas(ventanaPrincipal, titulo, "grande", usuario, tabvar);
@@ -892,27 +963,41 @@ public class VContra extends IUSecundario{
                         focoCampoDebe();
                     }
                     setOpacity(1f);
-                }
-                if(KeyEvent.VK_F8 == e.getKeyCode()){
-                    setOpacity(0.6f);
-                    VAsientoTipo iuAsiento = new VAsientoTipo(ventanaPrincipal, titulo, "intermedio");
-                    iuAsiento.mostrarVentana();                    
-                    if(iuAsiento.getEstado()){
-                        for (Tabvar t : iuAsiento.getList()) {
-                            Asiento a = new Asiento(indice);
-                            a.setCodigo(t.getCodcon());
-                            a.setCuenta(t.getDescri());
-                            listaAsientos.add(a);
-                            iuTabla.modeloTabla.setFila(a);
-                            indice++;
-                        }                        
+                }*/
+                if(indice > 1){
+                    if(KeyEvent.VK_F10 == e.getKeyCode()){
+                        Conmae c = CConmae.getConmae("select * from conmae where CUETOT = 11020100");
+                        iuCodigo.setText(String.valueOf(c.getCuetot()));
+                        iuDescripcion.setText(c.getDescri());
+                        iuDebe.setText("0.0");
+                        iuHaber.setText("0.0");
+                        iuDolares.setText("0.0");
+                        focoCampoS_N2();
                     }
-                    opcion = "ASIENTOS_TIPO";
-                    focoCampoTabla();
-                    setOpacity(1f);
-                }
+                }else{
+                    if(KeyEvent.VK_F8 == e.getKeyCode()){
+                        setOpacity(0.6f);
+                        VAsientoTipo iuAsiento = new VAsientoTipo(ventanaPrincipal, titulo, "intermedio");
+                        iuAsiento.mostrarVentana(); 
+                        iuTabla.modeloTabla.limpiarTabla();
+                        if(iuAsiento.getEstado()){
+                            for (Tabvar t : iuAsiento.getList()) {
+                                Asiento a = new Asiento(indice);
+                                a.setCodigo(t.getCodcon());
+                                a.setCuenta(t.getDescri());
+                                listaAsientos.add(a);
+                                iuTabla.modeloTabla.setFila(a);
+                                indice++;
+                            }                        
+                        }
+                        actualizarPanelFila();
+                        limpiarCamposFila();
+                        focoCampoCodigo();
+                        setOpacity(1f);
+                    }
+                }                
             }
-        });        
+        });
     }
     private void focoCampoTabla(){
         pintarBordeCampo("TABLA");
@@ -921,14 +1006,17 @@ public class VContra extends IUSecundario{
         iuNro.setBorder(new LineBorder(Color.GREEN));
         iuDescripcion.setBorder(new LineBorder(Color.GREEN));
         iuCodigo.setBorder(new LineBorder(Color.GREEN));
-        iuDebe.setBorder(new LineBorder(Color.GREEN));        
+        iuDebe.setBorder(new LineBorder(Color.GREEN));
+        iuHaber.setBorder(new LineBorder(Color.GREEN));
+        iuDolares.setBorder(new LineBorder(Color.GREEN));
+        
         iuTabla.setFocusable(true);
         iuTabla.requestFocus();
         
         iuCodigo.setEditar(false);        
         
         iuMensaje.setTexto("CAMPO TABLA: Seleccione el registro que quiere modificar en el DEBE o HABER. (Utilize las teclas de flecha ARRIBA, ABAJO)");
-        iuInformacion.setTexto("ATENCION: ENTER=Aceptar Registro, ESC=Suspender.");
+        iuInformacion.setTexto("ATENCION: ENTER=Aceptar Registro, F2=Retroceder, F3=Eliminar Fila, ESC=Suspender o Finalizar");
         
         iuTabla.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if(iuTabla.isFilaSeleccionado()){
@@ -937,9 +1025,9 @@ public class VContra extends IUSecundario{
                 iuNro.setText(String.valueOf(nro));
                 iuCodigo.setText(String.valueOf(a.getCodigo()));
                 iuDescripcion.setText(a.getCuenta());
-                iuDebe.setText(String.valueOf(a.getDeber()));
+                iuDebe.setText(String.valueOf(a.getDebe()));
                 iuHaber.setText(String.valueOf(a.getHaber()));
-                iuMontoDolares.setText(String.valueOf(a.getMonto()));
+                iuDolares.setText(String.valueOf(a.getMonto()));
             }
         });
         iuTabla.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
@@ -947,10 +1035,171 @@ public class VContra extends IUSecundario{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if(iuTabla.isFilaSeleccionado()){
-                    iuTabla.modeloTabla.fireTableDataChanged();
-                    iuTabla.setFocusable(false);
-                    focoCampoDebe();
+                    focoCampoS_N2();
                 }               
+            }
+        });
+        iuTabla.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    actualizarPanelFila();                    
+                    focoCampoCodigo();
+                }
+                if(KeyEvent.VK_F3 == e.getKeyCode()){
+                    focoCampoS_N4();
+                }
+                if(KeyEvent.VK_ADD == e.getKeyCode()){
+                    if(!iuTotalDolares.getText().isEmpty() && !iuTotalDebe.getText().isEmpty() && !iuTotalHaber.getText().isEmpty()){
+                        if((Double.parseDouble(iuTotalDebe.getText()) == Double.parseDouble(iuTotalHaber.getText())) ){
+                            focoCampoS_N5SUMA();
+                        }
+                    }                    
+                }
+                if(KeyEvent.VK_SUBTRACT == e.getKeyCode() && !iuTotalDebe.getText().isEmpty() && !iuTotalHaber.getText().isEmpty()){                    
+                    if(!iuTotalDolares.getText().isEmpty()){
+                        if((Double.parseDouble(iuTotalDebe.getText()) == Double.parseDouble(iuTotalHaber.getText())) ){
+                            focoCampoS_N6RESTA();
+                        }
+                    }                    
+                }
+            }
+        });
+    }
+    private void focoCampoS_N6RESTA(){
+        pintarBordeCampo("");        
+        campoS_N6.setVisible(true);
+        campoS_N6.setEditar(true);
+        campoS_N6.requestFocus();
+        campoS_N6.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("ATENCION: Esta seguro que desea agregar -0.01 a la fila de la tabla al CAMPO MONTO en DOLARES para el cuadraje correcto?    S/N");
+        iuInformacion.setVisible(false);
+        campoS_N6.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N6.getText()){
+                        case "S":
+                            if(iuTabla.isFilaSeleccionado()){                               
+                                if(!iuDolares.getText().isEmpty()){
+                                    double dolares = Double.parseDouble(iuDolares.getText());
+                                    dolares = dolares - 0.01;
+                                    iuDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));                                    
+                                    modificarRegistroTabla();
+                                    sumarColumnasTotales();
+                                    actualizarPanelFila();
+                                    limpiarCamposFila();
+                                    focoCampoNro();
+                                }
+                            }
+                        break;
+                        case "N":
+                            focoCampoTabla();
+                        break;
+                        default:
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    private void focoCampoS_N5SUMA(){
+        pintarBordeCampo("");        
+        campoS_N5.setVisible(true);
+        campoS_N5.setEditar(true);
+        campoS_N5.requestFocus();
+        campoS_N5.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("ATENCION: Esta seguro que desea agregar 0.01 a la fila de la tabla al CAMPO MONTO en DOLARES para el cuadraje correcto?    S/N");
+        iuInformacion.setVisible(false);
+        campoS_N5.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N5.getText()){
+                        case "S":
+                            if(iuTabla.isFilaSeleccionado()){                               
+                                if(!iuDolares.getText().isEmpty()){
+                                    double dolares = Double.parseDouble(iuDolares.getText());
+                                    dolares = dolares + 0.01;
+                                    iuDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
+                                    modificarRegistroTabla();
+                                    sumarColumnasTotales();
+                                    actualizarPanelFila();
+                                    limpiarCamposFila();
+                                    focoCampoNro();
+                                }
+                            }
+                        break;
+                        case "N":
+                            focoCampoTabla();
+                        break;
+                        default:
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    private void focoCampoS_N4(){
+        pintarBordeCampo("");        
+        campoS_N4.setVisible(true);
+        campoS_N4.setEditar(true);
+        campoS_N4.requestFocus();
+        campoS_N4.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("ATENCION: Esta seguro que desea eliminar esta FILA de la Tabla SELECCIONADA.?    S/N");
+        iuInformacion.setVisible(false);
+        campoS_N4.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N4.getText()){
+                        case "S":
+                            if(iuTabla.isFilaSeleccionado()){                                
+                                iuTabla.modeloTabla.removeFila(iuTabla.getSelectedRow());
+                                sumarColumnasTotales();
+                                actualizarPanelFila();
+                                limpiarCamposFila();
+                                indice--;
+                                focoCampoNro();                                
+                            }
+                        break;
+                        case "N":
+                            focoCampoTabla();
+                        break;
+                        default:
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    private void focoCampoS_N2(){
+        pintarBordeCampo("");        
+        campoS_N2.setVisible(true);
+        campoS_N2.setEditar(true);
+        campoS_N2.requestFocus();
+        campoS_N2.setText("D");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("Desea editar en el campo DEBE o HABER.?    D/H");
+        iuInformacion.setVisible(false);
+        campoS_N2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    switch(campoS_N2.getText()){
+                        case "D":
+                            focoCampoDebe();
+                        break;
+                        case "H":
+                            focoCampoHaber();
+                        break;
+                        default:
+                        break;
+                    }
+                }
             }
         });
     }
@@ -961,7 +1210,7 @@ public class VContra extends IUSecundario{
         iuDebe.setEditar(true);
         iuDebe.requestFocus();
         iuMensaje.setTexto("CAMPO DEBE: Digite el Monto a DEBITAR, ");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F7=87% de SI MISMO, F8=13%, ESC=Suspender");
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F9=100%, F7=87% de SI MISMO, F8=13%, ESC=Suspender o Finalizar");
         iuDebe.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -973,15 +1222,15 @@ public class VContra extends IUSecundario{
                             double result = debe/tc;
                             double dolares = Ayuda.acotarNumero(result, 2);
                             iuHaber.setText("0.0");
-                            iuMontoDolares.setText(String.valueOf(dolares));
-                            focoCampoS_N();
+                            iuDolares.setText(String.valueOf(dolares));                            
+                            focoCampoS_N3();
                         }
-                    }else{
-                        iuDebe.setText("0.0");
-                        focoCampoHaber();
                     }
-                    //
                 }
+                if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    actualizarPanelFila();
+                    focoCampoCodigo();
+                }                
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
                     double monto = Double.parseDouble(iuMonto.getText());
                     double porcentaje = (monto*87)/100;
@@ -992,8 +1241,8 @@ public class VContra extends IUSecundario{
                     double result = debe/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
                     iuHaber.setText("0.0");
-                    iuMontoDolares.setText(String.valueOf(dolares));
-                    focoCampoS_N();                    
+                    iuDolares.setText(String.valueOf(dolares));
+                    focoCampoS_N3();                    
                 }
                 if(KeyEvent.VK_F8 == e.getKeyCode()){
                     double monto = Double.parseDouble(iuMonto.getText());
@@ -1005,73 +1254,212 @@ public class VContra extends IUSecundario{
                     double result = debe/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
                     iuHaber.setText("0.0");
-                    iuMontoDolares.setText(String.valueOf(dolares));
-                    focoCampoS_N();
+                    iuDolares.setText(String.valueOf(dolares));
+                    focoCampoS_N3();
+                }
+                if(KeyEvent.VK_F9 == e.getKeyCode()){
+                    double monto = Double.parseDouble(iuMonto.getText());
+                    iuDebe.setText(String.valueOf(monto));
+                    double tc = usuario.getTipcam();
+                    double debe = Double.parseDouble(iuDebe.getText());
+                    double result = debe/tc;
+                    double dolares = Ayuda.acotarNumero(result, 2);
+                    iuHaber.setText("0.0");
+                    iuDolares.setText(String.valueOf(dolares));
+                    focoCampoS_N3();
                 }
             }
         });
     }
     private void focoCampoHaber(){
+        pintarBordeCampo("HABER");
+        deshabilitarCampoS_N();
         
+        iuHaber.setEditar(true);
+        iuHaber.requestFocus();
+        iuMensaje.setTexto("CAMPO HABER: Digite el Monto para ABONAR, ");
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F7=Duplica Monto-Total DEBE al HABER, ESC=Suspender o Finalizar");
+        iuHaber.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    if(!iuHaber.getText().isEmpty()){
+                        if(Double.parseDouble(iuHaber.getText()) > 0){
+                            double haber = Double.parseDouble(iuHaber.getText());
+                            double tc = usuario.getTipcam();                    
+                            double result = haber/tc;
+                            double dolares = Ayuda.acotarNumero(result, 2);
+                            iuDebe.setText("0.0");
+                            iuDolares.setText(String.valueOf(dolares));
+                            focoCampoS_N3();
+                        }
+                    }
+                }
+                if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    actualizarPanelFila();
+                    focoCampoCodigo();
+                }
+                if(KeyEvent.VK_F7 == e.getKeyCode()){
+                    double haber = getMontoTotalDebe();
+                    iuHaber.setText(String.valueOf(haber));
+                    double tc = usuario.getTipcam();                    
+                    double result = haber/tc;
+                    double dolares = Ayuda.acotarNumero(result, 2);
+                    iuDebe.setText("0.0");
+                    iuDolares.setText(String.valueOf(dolares));
+                    focoCampoS_N3();
+                }
+            }
+        });
     }
     private void sumarColumnasTotales(){
         ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
         double debe = 0;
         double haber = 0;
+        double dolares = 0;
         for (Asiento a : lista) {
-            debe = debe + a.getDeber();
-            haber = haber + a.getHaber();            
+            if(a.getDebe() > 0)
+                dolares = dolares + a.getMonto();
+            if(a.getHaber() > 0)
+                dolares = dolares - a.getMonto();
+            debe = debe + a.getDebe();
+            haber = haber + a.getHaber();             
         }
-        double dolar = debe - haber;
+        
         iuTotalDebe.setText(String.valueOf(debe));
         iuTotalHaber.setText(String.valueOf(haber));
-        iuTotalMontoDolares.setText(String.valueOf(dolar));
+        iuTotalDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
     }
-    private void focoCampoS_N(){
-        pintarBordeCampo("DOLAR");
-        iuDebe.setEditar(false);
-        campoS_N1.setVisible(true);
-        campoS_N1.setEditar(true);
-        campoS_N1.requestFocus();
-        campoS_N1.setText("S");
+    private boolean debeMenorIgualMonto(){
+        boolean verificador = false;
+        ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
+        double debe = 0;        
+        boolean modifico = false;
+        if(!lista.isEmpty()){
+            for (Asiento a : lista){
+                if(!iuCodigo.getText().isEmpty() && a.getCodigo() == Long.valueOf(iuCodigo.getText())){
+                    debe = debe + Double.parseDouble(iuDebe.getText());
+                    modifico = true;
+                }                    
+                else
+                    debe = debe + a.getDebe();
+            }
+        }else{
+            if(!iuDebe.getText().isEmpty()){
+                debe = Double.parseDouble(iuDebe.getText());
+                modifico = true;
+            }
+                
+        }
+        if(modifico == false){
+            if(!iuDebe.getText().isEmpty())
+                debe = debe + Double.parseDouble(iuDebe.getText());
+        }            
+        double montoInicial = Double.parseDouble(iuMonto.getText());
+                
+        if(debe <= montoInicial)
+            verificador = true;        
+        return verificador;
+    }
+    private double getMontoTotalDebe(){
+        ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
+        double debe = 0;        
+        for (Asiento a : lista)
+            debe = debe + a.getDebe();        
+        return debe;
+    }
+    private void focoCampoS_N3(){
+        pintarBordeCampo("");        
+        campoS_N3.setVisible(true);
+        campoS_N3.setEditar(true);
+        campoS_N3.requestFocus();
+        campoS_N3.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("Esta Conforme con el MONTO en DOLARES. ?");
-        iuInformacion.setTexto("");
-        campoS_N1.addKeyListener(new KeyAdapter() {
+        iuInformacion.setVisible(false);
+        campoS_N3.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    switch(campoS_N1.getText()){
+                    switch(campoS_N3.getText()){
                         case "S":
-                            switch(opcion){
-                                case "ASIENTOS_TIPO":
+                            if(debeMenorIgualMonto()){
+                                if(existeItemTabla(iuCodigo.getText())){                                
                                     modificarRegistroTabla();
                                     sumarColumnasTotales();
-                                    focoCampoTabla();
-                                break;
-                                case "":
+                                    actualizarPanelFila();
+                                    limpiarCamposFila();
+                                    focoCampoNro();                                
+                                }else{                                
                                     Asiento a = new Asiento(Integer.parseInt(iuNro.getText()));
-                                    a.setCodigo(Long.parseLong(iuCodigo.getText()));
-                                    a.setCuenta(iuDescripcion.getText());
-                                    a.setDeber(Double.parseDouble(iuDebe.getText()));
-                                    a.setHaber(Double.parseDouble(iuHaber.getText()));
-                                    a.setMonto(Double.parseDouble(iuMontoDolares.getText()));
-                                    iuTabla.modeloTabla.setFila(a);
-                                    indice++;
-                                    focoCampoNro();
-                                break;
-                            }
+                                    if(!iuCodigo.getText().isEmpty() && !iuDebe.getText().isEmpty() && !iuHaber.getText().isEmpty() && !iuDolares.getText().isEmpty()){
+                                        a.setCodigo(Long.parseLong(iuCodigo.getText()));
+                                        a.setCuenta(iuDescripcion.getText());
+                                        a.setDebe(Double.parseDouble(iuDebe.getText()));
+                                        a.setHaber(Double.parseDouble(iuHaber.getText()));
+                                        a.setMonto(Double.parseDouble(iuDolares.getText()));
+                                        iuTabla.modeloTabla.setFila(a);
+                                        indice++;
+                                        sumarColumnasTotales();
+                                        actualizarPanelFila();
+                                        limpiarCamposFila();
+                                        focoCampoNro();
+                                    }
+                                }
+                            }else{
+                                //JOptionPane.showMessageDialog( ventanaPrincipal, "Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.", "ADVERTENCIA", JOptionPane.ERROR_MESSAGE );                                
+                                actualizarPanelFila();
+                                limpiarCamposFila();
+                                focoCampoCodigo();
+                            }                            
                         break;
-                        case "N":
-                            sumarColumnasTotales();
-                            focoCampoDebe();
+                        case "N":                            
+                            focoCampoCodigo();
                         break;
                         default:
                         break;
-                    }
+                    }                    
+                }
+            }
+        });        
+    }
+    private void focoCampoS_N7(){
+        pintarBordeCampo("");
+        campoS_N7.setVisible(true);
+        campoS_N7.setEditar(true);
+        campoS_N7.requestFocus();
+        campoS_N7.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.");
+        iuInformacion.setVisible(false);
+        campoS_N7.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    
                 }
             }
         });
-        
+    }
+    private void limpiarCamposFila(){
+        iuCodigo.setText("");
+        iuDescripcion.setText("");
+        iuDebe.setText("");
+        iuHaber.setText("");
+        iuDolares.setText("");
+    }
+    private boolean existeItemTabla(String codigo){
+        boolean encontro = false;
+        int contador = 0;
+        if(!codigo.isEmpty()){
+            while(contador < iuTabla.modeloTabla.lista.size() && !encontro){
+                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(codigo)){
+                    encontro = true;
+                }
+                contador++;
+            }
+        }
+        return encontro;
     }
     private void modificarRegistroTabla(){
         boolean encontro = false;
@@ -1083,20 +1471,15 @@ public class VContra extends IUSecundario{
                     Asiento a = new Asiento(contador+1);
                     a.setCodigo(Long.parseLong(iuCodigo.getText()));
                     a.setCuenta(iuDescripcion.getText());
-                    a.setDeber(Double.parseDouble(iuDebe.getText()));
+                    a.setDebe(Double.parseDouble(iuDebe.getText()));
                     a.setHaber(Double.parseDouble(iuHaber.getText()));
-                    a.setMonto(Double.parseDouble(String.valueOf(iuMontoDolares.getText())));
+                    a.setMonto(Double.parseDouble(String.valueOf(iuDolares.getText())));
                     iuTabla.modeloTabla.setUpdateFila(contador, a);                
                     encontro = true;
-                }
-                contador++;
-            }else{
-                System.out.println("EL CODIGO esta VACIO....."+iuCodigo.getText());
-                encontro = true;
+                }                
             }
-        }
-        System.out.println(listaAsientos.size());
-        //iuTabla.actualizarTabla(listaAsientos);
+            contador++;
+        }        
     }
     private void inhabilitarCampos(){
         iuTipDoc.setEnabled(false);
@@ -1112,10 +1495,52 @@ public class VContra extends IUSecundario{
         iuBanco.setEnabled(false);
         iuCheque.setEnabled(false);
     }
+    private void actualizarPanelFila(){
+        Asiento a = new Asiento(0);
+        if(!iuNro.getText().isEmpty() && !iuCodigo.getText().isEmpty() && !iuDescripcion.getText().isEmpty()){
+            a.setNro(Integer.parseInt(iuNro.getText()));
+            a.setCodigo(Long.parseLong(iuCodigo.getText()));
+            a.setCuenta(iuDescripcion.getText());            
+            a.setDebe(0);
+            a.setHaber(0);
+            a.setMonto(0);
+        }
+        if(!iuDebe.getText().isEmpty())
+            a.setDebe(Double.parseDouble(iuDebe.getText()));
+        if(!iuHaber.getText().isEmpty())
+            a.setHaber(Double.parseDouble(iuHaber.getText()));
+        if(!iuDolares.getText().isEmpty())
+            a.setMonto(Double.parseDouble(iuDolares.getText()));
+        
+        quintoPanelC.removeAll();
+        iuTabla.modeloTabla.fireTableDataChanged();
+        construirQuintoPanelC(new Area(2, 0, quintoPanelC.area.An() - 14, quintoPanelC.area.Al()));
+        quintoPanelC.updateUI();        
+        
+        iuNro.setText(String.valueOf(a.getNro()));
+        iuCodigo.setText(String.valueOf(a.getCodigo()));
+        iuDescripcion.setText(a.getCuenta());
+        iuDebe.setText(String.valueOf(a.getDebe()));
+        iuHaber.setText(String.valueOf(a.getHaber()));
+        iuDolares.setText(String.valueOf(a.getMonto()));
+    }
     private void deshabilitarCampoS_N(){
         campoS_N1.setEditar(false);
         campoS_N1.setVisible(false);
-        
-        
+        campoS_N2.setEditar(false);
+        campoS_N2.setVisible(false);
+        campoS_N3.setEditar(false);
+        campoS_N3.setVisible(false);
+        campoS_N4.setEditar(false);
+        campoS_N4.setVisible(false);
+        campoS_N5.setEditar(false);
+        campoS_N5.setVisible(false);
+        campoS_N6.setEditar(false);
+        campoS_N6.setVisible(false);
+        campoS_N7.setEditar(false);
+        campoS_N7.setVisible(false);
+        iuInformacion.setVisible(true);
+        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
     }
 }

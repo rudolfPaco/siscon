@@ -215,8 +215,6 @@ public class VConmae extends IUSecundario{
         
         cuartoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(4) + a.AlP(85), a.An(), a.AlP(15)), false);
         construirCuartoPanel(new Area(2, 2, cuartoPanel.area.An() - 6, cuartoPanel.area.Al() - 8));
-        
-        
     }
     
     private void construirPrimerPanel(Area a){
@@ -532,6 +530,11 @@ public class VConmae extends IUSecundario{
                         campoNivel.setText("1");
                         
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));
+                        
+                        panelPrimerRegistro.removeAll();
+                        construirPanelPrimerRegistro(new Area(2, 2, panelPrimerRegistro.area.An() - 20, panelPrimerRegistro.area.Al() - 6));
+                        panelPrimerRegistro.updateUI();
+                        
                         Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(c != null){
                             cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);

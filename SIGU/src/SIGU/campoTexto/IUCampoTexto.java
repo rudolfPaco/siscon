@@ -49,6 +49,7 @@ public class IUCampoTexto extends JTextField{
         this.panel = panel;
         this.size = size;
         this.area = area;
+        this.nroColumnas = 99999999;
         
         construirCampoTexto();
         agregarEventos();
@@ -77,7 +78,7 @@ public class IUCampoTexto extends JTextField{
     private void construirCampoTexto(){
         
         panel.agregar(this, area);        
-        setSelectedTextColor(new Color(2, 67, 109));
+        setSelectedTextColor(getForeground());
         setForeground(new Color(2, 67, 109));
         setFont(new Font("Verdana", Font.PLAIN, size));
         setHorizontalAlignment(posicionH);
@@ -102,12 +103,13 @@ public class IUCampoTexto extends JTextField{
                     //transferFocusBackward();
             }
         });
-        if(nroColumnas > 0){
+        if(nroColumnas >= 0){
             addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent e) {
                     if(getText().length() == nroColumnas)
                         e.consume();
+                    
                 }
             });
         }

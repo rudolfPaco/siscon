@@ -291,7 +291,7 @@ public class VLogueo extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     String clave = Ayuda.getParseCadena(campoClave.getPassword());
-                    if(!clave.isEmpty()){
+                    if(!clave.isEmpty() && !campoUsuario.getText().isEmpty()){
                         if(clave.equalsIgnoreCase(tabvar.getObserv())){
                             usuario = CLogueo.getUsuario();                            
                             campoFecha.setDate(new Fecha().getDate(usuario.getFecusu()));
@@ -380,7 +380,7 @@ public class VLogueo extends IUSecundario{
     }
     private void construirPanelContenedorMensajes(Area a){
         iuTituloMensajes = new IUEtiqueta(panelContenedorMensajes, "MENSAJES - INSTRUCCIONES", new Area(a.X(), a.Y(), a.An(), a.AlP(30)), 16, "CENTER", Ayuda.COLOR_ROJO);
-        iuPanelMensajes = new IUPanel(panelContenedorMensajes, new Area(a.X(), a.Y(2) + a.AlP(30), a.An(), a.AlP(60)), true, Ayuda.COLOR_FONDO);
+        iuPanelMensajes = new IUPanel(panelContenedorMensajes, new Area(a.X(), a.Y(2) + a.AlP(30), a.An(), a.AlP(60)), true, Ayuda.COLOR_ATENCION);
         iuMensajes = new IUEtiqueta(iuPanelMensajes, "mensajes de instrucciones para el usuario", new Area(iuPanelMensajes.area.An(), iuPanelMensajes.area.Al()), 20, "LEFT", false);
     }
     private void registrarNuevoUsuario(){

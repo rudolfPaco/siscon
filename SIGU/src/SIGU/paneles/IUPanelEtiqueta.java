@@ -84,8 +84,12 @@ public class IUPanelEtiqueta extends JPanel{
         label.setBounds(getWidth() - 80, 0, 80, 10);
         add(label);        
     }
-    public void setColorTexto(Color colorTexto){
+    public void setColores(Color colorTexto, Color colorFondo){
         etiqueta.setForeground(colorTexto);
+        setBackground(colorFondo);
+    }
+    public void setFuente(Font fuente){
+        etiqueta.setFont(fuente);
     }
     public String getTexto(){
         return etiqueta.getText();
