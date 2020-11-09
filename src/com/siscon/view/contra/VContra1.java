@@ -52,7 +52,7 @@ import javax.swing.event.ListSelectionEvent;
  *
  * @author neo
  */
-public class VContra extends IUSecundario{
+public class VContra1 extends IUSecundario{
     
     private VPrincipal ventanaPrincipal;
     
@@ -136,21 +136,11 @@ public class VContra extends IUSecundario{
     private ArrayList<Tabvar> listaTabvar;
     private final ArrayList<Asiento> listaAsientos;
     
-    private int indice;
-    private KeyAdapter eventoNro;
-    private KeyAdapter eventoCodigo;
-    private KeyAdapter eventoDebe;
-    private KeyAdapter eventoHaber;
+    private Asiento asiento;
     
-    private KeyAdapter eventoCampoS_N1;
-    private KeyAdapter eventoCampoS_N2;
-    private KeyAdapter eventoCampoS_N3;
-    private KeyAdapter eventoCampoS_N4;
-    private KeyAdapter eventoCampoS_N5;
-    private KeyAdapter eventoCampoS_N6;
-    private KeyAdapter eventoCampoS_N7;
+    private int indice;    
     
-    public VContra(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
+    public VContra1(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.titulo = titulo;
@@ -159,20 +149,13 @@ public class VContra extends IUSecundario{
         this.listaTabvar = CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = 2");
         this.listaAsientos = new ArrayList<>();
         this.indice = 1;
+        this.asiento = new Asiento(0);
         
         construirPanel(new Area(An()-6, Al()-29));
         algoritmoInicial();
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
-        panel.getActionMap().put( "ESC", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                dispose();
-            }
-        });        
-        
         construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));        
     }
     private void construirPaneles(Area a){
@@ -188,9 +171,9 @@ public class VContra extends IUSecundario{
         iuTitulo = new IUEtiqueta(panelTitulo, "ASIENTO CONTABLE", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         
         iuTitulo = new IUEtiqueta(panelTitulo, "USUARIO: "+tabvar.getDescri(), new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        //iuTitulo = new IUEtiqueta(panelTitulo, "EMISION: "+new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);
     }
     private void construirPanelDatos(Area a){
         primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(85)), false);
@@ -338,10 +321,10 @@ public class VContra extends IUSecundario{
         segundoPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(2) + a.AlP(5), a.An(), a.AlP(10)), false);
         construirSegundoPanelC(new Area(2, 2, segundoPanelC.area.An() - 12, segundoPanelC.area.Al() - 6));
         
-        tercerPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(3) + a.AlP(15), a.An(), a.AlP(20)), true);
+        tercerPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(3) + a.AlP(15), a.An(), a.AlP(20)), false);
         construirTercerPanelC(new Area(2, 2, tercerPanelC.area.An() - 10, tercerPanelC.area.Al() - 10));
         
-        cuartoPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(4) + a.AlP(35), a.An(), a.AlP(8)), true);
+        cuartoPanelC = new IUPanel(panelComprobante, new Area(a.X(), a.Y(4) + a.AlP(35), a.An(), a.AlP(8)), false);
         construirCuartoPanelC(new Area(2, 0, cuartoPanelC.area.An() - 14, cuartoPanelC.area.Al()));
         
         iuTituloMensaje = new IUEtiqueta(panelComprobante, "↓", new Area(a.X(), a.Y(5) + a.AlP(43), a.AnP(5), a.AlP(5)), 20, "CENTER", Ayuda.COLOR_ROJO);
@@ -374,6 +357,7 @@ public class VContra extends IUSecundario{
         iuEtiquetaNum = new IUPanelEtiqueta(primerPanelC, new Area(a.X(5) + a.AnP(45), a.Y(), a.AnP(7), a.Al()), "No.: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuNum = new IUCampoTexto(primerPanelC, 8, 16, new Area(a.X(6) + a.AnP(52), a.Y(), a.AnP(7), a.Al()), SwingConstants.CENTER);
         iuNum.setFont(new Font("Verdana", Font.BOLD, 16));
+        iuNum.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuEtiquetaMonto = new IUPanelEtiqueta(primerPanelC, new Area(a.X(7) + a.AnP(80), a.Y(), a.AnP(5), a.Al()), "Monto: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuMonto = new IUCampoTexto(primerPanelC, 14, 16, new Area(a.X(8) + a.AnP(85), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
@@ -405,7 +389,7 @@ public class VContra extends IUSecundario{
         iuConcepto = new IUCampoTexto(tercerPanelC, "", 16, new Area(a.X(2) + a.AnP(10), a.Y(), a.AnP(70), a.AlP(25)));
         iuConcepto.setFont(new Font("Verdana", Font.BOLD, 16));
         iuAreaGlosa = new IUAreaTexto(tercerPanelC, new Area(a.X(2) + a.AnP(10), a.Y(2) + a.AlP(25), a.AnP(70), a.AlP(75) + a.Y(2)), "", 16);
-        iuAreaGlosa.setFont(new Font("Verdana", Font.BOLD, 16));
+        iuAreaGlosa.setFont(new Font("Verdana", Font.BOLD, 16));        
         
         iuEtiquetaCuenta = new IUPanelEtiqueta(tercerPanelC, new Area(a.X(3) + a.AnP(80), a.Y(2) + a.AlP(25), a.AnP(10), a.AlP(25)), " Cuenta Cte.:", 16, SwingConstants.LEFT, Ayuda.COLOR_FONDO, true);
         iuCuenta = new IUCampoTexto(tercerPanelC, 10, 16, new Area(a.X(4) + a.AnP(90), a.Y(2) + a.AlP(25), a.AnP(10), a.AlP(25)), SwingConstants.LEFT);
@@ -419,13 +403,13 @@ public class VContra extends IUSecundario{
     }
     private void construirCuartoPanelC(Area a){
         iuEtiquetaNro = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(), a.Y(), a.AnP(5), a.AlP(45)), "No", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);        
-        iuNro = new IUCampoTexto(cuartoPanelC, 0, 16, new Area(a.X(), a.Y() + a.AlP(45), a.AnP(5), a.AlP(55)), SwingConstants.CENTER);
-        iuNro.setEditar(false);
-        //iuNro.setRestriccion("^([0-9]|[1-9][0-9])$");
+        iuNro = new IUCampoTexto(cuartoPanelC, 1, 16, new Area(a.X(), a.Y() + a.AlP(45), a.AnP(5), a.AlP(55)), SwingConstants.CENTER);
+        //iuNro.setEditar(false);
         
         iuEtiquetaCodigo = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(2) + a.AnP(5), a.Y(), a.AnP(15), a.AlP(45)), "CODIGO", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuCodigo = new IUCampoTexto(cuartoPanelC, 0, 16, new Area(a.X(2) + a.AnP(5), a.Y() + a.AlP(45), a.AnP(15), a.AlP(55)), SwingConstants.CENTER);
+        iuCodigo = new IUCampoTexto(cuartoPanelC, 8, 16, new Area(a.X(2) + a.AnP(5), a.Y() + a.AlP(45), a.AnP(15), a.AlP(55)), SwingConstants.CENTER);
         iuCodigo.setEditar(false);
+        iuCodigo.setRestriccion("^([0-9]|[1-9][0-9])$");
         
         iuEtiquetaDescripcion = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(3) + a.AnP(20), a.Y(), a.AnP(50), a.AlP(45)), "DESCRIPCION DE CUENTA", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuDescripcion = new IUCampoTexto(cuartoPanelC, 0, 16, new Area(a.X(3) + a.AnP(20), a.Y() + a.AlP(45), a.AnP(50), a.AlP(55)), SwingConstants.LEFT);
@@ -472,9 +456,11 @@ public class VContra extends IUSecundario{
                 }
             }
         });
+        iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(4, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(5, SwingConstants.RIGHT);
+        iuTabla.setBackground(Ayuda.COLOR_ATENCION);
         
         iuTotalComprobante = new IUEtiqueta(quintoPanelC, "Total Comprobante (en Bolivianos)    ", new Area(a.X() + a.AnP(20), a.Y(2) + a.AlP(90), a.AnP(50), a.AlP(10)), 16, "RIGHT", Ayuda.COLOR_ROJO);
         iuTotalDebe = new IUEtiqueta(quintoPanelC, "0.0", new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
@@ -649,7 +635,6 @@ public class VContra extends IUSecundario{
     }
     private void focoCampoTipoDocumento(){
         pintarBordeCampo("TIPDOC");
-        campoS_N1.removeKeyListener(eventoCampoS_N1);
         
         iuTipDoc.setEditar(true);        
         iuTipDoc.requestFocus();
@@ -683,13 +668,16 @@ public class VContra extends IUSecundario{
                 if(t.getDescri().equalsIgnoreCase(tipdoc)){
                     switch(tipdoc){
                         case "INGRESOS":
-                            iuEtiquetaDocRef.setTexto("Recibido de: ");                            
+                            iuEtiquetaDocRef.setTexto("Recibido de: ");
+                            iuDocRef.setText("");
                         break;
                         case "EGRESOS":
                             iuEtiquetaDocRef.setTexto("Pagado a: ");
+                            iuDocRef.setText("");
                         break;
                         case "DIARIOS":
                             iuEtiquetaDocRef.setTexto("Por Concepto: ");
+                            iuDocRef.setText(Ayuda.getDatoCadena("DESCRI", "select * from tabvar where tipo = 10 and numero = 1"));
                         break;
                     }
                     encontro = true;
@@ -793,21 +781,19 @@ public class VContra extends IUSecundario{
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    if(!iuAreaGlosa.getText().isEmpty()){                        
-                        switch(iuTipDoc.getTexto()){
-                            case "INGRESOS":
-                                iuEtiquetaDocRef.setTexto("Recibido de: ");
-                                campoS_N1();
-                            break;
-                            case "EGRESOS":
-                                iuEtiquetaDocRef.setTexto("Pagado a: ");
-                                focoCampoCtaCte();
-                            break;
-                            case "DIARIOS":
-                                iuEtiquetaDocRef.setTexto("Por Concepto: ");
-                                focoCampoCtaCte();
-                            break;
-                        }
+                    switch(iuTipDoc.getTexto()){
+                        case "INGRESOS":
+                            iuEtiquetaDocRef.setTexto("Recibido de: ");
+                            campoS_N1();
+                        break;
+                        case "EGRESOS":
+                            iuEtiquetaDocRef.setTexto("Pagado a: ");
+                            focoCampoCtaCte();
+                        break;
+                        case "DIARIOS":
+                            iuEtiquetaDocRef.setTexto("Por Concepto: ");
+                            focoCampoCtaCte();
+                        break;
                     }
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
@@ -898,7 +884,7 @@ public class VContra extends IUSecundario{
         iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("Esta CONFORME con los Datos Generales del Asiento Contable. ?    S/N");
         iuInformacion.setVisible(false);
-        eventoCampoS_N1 = new KeyAdapter() {
+        campoS_N1.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -906,9 +892,9 @@ public class VContra extends IUSecundario{
                     iuInformacion.setVisible(true);
                     switch(campoS_N1.getText()){
                         case "S":
-                            deshabilitarCampoS_N();
-                            focoCampoNro();
+                            actualizarPaneles();
                             inhabilitarCampos();
+                            focoCampoNro();
                         break;
                         case "N":
                             focoCampoTipoDocumento();
@@ -918,37 +904,128 @@ public class VContra extends IUSecundario{
                     }
                 }
             }
-        };
-        campoS_N1.addKeyListener(eventoCampoS_N1);
+        });
     }
+    private void deshabilitarCampoS_N(){
+        campoS_N1.setEditar(false);
+        campoS_N1.setVisible(false);
+        campoS_N2.setEditar(false);
+        campoS_N2.setVisible(false);
+        campoS_N3.setEditar(false);
+        campoS_N3.setVisible(false);
+        campoS_N4.setEditar(false);
+        campoS_N4.setVisible(false);
+        campoS_N5.setEditar(false);
+        campoS_N5.setVisible(false);
+        campoS_N6.setEditar(false);
+        campoS_N6.setVisible(false);
+        campoS_N7.setEditar(false);
+        campoS_N7.setVisible(false);
+        iuInformacion.setVisible(true);
+        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
+    }
+    private void inhabilitarCampos(){
+        iuTipDoc.setEnabled(false);
+        iuMonto.setEnabled(false);
+        iuDoc.setEnabled(false);
+        iuNum.setEnabled(false);
+        iuDocRef.setEnabled(false);
+        iuNumLiteral.setEnabled(false);
+        iuConcepto.setEnabled(false);
+        iuTipCam.setEnabled(false);
+        iuAreaGlosa.setEnabled(false);
+        iuCuenta.setEnabled(false);
+        iuBanco.setEnabled(false);
+        iuCheque.setEnabled(false);
+    }
+    private void actualizarPaneles(){        
+        asiento.setTipoDoc(iuTipDoc.getSelectedItem().toString());
+        asiento.setDoc(iuDoc.getText());
+        asiento.setNumero(iuNum.getText());
+        asiento.setMontoIncial(iuMonto.getText());
+        asiento.setOrigen(iuDocRef.getText());
+        asiento.setMontoLiteral(iuNumLiteral.getText());
+        asiento.setConcepto(iuConcepto.getText());
+        asiento.setDescripcion(iuAreaGlosa.getText());
+        asiento.setNroCuenta(iuCuenta.getText());
+        asiento.setBanco(iuBanco.getText());
+        asiento.setCheque(iuCheque.getText());
+        
+        asiento.setLista(iuTabla.modeloTabla.lista);
+        
+        if(!iuNro.getText().isEmpty() && !iuCodigo.getText().isEmpty() && !iuDescripcion.getText().isEmpty()){
+            asiento.setNro(Integer.parseInt(iuNro.getText()));
+            asiento.setCodigo(Long.parseLong(iuCodigo.getText()));
+            asiento.setCuenta(iuDescripcion.getText());            
+            asiento.setDebe(0);
+            asiento.setHaber(0);
+            asiento.setMonto(0);
+        }
+        if(!iuDebe.getText().isEmpty())
+            asiento.setDebe(Double.parseDouble(iuDebe.getText()));
+        if(!iuHaber.getText().isEmpty())
+            asiento.setHaber(Double.parseDouble(iuHaber.getText()));
+        if(!iuDolares.getText().isEmpty())
+            asiento.setMonto(Double.parseDouble(iuDolares.getText()));
+        
+        panel.removeAll();        
+        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        iuTabla.modeloTabla.fireTableDataChanged();
+        panel.updateUI();
+        
+        iuTipDoc.setSelectedItem(asiento.getTipoDoc());
+        iuDoc.setText(asiento.getDoc());
+        iuNum.setText(String.valueOf(asiento.getNumero()));
+        iuMonto.setText(String.valueOf(asiento.getMontoIncial()));
+        iuDocRef.setText(asiento.getOrigen());
+        iuNumLiteral.setText(asiento.getMontoLiteral());
+        iuConcepto.setText(asiento.getConcepto());
+        iuAreaGlosa.setText(asiento.getDescripcion());
+        iuCuenta.setText(String.valueOf(asiento.getNroCuenta()));
+        iuBanco.setText(asiento.getBanco());
+        iuCheque.setText(String.valueOf(asiento.getCheque()));
+        iuNro.setText(String.valueOf(asiento.getNro()));
+        iuCodigo.setText(String.valueOf(asiento.getCodigo()));
+        iuDescripcion.setText(asiento.getCuenta());
+        iuDebe.setText(String.valueOf(asiento.getDebe()));
+        iuHaber.setText(String.valueOf(asiento.getHaber()));
+        iuDolares.setText(String.valueOf(asiento.getMonto()));  
+        
+        iuTabla.actualizarTabla(asiento.getLista());
+        sumarColumnasTotales();
+        inhabilitarCampos();
+    }
+    
+    //funcionalidad del programa
     private void focoCampoNro(){
         pintarBordeCampo("NRO");
         deshabilitarCampoS_N();
-        campoS_N1.removeKeyListener(eventoCampoS_N1);
-        campoS_N4.removeKeyListener(eventoCampoS_N4);
-        campoS_N3.removeKeyListener(eventoCampoS_N3);
         
         iuNro.setEditar(true);
         iuNro.requestFocus();        
         
         iuMensaje.setTexto("CAMPO No: REGISTRO DEL COMPROBANTE.");
         iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, 00=Finalizar o F7=Finalizar, ESC=Suspender");
-        iuNro.setText(String.valueOf(indice));
-        eventoNro = new KeyAdapter() {
+        iuNro.setText(String.valueOf(indice));        
+        iuNro.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){                    
                     focoCampoCodigo();
                 }
-                if(KeyEvent.VK_0 == e.getKeyCode()){                    
+                if(KeyEvent.VK_0 == e.getKeyCode() || KeyEvent.VK_NUMPAD0 == e.getKeyCode()){                    
                     if(!iuMonto.getText().isEmpty() && !iuTotalDebe.getText().isEmpty() && !iuTotalHaber.getText().isEmpty() && !iuTotalDolares.getText().isEmpty()){
                         double montoTotal = Double.parseDouble(iuMonto.getText());
                         double debeTotal = Double.parseDouble(iuTotalDebe.getText());
                         double haberTotal = Double.parseDouble(iuTotalHaber.getText());
                         double dolaresTotal = Double.parseDouble(iuTotalDolares.getText());
                         if((montoTotal == debeTotal && montoTotal  == haberTotal)){ // && dolaresTotal == 0
-                            if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION"))
-                                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");                     
+                            if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION")){
+                                guardarContra();
+                            }
+                                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");   
+                            actualizarPaneles();
                             dispose();
                         }
                     }                    
@@ -962,17 +1039,15 @@ public class VContra extends IUSecundario{
                         if((montoTotal == debeTotal && montoTotal  == haberTotal)){ // && dolaresTotal == 0
                             if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION"))
                                 Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");                     
+                            actualizarPaneles();
                             dispose();
                         }
                     }                    
                 }
             }
-        };
-        iuNro.addKeyListener(eventoNro);
+        });
     }
     private void focoCampoCodigo(){        
-        iuNro.removeKeyListener(eventoNro);
-        
         iuNro.setText(String.valueOf(indice));
         deshabilitarCampoS_N();
         pintarBordeCampo("CODIGO");        
@@ -980,22 +1055,20 @@ public class VContra extends IUSecundario{
         iuCodigo.requestFocus();
         iuMensaje.setTexto("CAMPO CODIGO: Puede elegir Asientos Tipo o consultar a la Ayuda.");
         if(indice > 1)
-            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F10=BANCO, ESC=Suspender o Finalizar");
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F10=BANCO, ESC=Suspender o Finalizar");
         else
-            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F8=ASIENTOS TIPO, ESC=Suspender o Finalizar");
-        eventoCodigo = new KeyAdapter() {
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F8=ASIENTOS TIPO, ESC=Suspender o Finalizar");        
+        iuCodigo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!iuCodigo.getText().isEmpty()){
-                        if(existeItemTabla(iuCodigo.getText())){
+                        if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()).isEmpty()){
+                            iuDescripcion.setText(Ayuda.getDatoCadena("descri", "SELECT DESCRI FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()));
                             focoCampoS_N2();
-                        }else{
-                            if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()).isEmpty())
-                                focoCampoS_N2();
                         }
                     }
-                }
+                }                
                 if(KeyEvent.VK_UP == e.getKeyCode() || KeyEvent.VK_DOWN == e.getKeyCode()){
                     if(!iuTabla.modeloTabla.isVacia())
                         focoCampoTabla();
@@ -1007,7 +1080,7 @@ public class VContra extends IUSecundario{
                     iuAyuda.mostrarVentana();
                     if(iuAyuda.getEstado()){
                         c = iuAyuda.getConmae();
-                        actualizarPanelFila();
+                        actualizarPaneles();
                     }else{
                         if(!iuCodigo.getText().isEmpty())
                             c.setCuetot(Long.parseLong(iuCodigo.getText()));
@@ -1017,10 +1090,9 @@ public class VContra extends IUSecundario{
                             c.setSalini(Double.parseDouble(iuDebe.getText()));
                         if(!iuHaber.getText().isEmpty())
                             c.setSalin2(Double.parseDouble(iuHaber.getText()));
-                        actualizarPanelFila();
+                        actualizarPaneles();                        
                     }
-                    iuCodigo.removeKeyListener(eventoCodigo);
-                    
+                    inhabilitarCampos();
                     iuNro.setText(String.valueOf(indice));
                     iuCodigo.setText(String.valueOf(c.getCuetot()));
                     iuDescripcion.setText(c.getDescri());
@@ -1031,6 +1103,9 @@ public class VContra extends IUSecundario{
                     else
                         focoCampoCodigo();
                     setOpacity(1f);
+                }
+                if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    focoCampoNro();
                 }
                 /*if(KeyEvent.VK_F7 == e.getKeyCode()){
                     Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Atencion: Para seleccionar el codigo de asiento NECESARIAMENTE DEBE CREAR UNA NUEVA CUENTA, en el plan de cuentas respectivamente.", "ADVERTENCIA");                    
@@ -1066,27 +1141,20 @@ public class VContra extends IUSecundario{
                                 Asiento a = new Asiento(indice);
                                 a.setCodigo(t.getCuetot());
                                 a.setCuenta(t.getDescri());
-                                //listaAsientos.add(a);
                                 iuTabla.modeloTabla.setFila(a);
                                 indice++;
-                            }                        
+                            }
                         }
-                        actualizarPanelFila();
-                        iuCodigo.removeKeyListener(eventoCodigo);
+                        actualizarPaneles();                        
                         limpiarCamposFila();
                         focoCampoCodigo();
                         setOpacity(1f);
                     }
                 }                
             }
-        };
-        iuCodigo.addKeyListener(eventoCodigo);
+        });
     }
-    private void focoCampoTabla(){
-        iuCodigo.removeKeyListener(eventoCodigo);
-        campoS_N4.removeKeyListener(eventoCampoS_N4);
-        campoS_N3.removeKeyListener(eventoCampoS_N3);
-        
+    private void focoCampoTabla(){        
         pintarBordeCampo("TABLA");
         deshabilitarCampoS_N();
         
@@ -1130,7 +1198,7 @@ public class VContra extends IUSecundario{
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    actualizarPanelFila();                    
+                    actualizarPaneles();                    
                     focoCampoCodigo();
                 }
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
@@ -1175,7 +1243,7 @@ public class VContra extends IUSecundario{
                                     iuDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));                                    
                                     modificarRegistroTabla();
                                     sumarColumnasTotales();
-                                    actualizarPanelFila();
+                                    actualizarPaneles();
                                     limpiarCamposFila();
                                     focoCampoNro();
                                 }
@@ -1213,7 +1281,7 @@ public class VContra extends IUSecundario{
                                     iuDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
                                     modificarRegistroTabla();
                                     sumarColumnasTotales();
-                                    actualizarPanelFila();
+                                    actualizarPaneles();
                                     limpiarCamposFila();
                                     focoCampoNro();
                                 }
@@ -1238,7 +1306,8 @@ public class VContra extends IUSecundario{
         iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("ATENCION: Esta seguro que desea eliminar esta FILA de la Tabla SELECCIONADA.?    S/N");
         iuInformacion.setVisible(false);
-        eventoCampoS_N4 = new KeyAdapter() {
+        
+        campoS_N4.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -1247,7 +1316,7 @@ public class VContra extends IUSecundario{
                             if(iuTabla.isFilaSeleccionado()){                                
                                 iuTabla.modeloTabla.removeFila(iuTabla.getSelectedRow());
                                 sumarColumnasTotales();
-                                actualizarPanelFila();
+                                actualizarPaneles();
                                 limpiarCamposFila();
                                 indice--;
                                 focoCampoNro();                                
@@ -1261,12 +1330,9 @@ public class VContra extends IUSecundario{
                     }
                 }
             }
-        };
-        campoS_N4.addKeyListener(eventoCampoS_N4);
+        });
     }
     private void focoCampoS_N2(){
-        iuCodigo.removeKeyListener(eventoCodigo);
-        
         pintarBordeCampo("");        
         campoS_N2.setVisible(true);
         campoS_N2.setEditar(true);
@@ -1275,7 +1341,7 @@ public class VContra extends IUSecundario{
         iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("Desea editar en el campo DEBE o HABER.?    D/H");
         iuInformacion.setVisible(false);
-        eventoCampoS_N2 = new KeyAdapter() {
+        campoS_N2.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -1291,21 +1357,17 @@ public class VContra extends IUSecundario{
                     }
                 }
             }
-        };
-        campoS_N2.addKeyListener(eventoCampoS_N2);        
+        });        
     }
     private void focoCampoDebe(){
-        iuCodigo.removeKeyListener(eventoCodigo);
-        campoS_N2.removeKeyListener(eventoCampoS_N2);
-        
         pintarBordeCampo("DEBE");
         deshabilitarCampoS_N();
         
         iuDebe.setEditar(true);
         iuDebe.requestFocus();
         iuMensaje.setTexto("CAMPO DEBE: Digite el Monto a DEBITAR, ");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F9=100%, F7=87% de SI MISMO, F8=13%, ESC=Suspender o Finalizar");
-        eventoDebe = new KeyAdapter() {
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F9=100%, F7=87% de SI MISMO, F8=13%, ESC=Suspender o Finalizar");        
+        iuDebe.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -1321,9 +1383,8 @@ public class VContra extends IUSecundario{
                         }
                     }
                 }
-                
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    actualizarPanelFila();
+                    actualizarPaneles();
                     focoCampoCodigo();
                 }                
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
@@ -1364,21 +1425,17 @@ public class VContra extends IUSecundario{
                     focoCampoS_N3();
                 }
             }
-        };
-        iuDebe.addKeyListener(eventoDebe);
+        });
     }
     private void focoCampoHaber(){
-        iuCodigo.removeKeyListener(eventoCodigo);
-        campoS_N2.removeKeyListener(eventoCampoS_N2);
-        
         pintarBordeCampo("HABER");
         deshabilitarCampoS_N();
         
         iuHaber.setEditar(true);
         iuHaber.requestFocus();
         iuMensaje.setTexto("CAMPO HABER: Digite el Monto para ABONAR, ");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F7=Duplica Monto-Total DEBE al HABER, ESC=Suspender o Finalizar");
-        eventoHaber = new KeyAdapter() {
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F2=Retrocede, F7=Duplica Monto-Total DEBE al HABER, ESC=Suspender o Finalizar");        
+        iuHaber.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -1395,7 +1452,7 @@ public class VContra extends IUSecundario{
                     }
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    actualizarPanelFila();
+                    actualizarPaneles();
                     focoCampoCodigo();
                 }
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
@@ -1409,8 +1466,105 @@ public class VContra extends IUSecundario{
                     focoCampoS_N3();
                 }
             }
-        };
-        iuHaber.addKeyListener(eventoHaber);
+        });
+    }
+    
+    private void guardarContra(){
+        ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
+        int contador = 0;
+        int nivel = 0;
+        for (Asiento a : lista) {
+            
+            long codigo = a.getCodigo();
+            int num = Integer.parseInt(iuNum.getText());
+            Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+            
+            double salact = conmae.getSalact();
+            double salac2 = conmae.getSalac2();
+            nivel = conmae.getNivel();
+            System.out.println("el NIVEL: "+nivel);
+            System.out.println("");
+            System.out.println("");
+            for (int i = 0; i < nivel; i++) {
+                Contra contra = new Contra(0);
+                conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                int tipcon = 0;
+                switch(iuTipDoc.getTexto()){
+                    case "INGRESOS":
+                        tipcon = 1;
+                    break;
+                    case "EGRESOS":
+                        tipcon = 2;
+                    break;
+                    case "DIARIOS":
+                        tipcon = 3;
+                    break;
+                }
+                contra.setTipcon(tipcon);
+                contra.setNumcom(num + contador);
+                contra.setCorrel(a.getNro());
+                contra.setFecha(new Fecha().getFecha());
+                contra.setGrupo(conmae.getGrup());
+                contra.setSubgru(conmae.getSubgru());
+                contra.setMayor(conmae.getMayor());
+                contra.setCuenta(conmae.getCuenta());
+                contra.setSubcta(conmae.getSubcta());
+                int apropi = 0;
+                
+                if(a.getDebe() > 0){
+                    apropi = 1;
+                    salact = salact + a.getDebe();                
+                    salac2 = salac2 + a.getMonto();
+                    contra.setMonto1(a.getDebe());
+                }else{
+                    apropi = 2;
+                    salact = salact - a.getHaber();
+                    salac2 = salac2 - a.getMonto();
+                    contra.setMonto1(a.getHaber());
+                }
+                contra.setApropi(apropi);            
+                contra.setMonto2(a.getMonto());
+                contra.setTipcam(Double.parseDouble(iuTipCam.getText()));
+                contra.setIndica(conmae.getNivel());
+                contra.setNombre(iuDocRef.getText());
+                contra.setGlosa(iuAreaGlosa.getText());
+                if(!iuCheque.getText().isEmpty())
+                    contra.setCheque(Integer.parseInt(iuCheque.getText()));
+                else
+                    contra.setCheque(0);
+                contra.setNumcue(0);
+                contra.setCuetot(conmae.getCuetot());
+                contra.setReduce(0);
+                contra.setTipcom(0);
+                contra.setIntern(0);
+                contra.setNumint(0);
+                contra.setEmpres(1);
+
+                conmae.setSalact(salact);
+                conmae.setSalac2(salac2);
+
+                switch(conmae.getNivel()){
+                    case 5:
+                        codigo = codigo - conmae.getSubcta();
+                    break;
+                    case 4:
+                        codigo = codigo - (conmae.getCuenta()*100);
+                    break;
+                    case 3:
+                        codigo = codigo - (conmae.getMayor()*10000);
+                    break;
+                    case 2:
+                        codigo = codigo - (conmae.getSubgru()*1000000);
+                    break;
+                    default:
+                    break;
+                }
+                contador++;
+                System.out.println("el contra"+contador+": "+contra.toString());
+                System.out.println("el salact: "+salact);
+                System.out.println("el salac2: "+salac2);
+            }
+        }
     }
     
     private void sumarColumnasTotales(){
@@ -1438,7 +1592,7 @@ public class VContra extends IUSecundario{
         boolean modifico = false;
         if(!lista.isEmpty()){
             for (Asiento a : lista){
-                if(!iuCodigo.getText().isEmpty() && a.getCodigo() == Long.valueOf(iuCodigo.getText())){
+                if(a.getCodigo() == Long.valueOf(iuCodigo.getText())){
                     debe = debe + Double.parseDouble(iuDebe.getText());
                     modifico = true;
                 }                    
@@ -1469,10 +1623,7 @@ public class VContra extends IUSecundario{
             debe = debe + a.getDebe();        
         return debe;
     }
-    private void focoCampoS_N3(){
-        iuDebe.removeKeyListener(eventoDebe);
-        iuHaber.removeKeyListener(eventoHaber);
-        
+    private void focoCampoS_N3(){        
         pintarBordeCampo("");        
         campoS_N3.setVisible(true);
         campoS_N3.setEditar(true);
@@ -1480,8 +1631,8 @@ public class VContra extends IUSecundario{
         campoS_N3.setText("S");
         iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
         iuMensaje.setTexto("Esta Conforme con el MONTO en DOLARES. ?");
-        iuInformacion.setVisible(false);
-        eventoCampoS_N3 = new KeyAdapter() {
+        iuInformacion.setVisible(false);        
+        campoS_N3.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
@@ -1489,11 +1640,28 @@ public class VContra extends IUSecundario{
                         case "S":
                             if(debeMenorIgualMonto()){
                                 if(existeItemTabla(iuCodigo.getText())){                                
-                                    modificarRegistroTabla();
-                                    sumarColumnasTotales();
-                                    actualizarPanelFila();
-                                    limpiarCamposFila();
-                                    focoCampoNro();                                
+                                    if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
+                                        modificarRegistroTabla();
+                                        sumarColumnasTotales();
+                                        actualizarPaneles();
+                                        limpiarCamposFila();
+                                        focoCampoNro();
+                                    }else{                                
+                                        Asiento a = new Asiento(Integer.parseInt(iuNro.getText()));
+                                        if(!iuCodigo.getText().isEmpty() && !iuDebe.getText().isEmpty() && !iuHaber.getText().isEmpty() && !iuDolares.getText().isEmpty()){
+                                            a.setCodigo(Long.parseLong(iuCodigo.getText()));
+                                            a.setCuenta(iuDescripcion.getText());
+                                            a.setDebe(Double.parseDouble(iuDebe.getText()));
+                                            a.setHaber(Double.parseDouble(iuHaber.getText()));
+                                            a.setMonto(Double.parseDouble(iuDolares.getText()));
+                                            iuTabla.modeloTabla.setFila(a);
+                                            indice++;
+                                            sumarColumnasTotales();
+                                            actualizarPaneles();
+                                            limpiarCamposFila();
+                                            focoCampoNro();
+                                        }
+                                    }
                                 }else{                                
                                     Asiento a = new Asiento(Integer.parseInt(iuNro.getText()));
                                     if(!iuCodigo.getText().isEmpty() && !iuDebe.getText().isEmpty() && !iuHaber.getText().isEmpty() && !iuDolares.getText().isEmpty()){
@@ -1505,17 +1673,17 @@ public class VContra extends IUSecundario{
                                         iuTabla.modeloTabla.setFila(a);
                                         indice++;
                                         sumarColumnasTotales();
-                                        actualizarPanelFila();
+                                        actualizarPaneles();
                                         limpiarCamposFila();
                                         focoCampoNro();
                                     }
                                 }
                             }else{
                                 JOptionPane.showMessageDialog( ventanaPrincipal, "Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.", "ADVERTENCIA", JOptionPane.ERROR_MESSAGE );                                
-                                actualizarPanelFila();
+                                actualizarPaneles();
                                 limpiarCamposFila();
                                 focoCampoCodigo();
-                            }                            
+                            }
                         break;
                         case "N":                            
                             focoCampoCodigo();
@@ -1525,26 +1693,7 @@ public class VContra extends IUSecundario{
                     }                    
                 }
             }
-        };
-        campoS_N3.addKeyListener(eventoCampoS_N3);        
-    }
-    private void focoCampoS_N7(){
-        pintarBordeCampo("");
-        campoS_N7.setVisible(true);
-        campoS_N7.setEditar(true);
-        campoS_N7.requestFocus();
-        campoS_N7.setText("S");
-        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
-        iuMensaje.setTexto("Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.");
-        iuInformacion.setVisible(false);
-        campoS_N7.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    
-                }
-            }
-        });
+        });        
     }
     private void limpiarCamposFila(){
         iuCodigo.setText("");
@@ -1585,67 +1734,5 @@ public class VContra extends IUSecundario{
             }
             contador++;
         }        
-    }
-    private void inhabilitarCampos(){
-        iuTipDoc.setEnabled(false);
-        iuMonto.setEnabled(false);
-        iuDoc.setEnabled(false);
-        iuNum.setEnabled(false);
-        iuDocRef.setEnabled(false);
-        iuNumLiteral.setEnabled(false);
-        iuConcepto.setEnabled(false);
-        iuTipCam.setEnabled(false);
-        iuAreaGlosa.setEnabled(false);
-        iuCuenta.setEnabled(false);
-        iuBanco.setEnabled(false);
-        iuCheque.setEnabled(false);
-    }
-    private void actualizarPanelFila(){
-        Asiento a = new Asiento(0);
-        if(!iuNro.getText().isEmpty() && !iuCodigo.getText().isEmpty() && !iuDescripcion.getText().isEmpty()){
-            a.setNro(Integer.parseInt(iuNro.getText()));
-            a.setCodigo(Long.parseLong(iuCodigo.getText()));
-            a.setCuenta(iuDescripcion.getText());            
-            a.setDebe(0);
-            a.setHaber(0);
-            a.setMonto(0);
-        }
-        if(!iuDebe.getText().isEmpty())
-            a.setDebe(Double.parseDouble(iuDebe.getText()));
-        if(!iuHaber.getText().isEmpty())
-            a.setHaber(Double.parseDouble(iuHaber.getText()));
-        if(!iuDolares.getText().isEmpty())
-            a.setMonto(Double.parseDouble(iuDolares.getText()));
-        
-        cuartoPanelC.removeAll();
-        iuTabla.modeloTabla.fireTableDataChanged();
-        construirCuartoPanelC(new Area(2, 0, cuartoPanelC.area.An() - 14, cuartoPanelC.area.Al()));
-        cuartoPanelC.updateUI();        
-        
-        iuNro.setText(String.valueOf(a.getNro()));
-        iuCodigo.setText(String.valueOf(a.getCodigo()));
-        iuDescripcion.setText(a.getCuenta());
-        iuDebe.setText(String.valueOf(a.getDebe()));
-        iuHaber.setText(String.valueOf(a.getHaber()));
-        iuDolares.setText(String.valueOf(a.getMonto()));
-    }
-    private void deshabilitarCampoS_N(){
-        campoS_N1.setEditar(false);
-        campoS_N1.setVisible(false);
-        campoS_N2.setEditar(false);
-        campoS_N2.setVisible(false);
-        campoS_N3.setEditar(false);
-        campoS_N3.setVisible(false);
-        campoS_N4.setEditar(false);
-        campoS_N4.setVisible(false);
-        campoS_N5.setEditar(false);
-        campoS_N5.setVisible(false);
-        campoS_N6.setEditar(false);
-        campoS_N6.setVisible(false);
-        campoS_N7.setEditar(false);
-        campoS_N7.setVisible(false);
-        iuInformacion.setVisible(true);
-        iuInformacion.setColores(Color.BLACK, new Color(255, 210, 0));
-        iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
-    }
+    } 
 }

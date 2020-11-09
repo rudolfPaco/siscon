@@ -531,9 +531,9 @@ public class VConmae extends IUSecundario{
                         
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));
                         
-                        panelPrimerRegistro.removeAll();
-                        construirPanelPrimerRegistro(new Area(2, 2, panelPrimerRegistro.area.An() - 20, panelPrimerRegistro.area.Al() - 6));
-                        panelPrimerRegistro.updateUI();
+                        //panelPrimerRegistro.removeAll();
+                        //construirPanelPrimerRegistro(new Area(2, 2, panelPrimerRegistro.area.An() - 20, panelPrimerRegistro.area.Al() - 6));
+                        //panelPrimerRegistro.updateUI();
                         
                         Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(c != null){

@@ -128,14 +128,14 @@ public class VAsientoTipo extends IUSecundario{
         new Class[]{Integer.class, Long.class, String.class}, 
         new int[]{15, 25, 60}, 
         new ArrayList(), 
-        new ModeloTabla<Tabvar>(){
+        new ModeloTabla<Conmae>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 switch (columnIndex) {
                     case 0:
-                        return lista.get(rowIndex).getNumero();
+                        return rowIndex+1;
                     case 1:                
-                        return lista.get(rowIndex).getCodcon();
+                        return lista.get(rowIndex).getCuetot();
                     case 2:
                         return lista.get(rowIndex).getDescri();
                     default:
@@ -180,8 +180,17 @@ public class VAsientoTipo extends IUSecundario{
         iuInformacion.setTexto("ATENCION: ENTER=Aceptar Asiento Seleccionado, ESC=Suspender.");
         iuTabla1.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if(iuTabla1.isFilaSeleccionado()){
+                
                 Tabvar t = (Tabvar) iuTabla1.modeloTabla.getFila(iuTabla1.getSelectedRow());                
-                iuTabla2.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+t.getTipo()));
+                ArrayList<Tabvar> listaTabvar = CTabvar.getLista("select * from tabvar where tipo = "+t.getTipo());
+                ArrayList<Conmae> listaConmae = new ArrayList<>();
+                listaTabvar.forEach((tabvar) -> {                    
+                    Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+tabvar.getCodcon());
+                    if(c != null){
+                        listaConmae.add(CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+tabvar.getCodcon()));
+                    }
+                });
+                iuTabla2.actualizarTabla(listaConmae);
                 iuTabla2.setBackground(Color.GREEN);
             }
         });
@@ -220,7 +229,7 @@ public class VAsientoTipo extends IUSecundario{
             }
         });
     }
-    public ArrayList<Tabvar> getList(){
+    public ArrayList<Conmae> getList(){
         return iuTabla2.modeloTabla.lista;
     }
 }

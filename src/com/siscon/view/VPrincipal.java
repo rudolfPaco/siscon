@@ -19,6 +19,7 @@ import com.siscon.view.contra.VContra;
 import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VAsientoTipo;
 import com.siscon.view.contra.VAyudaContra;
+import com.siscon.view.contra.VContra1;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
 import java.awt.Color;
@@ -267,7 +268,7 @@ public class VPrincipal extends IUPrincipal{
             break;
             case "11":
                 setOpacity(0.6f);                
-                VContra iuSimple = new VContra(this, titulo, "grande", usuario, tabvar);
+                VContra1 iuSimple = new VContra1(this, titulo, "grande", usuario, tabvar);
                 iuSimple.mostrarVentana();
                 setOpacity(1f);
             break;
