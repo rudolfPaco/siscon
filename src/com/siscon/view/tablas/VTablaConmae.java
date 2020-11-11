@@ -17,6 +17,7 @@ import com.siscon.model.Conmae;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -220,7 +221,7 @@ public class VTablaConmae extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(0, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(6, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(8, SwingConstants.LEFT);
-        iuTabla.setFocusable(true);
+        iuTabla.setFocusable(true);        
         
         if(!lista.isEmpty()){
             showHideBotones("LISTA_CON_DATOS");
@@ -331,13 +332,14 @@ public class VTablaConmae extends IUSecundario{
     }
     private void eliminarArchivo(){
         if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
-            ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
+            /*ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
             listaConmae.forEach((conmae) -> {
                 CConmae.eliminarConmae(conmae);
-            });
+            });*/
+            CConmae.eliminarTodoConmae();
             iuTabla.modeloTabla.limpiarTabla();
             JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado TODOS LOS REGISTROS DE LA TABLA CONMAE...!");
-            showHideBotones("ELIMINAR");
+            showHideBotones("ELIMINAR");                        
         }
     }
     private void guardarArchivo(){ 

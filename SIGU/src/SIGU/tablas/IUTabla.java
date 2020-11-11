@@ -11,6 +11,7 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Grid;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class IUTabla extends JTable{
         setOpaque(false);
         setFocusable(false);        
         setRowSelectionAllowed(true);
+        setLayout(null);
         setGridColor(colorGrid);
         setForeground(colorLetra);        
         setSelectionBackground(colorSeleccionFondo);
@@ -85,8 +87,8 @@ public class IUTabla extends JTable{
         setFuenteCabecera(new Font("Verdana", Font.PLAIN, 14), colorFondoCabecera, colorLetraCabecera, false, 0, Color.WHITE);
         
         deslizador = new JScrollPane(this, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);        
-        //deslizador.setFocusable(false);
         panel.agregar(deslizador, area);
+        
         /*
         final TableRowSorter<TableModel> sorter = new TableRowSorter<>(getModel());
         setRowSorter(sorter);

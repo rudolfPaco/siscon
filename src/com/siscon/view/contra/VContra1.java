@@ -17,6 +17,7 @@ import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
+import com.siscon.controller.CContra;
 import com.siscon.controller.CTabvar;
 import com.siscon.model.Asiento;
 import com.siscon.model.Conmae;
@@ -28,6 +29,7 @@ import com.siscon.recursos.Numero_a_Letra;
 import com.siscon.view.VPrincipal;
 import com.siscon.view.conmae.VConmae;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -460,7 +462,7 @@ public class VContra1 extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(4, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(5, SwingConstants.RIGHT);
-        iuTabla.setBackground(Ayuda.COLOR_ATENCION);
+        iuTabla.setBackground(Ayuda.COLOR_ATENCION);        
         
         iuTotalComprobante = new IUEtiqueta(quintoPanelC, "Total Comprobante (en Bolivianos)    ", new Area(a.X() + a.AnP(20), a.Y(2) + a.AlP(90), a.AnP(50), a.AlP(10)), 16, "RIGHT", Ayuda.COLOR_ROJO);
         iuTotalDebe = new IUEtiqueta(quintoPanelC, "0.0", new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
@@ -663,9 +665,9 @@ public class VContra1 extends IUSecundario{
         boolean encontro = false;
         int contador = 0;
         while(contador < listaTabvar.size() && !encontro){
-            Tabvar t = listaTabvar.get(contador);
-            if(t.getTipo() == 2){                
-                if(t.getDescri().equalsIgnoreCase(tipdoc)){
+            tabvar = listaTabvar.get(contador);
+            if(tabvar.getTipo() == 2){                
+                if(tabvar.getDescri().equalsIgnoreCase(tipdoc)){
                     switch(tipdoc){
                         case "INGRESOS":
                             iuEtiquetaDocRef.setTexto("Recibido de: ");
@@ -681,8 +683,8 @@ public class VContra1 extends IUSecundario{
                         break;
                     }
                     encontro = true;
-                    iuDoc.setText(t.getDescri());
-                    iuNum.setText(String.valueOf(t.getCorrel()));
+                    iuDoc.setText(tabvar.getDescri());
+                    iuNum.setText(String.valueOf(tabvar.getCorrel()));
                 }
             }
             contador++;
@@ -1024,8 +1026,9 @@ public class VContra1 extends IUSecundario{
                             if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION")){
                                 guardarContra();
                             }
-                                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");   
                             actualizarPaneles();
+                            Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");   
+                            actualizarPaneles();                            
                             dispose();
                         }
                     }                    
@@ -1472,99 +1475,228 @@ public class VContra1 extends IUSecundario{
     private void guardarContra(){
         ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
         int contador = 0;
+        int num = Integer.parseInt(iuNum.getText());
         int nivel = 0;
-        for (Asiento a : lista) {
+        for (Asiento apropiacion : lista) {
             
-            long codigo = a.getCodigo();
-            int num = Integer.parseInt(iuNum.getText());
+            long codigo = apropiacion.getCodigo();
+            
             Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+            Contra contra = new Contra(0);            
             
+            nivel = conmae.getNivel();
+            
+            int tipcon = 0;
+            switch(iuTipDoc.getSelectedItem().toString()){
+                case "INGRESOS":
+                    tipcon = 1;
+                break;
+                case "EGRESOS":
+                    tipcon = 2;
+                break;
+                case "DIARIOS":
+                    tipcon = 3;
+                break;
+            }
+            
+            contra.setTipcon(tipcon);
+            contra.setNumcom(num);
+            contra.setCorrel(apropiacion.getNro());
+            contra.setFecha(new Fecha().getFecha());
+            contra.setGrupo(conmae.getGrup());
+            contra.setSubgru(conmae.getSubgru());
+            contra.setMayor(conmae.getMayor());
+            contra.setCuenta(conmae.getCuenta());
+            contra.setSubcta(conmae.getSubcta());
+            
+            int apropi = 0;
             double salact = conmae.getSalact();
             double salac2 = conmae.getSalac2();
-            nivel = conmae.getNivel();
-            System.out.println("el NIVEL: "+nivel);
-            System.out.println("");
-            System.out.println("");
-            for (int i = 0; i < nivel; i++) {
-                Contra contra = new Contra(0);
-                conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
-                int tipcon = 0;
-                switch(iuTipDoc.getTexto()){
-                    case "INGRESOS":
-                        tipcon = 1;
-                    break;
-                    case "EGRESOS":
-                        tipcon = 2;
-                    break;
-                    case "DIARIOS":
-                        tipcon = 3;
-                    break;
-                }
-                contra.setTipcon(tipcon);
-                contra.setNumcom(num + contador);
-                contra.setCorrel(a.getNro());
-                contra.setFecha(new Fecha().getFecha());
-                contra.setGrupo(conmae.getGrup());
-                contra.setSubgru(conmae.getSubgru());
-                contra.setMayor(conmae.getMayor());
-                contra.setCuenta(conmae.getCuenta());
-                contra.setSubcta(conmae.getSubcta());
-                int apropi = 0;
+            
+            //debe
+            double debano = conmae.getDebano();
+            double debdia = conmae.getDebdia();
+            double debmes = conmae.getDebmes();
+                        
+            double deban2 = conmae.getDeban2();
+            double debme2 = conmae.getDebme2();
+            double debdi2 = conmae.getDebdi2();
+            
+            //haber
+            double creano = conmae.getCreano();
+            double credia = conmae.getCredia();
+            double cremes = conmae.getCremes();
+            
+            double crean2 = conmae.getCrean2();
+            double creme2 = conmae.getCreme2();
+            double credi2 = conmae.getCredi2();
+            
+            if(apropiacion.getDebe() > 0){
+                apropi = 1;
+                salact = salact + apropiacion.getDebe();
+                debano = debano + apropiacion.getDebe();
+                debdia = debdia + apropiacion.getDebe();
+                debmes = debmes + apropiacion.getDebe();
                 
-                if(a.getDebe() > 0){
-                    apropi = 1;
-                    salact = salact + a.getDebe();                
-                    salac2 = salac2 + a.getMonto();
-                    contra.setMonto1(a.getDebe());
-                }else{
-                    apropi = 2;
-                    salact = salact - a.getHaber();
-                    salac2 = salac2 - a.getMonto();
-                    contra.setMonto1(a.getHaber());
-                }
-                contra.setApropi(apropi);            
-                contra.setMonto2(a.getMonto());
-                contra.setTipcam(Double.parseDouble(iuTipCam.getText()));
-                contra.setIndica(conmae.getNivel());
-                contra.setNombre(iuDocRef.getText());
-                contra.setGlosa(iuAreaGlosa.getText());
-                if(!iuCheque.getText().isEmpty())
-                    contra.setCheque(Integer.parseInt(iuCheque.getText()));
-                else
-                    contra.setCheque(0);
-                contra.setNumcue(0);
-                contra.setCuetot(conmae.getCuetot());
-                contra.setReduce(0);
-                contra.setTipcom(0);
-                contra.setIntern(0);
-                contra.setNumint(0);
-                contra.setEmpres(1);
-
-                conmae.setSalact(salact);
-                conmae.setSalac2(salac2);
-
-                switch(conmae.getNivel()){
-                    case 5:
-                        codigo = codigo - conmae.getSubcta();
-                    break;
-                    case 4:
-                        codigo = codigo - (conmae.getCuenta()*100);
-                    break;
-                    case 3:
-                        codigo = codigo - (conmae.getMayor()*10000);
-                    break;
-                    case 2:
-                        codigo = codigo - (conmae.getSubgru()*1000000);
-                    break;
-                    default:
-                    break;
-                }
-                contador++;
-                System.out.println("el contra"+contador+": "+contra.toString());
-                System.out.println("el salact: "+salact);
-                System.out.println("el salac2: "+salac2);
+                salac2 = salac2 + apropiacion.getMonto();
+                deban2 = deban2 + apropiacion.getMonto();
+                debme2 = debme2 + apropiacion.getMonto();
+                debdi2 = debdi2 + apropiacion.getMonto();
+                
+                contra.setMonto1(apropiacion.getDebe());
+            }else{
+                apropi = 2;
+                salact = salact - apropiacion.getHaber();
+                creano = creano + apropiacion.getHaber();
+                credia = credia + apropiacion.getHaber();
+                cremes = cremes + apropiacion.getHaber();
+                
+                salac2 = salac2 - apropiacion.getMonto();
+                crean2 = crean2 + apropiacion.getMonto();
+                creme2 = creme2 + apropiacion.getMonto();
+                credi2 = credi2 + apropiacion.getMonto();
+                
+                contra.setMonto1(apropiacion.getHaber());
             }
+            contra.setApropi(apropi);            
+            contra.setMonto2(apropiacion.getMonto());
+            contra.setTipcam(Double.parseDouble(iuTipCam.getText()));
+            contra.setIndica(nivel);
+            contra.setNombre(iuDocRef.getText());
+            contra.setGlosa(iuAreaGlosa.getText());
+            if(!iuCheque.getText().isEmpty())
+                contra.setCheque(Integer.parseInt(iuCheque.getText()));
+            else
+                contra.setCheque(0);
+            contra.setNumcue(0);
+            contra.setCuetot(conmae.getCuetot());
+            contra.setReduce(0);
+            contra.setTipcom(tipcon);
+            contra.setIntern(0);
+            contra.setNumint(0);
+            //guarda la empesa, donde se consigue del tabvar (10,1)
+            contra.setEmpres(1);
+            
+            conmae.setSalact(salact);
+            conmae.setDebano(debano);
+            conmae.setDebdia(debdia);
+            conmae.setDebmes(debmes);
+                        
+            conmae.setSalac2(salac2);
+            conmae.setDeban2(deban2);
+            conmae.setDebme2(debme2);
+            conmae.setDebdi2(debdi2);
+            
+            conmae.setCreano(creano);
+            conmae.setCredia(credia);
+            conmae.setCremes(cremes);
+            
+            conmae.setCrean2(crean2);
+            conmae.setCreme2(creme2);
+            conmae.setCredi2(credi2);
+
+            System.out.println("");
+            System.out.println("el contra es: "+contra.toString());
+            System.out.println("");
+            System.out.println("el conmae PRINCIPAL es: "+conmae.toString());
+            //modifica el conmae y guarda el nuevo contra
+            if(CContra.guardarConmae(contra)){
+                if(CConmae.modificarConmae(conmae)){
+                    
+                    for (int i = 1; i < nivel; i++) {
+                
+                        switch(conmae.getNivel()){
+                            case 5:
+                                codigo = codigo - conmae.getSubcta();
+                            break;
+                            case 4:
+                                codigo = codigo - (conmae.getCuenta()*100);
+                            break;
+                            case 3:
+                                codigo = codigo - (conmae.getMayor()*10000);
+                            break;
+                            case 2:
+                                codigo = codigo - (conmae.getSubgru()*1000000);
+                            break;
+                            default:
+                            break;
+                        }
+                        conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+
+                        salact = conmae.getSalact();
+                        salac2 = conmae.getSalac2();
+
+                        //debe
+                        debano = conmae.getDebano();
+                        debdia = conmae.getDebdia();
+                        debmes = conmae.getDebmes();
+
+                        deban2 = conmae.getDeban2();
+                        debme2 = conmae.getDebme2();
+                        debdi2 = conmae.getDebdi2();
+
+                        //haber
+                        creano = conmae.getCreano();
+                        credia = conmae.getCredia();
+                        cremes = conmae.getCremes();
+
+                        crean2 = conmae.getCrean2();
+                        creme2 = conmae.getCreme2();
+                        credi2 = conmae.getCredi2();
+
+                        /************MAYORIZACION**************/
+                        if(apropiacion.getDebe() > 0){                
+                            salact = salact + apropiacion.getDebe();
+                            debano = debano + apropiacion.getDebe();
+                            debdia = debdia + apropiacion.getDebe();
+                            debmes = debmes + apropiacion.getDebe();
+
+                            salac2 = salac2 + apropiacion.getMonto();
+                            deban2 = deban2 + apropiacion.getMonto();
+                            debme2 = debme2 + apropiacion.getMonto();
+                            debdi2 = debdi2 + apropiacion.getMonto();
+
+                        }else{                
+                            salact = salact - apropiacion.getHaber();
+                            creano = creano + apropiacion.getHaber();
+                            credia = credia + apropiacion.getHaber();
+                            cremes = cremes + apropiacion.getHaber();
+
+                            salac2 = salac2 - apropiacion.getMonto();
+                            crean2 = crean2 + apropiacion.getMonto();
+                            creme2 = creme2 + apropiacion.getMonto();
+                            credi2 = credi2 + apropiacion.getMonto();
+                        }
+                        conmae.setSalact(salact);
+                        conmae.setDebano(debano);
+                        conmae.setDebdia(debdia);
+                        conmae.setDebmes(debmes);
+
+                        conmae.setSalac2(salac2);
+                        conmae.setDeban2(deban2);
+                        conmae.setDebme2(debme2);
+                        conmae.setDebdi2(debdi2);
+
+                        conmae.setCreano(creano);
+                        conmae.setCredia(credia);
+                        conmae.setCremes(cremes);
+
+                        conmae.setCrean2(crean2);
+                        conmae.setCreme2(creme2);
+                        conmae.setCredi2(credi2);
+
+                        CConmae.modificarConmae(conmae);
+                        //modificar el conmae
+                        System.out.println("el conmae sube de nivel: "+conmae.getNivel());
+                        System.out.println("el conmae: "+conmae.toString());
+                    }
+                }
+            }
+            contador++;
         }
+        num++;
+        tabvar.setCorrel(num);
+        CTabvar.modificarTabvar(tabvar);
     }
     
     private void sumarColumnasTotales(){

@@ -44,4 +44,11 @@ public class CConmae {
             verificador = true;
         return verificador;
     }
+    public static boolean eliminarTodoConmae(){
+        boolean verificador = false;
+        ConmaeDao conmaeDao = new ConmaeDao();
+        if(conmaeDao.removeAll())
+            verificador = true;
+        return verificador;
+    }
 }
