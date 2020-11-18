@@ -202,7 +202,10 @@ public class VEliminarGrupoConmae extends IUSecundario{
                             for (int i = 0; i < multipleSeleccion.length; i++) {
                                 int indice = multipleSeleccion[i];
                                 Conmae c = (Conmae) iuTabla.modeloTabla.getFila(indice);
-                                CConmae.eliminarConmae(c);
+                                if(c.getDebmes() != 0 && c.getCremes() != 0)
+                                    Ayuda.mostrarMensajeError(ventanaPrincipal, "G-S-My-An-Sa = "+c.getCuetot()+"  descripcion = "+c.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "Error");
+                                else
+                                    CConmae.eliminarConmae(c);
                             }
                             JOptionPane.showMessageDialog( ventanaPrincipal , "Se ha ELIMINADO (EL) LOS "+multipleSeleccion.length+" Registros de la TABLA CONMAE.", "CORRECTO" , JOptionPane.INFORMATION_MESSAGE );
                             iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "));

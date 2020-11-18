@@ -148,6 +148,22 @@ public class Ayuda {
         conexion.cerrar_conexion();
         return dato;
     }
+    
+    public static int getDatoEntero(String columna, String sql){        
+        Conexion conexion = new Conexion();
+        int dato = 0;
+        try {            
+            PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();            
+            while (rs.next()) {
+                dato = rs.getInt(columna);
+            }
+        } catch (SQLException e) {            
+            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());            
+        }
+        conexion.cerrar_conexion();
+        return dato;
+    }
 
     public static String cambiarFormatoFecha(String fecha) {
         System.out.println("la fecha es: "+fecha);
@@ -197,6 +213,7 @@ public class Ayuda {
         BigDecimal big = new BigDecimal(numero);
         return big.setScale(cota, RoundingMode.HALF_UP).doubleValue();
     }
+    
     public static void main(String[] arg) {
         String fecha = "01/01/2015";
         System.out.println("la fecha es: " + fecha);

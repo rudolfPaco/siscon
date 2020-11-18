@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -81,7 +82,7 @@ public class IUComboBox extends JComboBox<String> {
         //setColorLetra(colorLetra);
         setForeground(colorLetra);
         setTipo("");        
-        setBordeComponente(getBorder());
+        setBordeComponente(getBorder());        
         //setDeshabilitarTexto(true);
         //setOpacidad(false);                
     }
@@ -109,7 +110,9 @@ public class IUComboBox extends JComboBox<String> {
     public void setOpacidad(boolean opacidad){
         ((JTextField)getEditor().getEditorComponent()).setOpaque(opacidad);
     }
-    
+    public void setPosicionHorizontal(int posicion){
+        ((JLabel)getRenderer()).setHorizontalAlignment(posicion);
+    }
     public void setEditar(boolean estado){
         setFocusable(estado);
         setEnabled(estado);

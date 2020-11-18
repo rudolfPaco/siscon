@@ -24,6 +24,10 @@ public class CTabvar {
         TabvarDao tabvarDao = new TabvarDao();
         return tabvarDao.getTabvar("SELECT * FROM TABVAR WHERE TIPO = "+tipo+" AND NUMERO = "+numero);
     }
+    public static Tabvar getTabvar(String sql){
+        TabvarDao tabvarDao = new TabvarDao();
+        return tabvarDao.getTabvar(sql);
+    }
     public static String getObservacion(int tipo){
         String observacion = "";
         TabvarDao tabvarDao = new TabvarDao();        

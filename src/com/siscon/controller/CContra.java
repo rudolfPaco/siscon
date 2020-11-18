@@ -5,8 +5,11 @@
  */
 package com.siscon.controller;
 
+import com.siscon.dao.ConmaeDao;
 import com.siscon.dao.ContraDao;
+import com.siscon.model.Conmae;
 import com.siscon.model.Contra;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,11 +18,33 @@ import com.siscon.model.Contra;
 public class CContra {
 
 
-    public static boolean guardarConmae(Contra contra){
+    public static boolean guardarContra(Contra contra){
         boolean verificador = false;
         ContraDao contraDao = new ContraDao();
         if(contraDao.saveContra(contra))
             verificador = true;
         return verificador;
     }
+    public static boolean modificarContra(Contra contra){
+        boolean verificador = false;
+        ContraDao contraDao = new ContraDao();
+        if(contraDao.modifyContra(contra))
+            verificador = true;
+        return verificador;
+    }
+    public static boolean eliminarConmae(Contra contra){
+        boolean verificador = false;
+        ContraDao contraDao = new ContraDao();
+        if(contraDao.deleteContra(contra))
+            verificador = true;
+        return verificador;
+    }
+    public static Contra getContra(String sql){
+        ContraDao conmaeDao = new ContraDao();
+        return conmaeDao.getContra(sql);
+    }
+    public static ArrayList<Contra> getListaContra(String sql){
+        ContraDao contraDao = new ContraDao();
+        return contraDao.getAllList(sql);
+    }    
 }

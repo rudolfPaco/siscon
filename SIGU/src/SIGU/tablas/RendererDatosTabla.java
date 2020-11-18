@@ -31,13 +31,13 @@ public class RendererDatosTabla extends DefaultTableCellRenderer {
             c.setFont(new Font("Verdana", Font.BOLD, 14));
             c.setForeground(new Color(2, 67, 109));//
             if((Integer)table.getValueAt(row, 8) == 1){
-                c.setBackground(new Color(255, 185, 185));
+                c.setBackground(Color.WHITE);
             }else{
                 c.setBackground(new Color(193, 255, 224));
             }
         }else{
             if((Integer)table.getValueAt(row, 8) == 1){
-                c.setBackground(new Color(255, 185, 185));
+                c.setBackground(Color.WHITE);
             }else{
                 c.setBackground(new Color(193, 255, 224));
             }
