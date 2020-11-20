@@ -387,19 +387,21 @@ public class REmisionPC extends IUSecundario{
             break;
             case "IMPRESORA":                
                 dispose();
-                reporte(Integer.parseInt(grupo), Integer.parseInt(nivel));
+                reporte(Integer.parseInt(grupo), Integer.parseInt(nivel), nombreNivel);
             break;
             default:
             break;
         }
     }
-    private void reporte(int grup, int niv){
+    private void reporte(int grup, int niv, String nombreNivel){
         try {
             Conexion conexion = new Conexion();            
             String ruta = "/reportes/report1.jasper";            
             Map parametros = new HashMap();
             parametros.put("grup", grup);
             parametros.put("nivel", niv);
+            parametros.put("plan", grupos);
+            parametros.put("grupos", nombreNivel);
             JasperReport jasper = (JasperReport) JRLoader.loadObjectFromFile(getClass().getResource(ruta).getPath());
             JasperPrint informe = JasperFillManager.fillReport(jasper, parametros, conexion.getConexion());
             JasperViewer visor = new JasperViewer(informe, false);
@@ -429,7 +431,7 @@ public class REmisionPC extends IUSecundario{
 
                 for (int i = 0 ; i < lista.size(); i++) //realiza un barrido por filas.
                 {
-                    bfw.write(i+1 + ","+lista.get(i).getGrup()+"-"+lista.get(i).getSubgru()+"-"+String.format("%02d",lista.get(i).getMayor())+"-"+String.format("%02d",lista.get(i).getCuenta())+"-"+String.format("%02d",lista.get(i).getSubcta())+","+lista.get(i).getDescri()+","+lista.get(i).getNivel() + ","+lista.get(i).getActivi() + ","+lista.get(i).getSalact() + ",");
+                    bfw.write(lista.get(i).getGrup()+"-"+lista.get(i).getSubgru()+"-"+String.format("%02d",lista.get(i).getMayor())+"-"+String.format("%02d",lista.get(i).getCuenta())+"-"+String.format("%02d",lista.get(i).getSubcta())+","+lista.get(i).getDescri()+","+lista.get(i).getNivel() + ","+lista.get(i).getActivi() + ","+lista.get(i).getSalact() + ",");
                     bfw.newLine(); //inserta nueva linea.
                 }
 

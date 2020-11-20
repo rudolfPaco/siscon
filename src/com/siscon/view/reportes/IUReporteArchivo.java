@@ -80,7 +80,7 @@ public class IUReporteArchivo extends IUSecundario{
     
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: EPC ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Nivel: "+nombreNivel+"   |   Cuenta: "+nombreGrupo, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Nivel: "+nombreNivel+"   |   Cuenta: "+nombreGrupo, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(45), a.AlP(50)), 16, "LEFT", false);
         iuTitulo = new IUEtiqueta(panelTitulo, "PLAN DE CUENTAS", new Area(a.X(2) + a.AnP(45), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "LEFT", false);                
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
