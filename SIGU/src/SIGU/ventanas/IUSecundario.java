@@ -63,6 +63,9 @@ public class IUSecundario extends JDialog{
             case "pequeno":
                 area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width/3 + Toolkit.getDefaultToolkit().getScreenSize().width/50, Toolkit.getDefaultToolkit().getScreenSize().height/2 + Toolkit.getDefaultToolkit().getScreenSize().height/50);
             break;
+            case "mini":
+                area = new Area(Toolkit.getDefaultToolkit().getScreenSize().width/10, Toolkit.getDefaultToolkit().getScreenSize().height/20);
+            break;
         }
         
         setSize(new Dimension(area.An(), area.Al()));

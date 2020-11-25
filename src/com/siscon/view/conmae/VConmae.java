@@ -174,21 +174,7 @@ public class VConmae extends IUSecundario{
         algoritmoInicial();
     }
     private void construirPanel(Area a){
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
-        panel.getActionMap().put( "ESC", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                dispose();
-            }
-        });        
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F8, 0 ), "F8" );
-        panel.getActionMap().put( "F8", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                limpiarCampos();
-            }
-        });
+        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
         construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
     }
     private void construirPaneles(Area a){
@@ -203,6 +189,9 @@ public class VConmae extends IUSecundario{
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "PROCESOS PLAN DE CUENTAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
         iuTitulo.setSubrayarTexto(true);
+        iuTitulo = new IUEtiqueta(panelTitulo, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(50), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
+        iuTitulo.setSubrayarTexto(true);
+        
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
         
         iuTitulo = new IUEtiqueta(panelTitulo, "CONMAM1", new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
@@ -396,8 +385,8 @@ public class VConmae extends IUSecundario{
         iuTabla = new IUTabla(
         tercerPanel, 
         new Area(a.X(), a.Y(2) + a.AlP(5), a.An(), a.AlP(95)), 
-        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "PRESUP"}, 
-        new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
+        new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "SALDO"}, 
+        new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Double.class}, 
         new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, 
         new ArrayList(), 
         new ModeloTabla<Conmae>(){
@@ -424,7 +413,7 @@ public class VConmae extends IUSecundario{
                     case 8:
                         return lista.get(rowIndex).getActivi();
                     case 9:
-                        return lista.get(rowIndex).getPresup();
+                        return lista.get(rowIndex).getSalact();
                     default:
                         return null;
                 }
@@ -516,6 +505,14 @@ public class VConmae extends IUSecundario{
         campoActividad.setEditar(false);
         campoPresup.setEditar(false);
         
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
+        panel.getActionMap().put( "ESC", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                dispose();
+            }
+        });
+        
         focoCampoG();
     }
     
@@ -532,9 +529,8 @@ public class VConmae extends IUSecundario{
                     if(!campoG.getText().isEmpty()){
                         G = Integer.parseInt(campoG.getText());
                         
-                        campoNivel.setText("1");
-                        
                         actualizarPaneles();
+                        campoNivel.setText("1");
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));                        
                         campoG.setText(String.valueOf(G));
                         
@@ -567,12 +563,13 @@ public class VConmae extends IUSecundario{
                         
                         campoPresup.setText(String.valueOf(G));
                         
+                        actualizarPaneles();
                         campoActividad.setText("1");
                         
-                        if(S > 0){
-                            campoNivel.setText("2");
+                        if(S > 0){                            
                             
-                            actualizarPaneles();
+                            
+                            campoNivel.setText("2");
                             iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));                            
                             campoG.setText(String.valueOf(G));
                             campoS.setText(String.valueOf(S));
@@ -655,6 +652,7 @@ public class VConmae extends IUSecundario{
                         My = Integer.parseInt(campoMy.getText());
                         An = Integer.parseInt(campoAn.getText());
                                                 
+                        actualizarPaneles();
                         campoActividad.setText("1");
                         
                         if(An > 0){
@@ -663,7 +661,7 @@ public class VConmae extends IUSecundario{
                             iuTabla.actualizarTabla(new ArrayList());
                         }     
                         
-                        actualizarPaneles();
+                        
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" GROUP BY CUETOT "));                                                    
                         campoG.setText(String.valueOf(G));
                         campoS.setText(String.valueOf(S));
@@ -711,6 +709,7 @@ public class VConmae extends IUSecundario{
                         An = Integer.parseInt(campoAn.getText());
                         Sa = Integer.parseInt(campoSa.getText());
                                                 
+                        actualizarPaneles();
                         campoActividad.setText("1");
                         
                         if(Sa > 0)
@@ -718,7 +717,7 @@ public class VConmae extends IUSecundario{
                         else
                             iuTabla.actualizarTabla(new ArrayList());
                         
-                        actualizarPaneles();
+                        
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));                        
                         campoG.setText(String.valueOf(G));
                         campoS.setText(String.valueOf(S));
@@ -730,6 +729,7 @@ public class VConmae extends IUSecundario{
                         if(conmae != null){
                             if(conmae.getActivi() == 2 && restringir){
                                 iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, tome en cuenta a futuros procesos. Vuelva a presionar la tecla Enter.");
+                                focoCampoDescripcion();
                                 restringir = false;                                    
                             }else{
                                 focoCampoS_N1(conmae);
@@ -901,7 +901,8 @@ public class VConmae extends IUSecundario{
     private void eliminarConmae(){
         setOpacity(0.5f);
         if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR el Registro del PLAN DE CUENTAS....?", "CONFIRMACION")){
-            if(conmae.getDebmes() != 0 && conmae.getCremes() != 0){
+            double suma = Math.abs(conmae.getDebmes() + conmae.getCremes());
+            if(suma > 0){
                 Ayuda.mostrarMensajeError(ventanaPrincipal, "G-S-My-An-Sa = "+conmae.getCuetot()+"  descripcion = "+conmae.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "Error");
             }else{
                 if(CConmae.eliminarConmae(conmae)){
@@ -1094,7 +1095,7 @@ public class VConmae extends IUSecundario{
         }            
         
         panel.removeAll();
-        construirPanel(new Area(An()-6, Al()-29));
+        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
         panel.updateUI();
         
         if(!lista1.isEmpty()){

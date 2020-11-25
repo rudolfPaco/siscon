@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -33,6 +35,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -343,25 +346,52 @@ public class VTablaConmae extends IUSecundario{
         }
     }
     private void guardarArchivo(){ 
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
-            for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {
-                Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
-                try {
-                    if(conmae.getFecha().isEmpty())
-                        conmae.setFecha(null);
-                } catch (Exception e) {conmae.setFecha(null);}
-
-                try {
-                    if(conmae.getFecha2().isEmpty())
-                        conmae.setFecha2(null);
-                } catch (Exception e) {conmae.setFecha2(null);}
-
-                CConmae.guardarConmae(conmae);
-            }
-        }
-        showHideBotones("GUARDAR");
+        JProgressBar progresoBar = new JProgressBar();
+        progresoBar.setValue(0);
+        progresoBar.setStringPainted(true);
+        progresoBar.setBounds(panel.getWidth()/2 - panel.getWidth()/8, panel.getHeight()/2 - panel.getHeight()/8, panel.getWidth()/8, panel.getHeight()/8);
+        progresoBar.setVisible(true);
+        panel.add(progresoBar);
         
-        JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONMAE correctamente...!");
+        final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+                    for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {                        
+                        Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
+                        try {
+                            if(conmae.getFecha().isEmpty())
+                                conmae.setFecha(null);
+                        } catch (Exception e) {conmae.setFecha(null);}
+
+                        try {
+                            if(conmae.getFecha2().isEmpty())
+                                conmae.setFecha2(null);
+                        } catch (Exception e) {conmae.setFecha2(null);}
+
+                        CConmae.guardarConmae(conmae);
+                        setProgress(i);
+                    }
+                }
+                return null;
+            }
+            @Override
+            protected void done() {
+                setProgress(100);
+                showHideBotones("GUARDAR");
+                JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONMAE correctamente...!");
+            }
+             //agregamos un escuchador de cambio de propiedad           
+        };
+        worker.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                progresoBar.setValue(worker.getProgress());//actualizamos el valor del progressBar
+            }
+        });
+
+        worker.execute();
+        
     }
     private void setEventos(){
         iuBotonSalir.addMouseListener(new MouseAdapter() {

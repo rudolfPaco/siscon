@@ -150,6 +150,8 @@ public class VTabvar extends IUSecundario{
         iuTitulo = new IUEtiqueta(panelTitulo, "PROCESOS DE PARAMETROS - TABLAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "CENTER", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(50), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
+        iuTitulo.setSubrayarTexto(true);
         
         iuTitulo = new IUEtiqueta(panelTitulo, "EJECUTIVO: "+tabvar.getDescri(), new Area(a.X(), a.Y(2) + a.AlP(50), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
         iuTitulo = new IUEtiqueta(panelTitulo, "FECHA: "+new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(50), a.AnP(40), a.AlP(50)), 16, "CENTER", false);
@@ -599,8 +601,8 @@ public class VTabvar extends IUSecundario{
         campoOBSERVACION.setText(tabvar.getObserv());
         campoCODCON.setText(String.valueOf(tabvar.getCodcon()));        
         campoCORREL.setText(String.valueOf(tabvar.getCorrel()));
-        campoMONTO1.setText(String.valueOf(tabvar.getMonto()));
-        campoMONTO2.setText(String.valueOf(tabvar.getMonto2()));
+        campoMONTO1.setTextoD(String.valueOf(tabvar.getMonto()));
+        campoMONTO2.setTextoD(String.valueOf(tabvar.getMonto2()));
 
         if(tabvar.getFecha() == null)
             campoFECHA1.setCalendar(null);
@@ -1149,7 +1151,7 @@ public class VTabvar extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(campoMONTO1.getText().isEmpty())
-                        campoMONTO1.setText("0.00");
+                        campoMONTO1.setTextoD("0.00");
                     focoCampoMONTO2();
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
@@ -1174,7 +1176,7 @@ public class VTabvar extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(campoMONTO2.getText().isEmpty())
-                        campoMONTO2.setText("0.00");
+                        campoMONTO2.setTextoD("0.00");
                     focoCampoN_S5();                    
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){

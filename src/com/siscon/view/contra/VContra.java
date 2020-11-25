@@ -35,6 +35,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +45,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -145,7 +148,7 @@ public class VContra extends IUSecundario{
     private Asiento asiento;
     
     private int indice;    
-    private boolean modificable;
+    private boolean modificable;    
     
     public VContra(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
@@ -166,7 +169,7 @@ public class VContra extends IUSecundario{
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));        
+        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
     }
     private void construirPaneles(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
@@ -178,7 +181,9 @@ public class VContra extends IUSecundario{
     
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "ASIENTO CONTABLE", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
+        iuTitulo = new IUEtiqueta(panelTitulo, "ASIENTO CONTABLE", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
+        iuTitulo.setSubrayarTexto(true);
+        iuTitulo = new IUEtiqueta(panelTitulo, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
@@ -190,7 +195,7 @@ public class VContra extends IUSecundario{
         construirPrimerPanel(new Area(2, 2, primerPanel.area.An() - 4, primerPanel.area.Al() - 4));
         
         segundoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(85), a.An(), a.AlP(15)), false);
-        construirSegundoPanel(new Area(8, 2, segundoPanel.area.An() - 24, segundoPanel.area.Al() - 8));
+        construirSegundoPanel(new Area(8, 2, segundoPanel.area.An() - 24, segundoPanel.area.Al() - 8));        
     }
     private void construirPrimerPanel(Area a){        
         panelComprobante = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.Al()), false);
@@ -417,7 +422,7 @@ public class VContra extends IUSecundario{
         
         iuEtiquetaTipCam = new IUPanelEtiqueta(segundoPanelC, new Area(a.X(3) + a.AnP(75), a.Y(), a.AnP(7), a.AlP(50)), "T/C: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuTipCam = new IUCampoTexto(segundoPanelC, 50, 16, new Area(a.X(4) + a.AnP(82), a.Y(), a.AnP(8), a.AlP(50)), SwingConstants.CENTER);
-        iuTipCam.setText(String.valueOf(usuario.getTipcam()));
+        iuTipCam.setTextoD(String.valueOf(usuario.getTipcam()));
         iuTipCam.setEditar(false);
         iuTipCam.setFont(new Font("Verdana", Font.BOLD, 16));
         iuUnidad = new IUPanelEtiqueta(segundoPanelC, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.AlP(50)), "Bs.-/$us.-", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
@@ -461,15 +466,18 @@ public class VContra extends IUSecundario{
         
         iuEtiquetaDebe = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(4) + a.AnP(70), a.Y(), a.AnP(10), a.AlP(45)), "DEBE", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuDebe = new IUCampoTexto(cuartoPanelC, 12, 16, new Area(a.X(4) + a.AnP(70), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
+        iuDebe.setRestriccionNumeroDecimal(2);
         iuDebe.setEditar(false);
         
         iuEtiquetaHaber = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(5) + a.AnP(80), a.Y(), a.AnP(10), a.AlP(45)), "HABER", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuHaber = new IUCampoTexto(cuartoPanelC, 12, 16, new Area(a.X(5) + a.AnP(80), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
         iuHaber.setEditar(false);
+        iuHaber.setRestriccionNumeroDecimal(2);
         
         iuEtiquetaMontoDolares = new IUPanelEtiqueta(cuartoPanelC, new Area(a.X(6) + a.AnP(90), a.Y(), a.AnP(10), a.AlP(45)), "MONTO $us", 14, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuDolares = new IUCampoTexto(cuartoPanelC, 12, 16, new Area(a.X(6) + a.AnP(90), a.Y() + a.AlP(45), a.AnP(10), a.AlP(55)), SwingConstants.CENTER);
         iuDolares.setEditar(false);
+        iuDolares.setRestriccionNumeroDecimal(2);
     }
     private void construirQuintoPanelC(Area a){
         iuTabla = new IUTabla(
@@ -507,12 +515,12 @@ public class VContra extends IUSecundario{
         iuTabla.setBackground(Ayuda.COLOR_ATENCION);        
         
         iuTotalComprobante = new IUEtiqueta(quintoPanelC, "Total Comprobante (en Bolivianos)    ", new Area(a.X() + a.AnP(20), a.Y(2) + a.AlP(90), a.AnP(50), a.AlP(10)), 16, "RIGHT", Ayuda.COLOR_ROJO);
-        iuTotalDebe = new IUEtiqueta(quintoPanelC, "0.0", new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
+        iuTotalDebe = new IUEtiqueta(quintoPanelC, "0.00", new Area(a.X(2) + a.AnP(70), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
         iuTotalDebe.setBorder(new LineBorder(Color.BLUE));
-        iuTotalHaber = new IUEtiqueta(quintoPanelC, "0.0", new Area(a.X(3) + a.AnP(80), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
+        iuTotalHaber = new IUEtiqueta(quintoPanelC, "0.00", new Area(a.X(3) + a.AnP(80), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
         iuTotalHaber.setBorder(new LineBorder(Color.BLUE));
-        iuTotalDolares = new IUEtiqueta(quintoPanelC, "0.0", new Area(a.X(4) + a.AnP(90), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
-        iuTotalDolares.setBorder(new LineBorder(Color.BLUE));
+        iuTotalDolares = new IUEtiqueta(quintoPanelC, "0.00", new Area(a.X(4) + a.AnP(90), a.Y(2) + a.AlP(90), a.AnP(10), a.AlP(10)), 18, "RIGHT", true);
+        iuTotalDolares.setBorder(new LineBorder(Color.BLUE));        
     }
     
     private void algoritmoInicial(){
@@ -872,6 +880,7 @@ public class VContra extends IUSecundario{
                     if(!iuMonto.getText().isEmpty()){
                         if(Double.parseDouble(iuMonto.getText()) > 0){
                             iuNumLiteral.setText(Numero_a_Letra.Convertir(iuMonto.getText(), true));
+                            iuMonto.setTextoD(iuMonto.getText());
                             focoCampoDocRef();
                         }
                     }
@@ -1049,7 +1058,8 @@ public class VContra extends IUSecundario{
                             focoCampoNro();
                         break;
                         case "N":
-                            focoCampoTipoDocumento();
+                            campoModificables();
+                            focoCampoMonto();
                         break;                            
                         default:
                         break;
@@ -1212,7 +1222,7 @@ public class VContra extends IUSecundario{
                         if((montoTotal == debeTotal && montoTotal  == haberTotal)){ // && dolaresTotal == 0
                             actualizarPaneles();
                             if(!modificable){
-                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION")){
+                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION")){
                                     if(!getEstado()){
                                         setEstado(true);
                                         guardarContra();
@@ -1224,7 +1234,7 @@ public class VContra extends IUSecundario{
                                 }else
                                     focoCampoNro();
                             }else{
-                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado un cuadraje del MONTO DEBE Y HABER CORRECTAMENTE, desea MODIFICAR EL ASIENTO.?", "CONFIRMACION")){
+                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea MODIFICAR EL ASIENTO.?", "CONFIRMACION")){
                                     if(!getEstado()){
                                         setEstado(true);
                                         desmayorizar();
@@ -1259,7 +1269,7 @@ public class VContra extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!iuCodigo.getText().isEmpty()){
-                        if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()).isEmpty()){
+                        if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()+" AND ACTIVI = 2").isEmpty()){
                             iuDescripcion.setText(Ayuda.getDatoCadena("descri", "SELECT DESCRI FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()));
                             focoCampoS_N2();
                         }
@@ -1565,8 +1575,8 @@ public class VContra extends IUSecundario{
                             double debe = Double.parseDouble(iuDebe.getText());
                             double result = debe/tc;
                             double dolares = Ayuda.acotarNumero(result, 2);
-                            iuHaber.setText("0.0");
-                            iuDolares.setText(String.valueOf(dolares));                            
+                            iuHaber.setTextoD("0.0");
+                            iuDolares.setTextoD(String.valueOf(dolares));                            
                             focoCampoS_N3();
                         }
                     }
@@ -1578,38 +1588,38 @@ public class VContra extends IUSecundario{
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
                     double monto = Double.parseDouble(iuMonto.getText());
                     double porcentaje = (monto*87)/100;
-                    iuDebe.setText(String.valueOf(porcentaje));
+                    iuDebe.setTextoD(String.valueOf(porcentaje));
                     
                     double tc = usuario.getTipcam();
                     double debe = Double.parseDouble(iuDebe.getText());
                     double result = debe/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
-                    iuHaber.setText("0.0");
-                    iuDolares.setText(String.valueOf(dolares));
+                    iuHaber.setTextoD("0.0");
+                    iuDolares.setTextoD(String.valueOf(dolares));
                     focoCampoS_N3();                    
                 }
                 if(KeyEvent.VK_F8 == e.getKeyCode()){
                     double monto = Double.parseDouble(iuMonto.getText());
                     double porcentaje = (monto*13)/100;
-                    iuDebe.setText(String.valueOf(porcentaje));
+                    iuDebe.setTextoD(String.valueOf(porcentaje));
                     
                     double tc = usuario.getTipcam();
                     double debe = Double.parseDouble(iuDebe.getText());
                     double result = debe/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
-                    iuHaber.setText("0.0");
-                    iuDolares.setText(String.valueOf(dolares));
+                    iuHaber.setTextoD("0.0");
+                    iuDolares.setTextoD(String.valueOf(dolares));
                     focoCampoS_N3();
                 }
                 if(KeyEvent.VK_F9 == e.getKeyCode()){
                     double monto = Double.parseDouble(iuMonto.getText());
-                    iuDebe.setText(String.valueOf(monto));
+                    iuDebe.setTextoD(String.valueOf(monto));
                     double tc = usuario.getTipcam();
                     double debe = Double.parseDouble(iuDebe.getText());
                     double result = debe/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
-                    iuHaber.setText("0.0");
-                    iuDolares.setText(String.valueOf(dolares));
+                    iuHaber.setTextoD("0.0");
+                    iuDolares.setTextoD(String.valueOf(dolares));
                     focoCampoS_N3();
                 }
             }
@@ -1633,8 +1643,8 @@ public class VContra extends IUSecundario{
                             double tc = usuario.getTipcam();                    
                             double result = haber/tc;
                             double dolares = Ayuda.acotarNumero(result, 2);
-                            iuDebe.setText("0.0");
-                            iuDolares.setText(String.valueOf(dolares));
+                            iuDebe.setTextoD("0.0");
+                            iuDolares.setTextoD(String.valueOf(dolares));
                             focoCampoS_N3();
                         }
                     }
@@ -1645,22 +1655,21 @@ public class VContra extends IUSecundario{
                 }
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
                     double haber = getMontoTotalDebe();
-                    iuHaber.setText(String.valueOf(haber));
+                    iuHaber.setTextoD(String.valueOf(haber));
                     double tc = usuario.getTipcam();                    
                     double result = haber/tc;
                     double dolares = Ayuda.acotarNumero(result, 2);
-                    iuDebe.setText("0.0");
-                    iuDolares.setText(String.valueOf(dolares));
+                    iuDebe.setTextoD("0.0");
+                    iuDolares.setTextoD(String.valueOf(dolares));
                     focoCampoS_N3();
                 }
             }
         });
     }
     private void modificarContra(){
-        int num = Integer.parseInt(iuNum.getText());
         for (int i = 0; i < listaContras.size(); i++) {
             Contra contra = listaContras.get(i);
-            CContra.eliminarConmae(contra);
+            CContra.eliminarContra(contra);
         }
         //tabvar.setCorrel(num);
         //CTabvar.modificarTabvar(tabvar);
@@ -1671,127 +1680,48 @@ public class VContra extends IUSecundario{
         }*/
     }
     private void desmayorizar(){
-        ArrayList<Asiento> lista = listaAsientos;
-        int nivel = 0;
-        for (Asiento apropiacion : lista) {
-            
-            long codigo = apropiacion.getCodigo();
-            
-            Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
-                        
-            double salact = conmae.getSalact();
-            double salac2 = conmae.getSalac2();
-            
-            //debe
-            double debano = conmae.getDebano();
-            double debdia = conmae.getDebdia();
-            double debmes = conmae.getDebmes();
-                        
-            double deban2 = conmae.getDeban2();
-            double debme2 = conmae.getDebme2();
-            double debdi2 = conmae.getDebdi2();
-            
-            //haber
-            double creano = conmae.getCreano();
-            double credia = conmae.getCredia();
-            double cremes = conmae.getCremes();
-            
-            double crean2 = conmae.getCrean2();
-            double creme2 = conmae.getCreme2();
-            double credi2 = conmae.getCredi2();
-            
-            if(apropiacion.getDebe() > 0){
-                salact = salact - apropiacion.getDebe();
-                debano = debano - apropiacion.getDebe();
-                debdia = debdia - apropiacion.getDebe();
-                debmes = debmes - apropiacion.getDebe();
-                
-                salac2 = salac2 - apropiacion.getMonto();
-                deban2 = deban2 - apropiacion.getMonto();
-                debme2 = debme2 - apropiacion.getMonto();
-                debdi2 = debdi2 - apropiacion.getMonto();
-                
-            }else{
-                salact = salact + apropiacion.getHaber();
-                creano = creano - apropiacion.getHaber();
-                credia = credia - apropiacion.getHaber();
-                cremes = cremes - apropiacion.getHaber();
-                
-                salac2 = salac2 + apropiacion.getMonto();
-                crean2 = crean2 - apropiacion.getMonto();
-                creme2 = creme2 - apropiacion.getMonto();
-                credi2 = credi2 - apropiacion.getMonto();
-                
-            }
-            
-            conmae.setSalact(salact);
-            conmae.setDebano(debano);
-            conmae.setDebdia(debdia);
-            conmae.setDebmes(debmes);
-                        
-            conmae.setSalac2(salac2);
-            conmae.setDeban2(deban2);
-            conmae.setDebme2(debme2);
-            conmae.setDebdi2(debdi2);
-            
-            conmae.setCreano(creano);
-            conmae.setCredia(credia);
-            conmae.setCremes(cremes);
-            
-            conmae.setCrean2(crean2);
-            conmae.setCreme2(creme2);
-            conmae.setCredi2(credi2);
+        JProgressBar progresoBar = new JProgressBar();
+        progresoBar.setValue(0);
+        //progresoBar.setString("Desmayorizando...");
+        progresoBar.setStringPainted(true);
+        progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
+        progresoBar.setVisible(true);
+        iuTituloMensaje.add(progresoBar);
+        
+        final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                ArrayList<Asiento> lista = listaAsientos;
+                int nivel = 0;
+                setProgress(0);
+                for (Asiento apropiacion : lista) {
 
-            System.out.println("");
-            System.out.println("");
-            System.out.println("el conmae PRINCIPAL es: "+conmae.toString());
-            
-            //modifica el conmae y guarda el nuevo contra
-            if(CConmae.modificarConmae(conmae)){
-                    
-                for (int i = 1; i < nivel; i++) {
+                    long codigo = apropiacion.getCodigo();
 
-                    switch(conmae.getNivel()){
-                        case 5:
-                            codigo = codigo - conmae.getSubcta();
-                        break;
-                        case 4:
-                            codigo = codigo - (conmae.getCuenta()*100);
-                        break;
-                        case 3:
-                            codigo = codigo - (conmae.getMayor()*10000);
-                        break;
-                        case 2:
-                            codigo = codigo - (conmae.getSubgru()*1000000);
-                        break;
-                        default:
-                        break;
-                    }
-                    conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    nivel = conmae.getNivel();
 
-                    salact = conmae.getSalact();
-                    salac2 = conmae.getSalac2();
+                    double salact = conmae.getSalact();
+                    double salac2 = conmae.getSalac2();
 
                     //debe
-                    debano = conmae.getDebano();
-                    debdia = conmae.getDebdia();
-                    debmes = conmae.getDebmes();
+                    double debano = conmae.getDebano();
+                    double debdia = conmae.getDebdia();
+                    double debmes = conmae.getDebmes();
 
-                    deban2 = conmae.getDeban2();
-                    debme2 = conmae.getDebme2();
-                    debdi2 = conmae.getDebdi2();
+                    double deban2 = conmae.getDeban2();
+                    double debme2 = conmae.getDebme2();
+                    double debdi2 = conmae.getDebdi2();
 
                     //haber
-                    creano = conmae.getCreano();
-                    credia = conmae.getCredia();
-                    cremes = conmae.getCremes();
+                    double creano = conmae.getCreano();
+                    double credia = conmae.getCredia();
+                    double cremes = conmae.getCremes();
 
-                    crean2 = conmae.getCrean2();
-                    creme2 = conmae.getCreme2();
-                    credi2 = conmae.getCredi2();
-
-                    /************MAYORIZACION**************/
-                    if(apropiacion.getDebe() > 0){                
+                    double crean2 = conmae.getCrean2();
+                    double creme2 = conmae.getCreme2();
+                    double credi2 = conmae.getCredi2();            
+                    if(apropiacion.getDebe() > 0){
                         salact = salact - apropiacion.getDebe();
                         debano = debano - apropiacion.getDebe();
                         debdia = debdia - apropiacion.getDebe();
@@ -1802,7 +1732,7 @@ public class VContra extends IUSecundario{
                         debme2 = debme2 - apropiacion.getMonto();
                         debdi2 = debdi2 - apropiacion.getMonto();
 
-                    }else{                
+                    }else{
                         salact = salact + apropiacion.getHaber();
                         creano = creano - apropiacion.getHaber();
                         credia = credia - apropiacion.getHaber();
@@ -1812,7 +1742,9 @@ public class VContra extends IUSecundario{
                         crean2 = crean2 - apropiacion.getMonto();
                         creme2 = creme2 - apropiacion.getMonto();
                         credi2 = credi2 - apropiacion.getMonto();
+
                     }
+
                     conmae.setSalact(salact);
                     conmae.setDebano(debano);
                     conmae.setDebdia(debdia);
@@ -1831,242 +1763,365 @@ public class VContra extends IUSecundario{
                     conmae.setCreme2(creme2);
                     conmae.setCredi2(credi2);
 
-                    CConmae.modificarConmae(conmae);
-                    //modificar el conmae
-                    System.out.println("el conmae sube de nivel: "+conmae.getNivel());
-                    System.out.println("el conmae: "+conmae.toString());
-                }
-            }
-        }
-    }
-    private void guardarContra(){
-        ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
-        int num = Integer.parseInt(iuNum.getText());
-        int nivel = 0;
-        for (Asiento apropiacion : lista) {
-            
-            long codigo = apropiacion.getCodigo();
-            
-            Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
-            Contra contra = new Contra(0);            
-            
-            nivel = conmae.getNivel();
-            
-            int tipcon = 0;
-            switch(iuTipDoc.getSelectedItem().toString()){
-                case "INGRESOS":
-                    tipcon = 1;
-                break;
-                case "EGRESOS":
-                    tipcon = 2;
-                break;
-                case "DIARIOS":
-                    tipcon = 3;
-                break;
-            }
-            
-            contra.setTipcon(tipcon);
-            contra.setNumcom(num);
-            contra.setCorrel(apropiacion.getNro());
-            contra.setFecha(new Fecha().getFecha());
-            contra.setGrupo(conmae.getGrup());
-            contra.setSubgru(conmae.getSubgru());
-            contra.setMayor(conmae.getMayor());
-            contra.setCuenta(conmae.getCuenta());
-            contra.setSubcta(conmae.getSubcta());
-            
-            int apropi = 0;
-            double salact = conmae.getSalact();
-            double salac2 = conmae.getSalac2();
-            
-            //debe
-            double debano = conmae.getDebano();
-            double debdia = conmae.getDebdia();
-            double debmes = conmae.getDebmes();
-                        
-            double deban2 = conmae.getDeban2();
-            double debme2 = conmae.getDebme2();
-            double debdi2 = conmae.getDebdi2();
-            
-            //haber
-            double creano = conmae.getCreano();
-            double credia = conmae.getCredia();
-            double cremes = conmae.getCremes();
-            
-            double crean2 = conmae.getCrean2();
-            double creme2 = conmae.getCreme2();
-            double credi2 = conmae.getCredi2();
-            
-            if(apropiacion.getDebe() > 0){
-                apropi = 1;
-                salact = salact + apropiacion.getDebe();
-                debano = debano + apropiacion.getDebe();
-                debdia = debdia + apropiacion.getDebe();
-                debmes = debmes + apropiacion.getDebe();
-                
-                salac2 = salac2 + apropiacion.getMonto();
-                deban2 = deban2 + apropiacion.getMonto();
-                debme2 = debme2 + apropiacion.getMonto();
-                debdi2 = debdi2 + apropiacion.getMonto();
-                
-                contra.setMonto1(apropiacion.getDebe());
-            }else{
-                apropi = 2;
-                salact = salact - apropiacion.getHaber();
-                creano = creano + apropiacion.getHaber();
-                credia = credia + apropiacion.getHaber();
-                cremes = cremes + apropiacion.getHaber();
-                
-                salac2 = salac2 - apropiacion.getMonto();
-                crean2 = crean2 + apropiacion.getMonto();
-                creme2 = creme2 + apropiacion.getMonto();
-                credi2 = credi2 + apropiacion.getMonto();
-                
-                contra.setMonto1(apropiacion.getHaber());
-            }
-            contra.setApropi(apropi);            
-            contra.setMonto2(apropiacion.getMonto());
-            contra.setTipcam(Double.parseDouble(iuTipCam.getText()));
-            contra.setIndica(nivel);
-            contra.setNombre(iuDocRef.getText());
-            contra.setGlosa(iuConcepto.getText());
-            if(!iuCheque.getText().isEmpty())
-                contra.setCheque(Integer.parseInt(iuCheque.getText()));
-            else
-                contra.setCheque(0);
-            contra.setNumcue(0);
-            contra.setCuetot(conmae.getCuetot());
-            contra.setReduce(0);
-            contra.setTipcom(tipcon);
-            contra.setIntern(0);
-            contra.setNumint(0);
-            //guarda la empesa, donde se consigue del tabvar (10,1)
-            contra.setEmpres(1);
-            
-            conmae.setSalact(salact);
-            conmae.setDebano(debano);
-            conmae.setDebdia(debdia);
-            conmae.setDebmes(debmes);
-                        
-            conmae.setSalac2(salac2);
-            conmae.setDeban2(deban2);
-            conmae.setDebme2(debme2);
-            conmae.setDebdi2(debdi2);
-            
-            conmae.setCreano(creano);
-            conmae.setCredia(credia);
-            conmae.setCremes(cremes);
-            
-            conmae.setCrean2(crean2);
-            conmae.setCreme2(creme2);
-            conmae.setCredi2(credi2);
+                    //modifica el conmae y guarda el nuevo contra
+                    if(CConmae.modificarConmae(conmae)){
 
-            System.out.println("");
-            System.out.println("el contra es: "+contra.toString());
-            System.out.println("");
-            System.out.println("el conmae PRINCIPAL es: "+conmae.toString());
-            //modifica el conmae y guarda el nuevo contra
-            if(CContra.guardarContra(contra)){
-                if(CConmae.modificarConmae(conmae)){
-                    
-                    for (int i = 1; i < nivel; i++) {
-                
-                        switch(conmae.getNivel()){
-                            case 5:
-                                codigo = codigo - conmae.getSubcta();
-                            break;
-                            case 4:
-                                codigo = codigo - (conmae.getCuenta()*100);
-                            break;
-                            case 3:
-                                codigo = codigo - (conmae.getMayor()*10000);
-                            break;
-                            case 2:
-                                codigo = codigo - (conmae.getSubgru()*1000000);
-                            break;
-                            default:
-                            break;
+                        for (int i = 1; i < nivel; i++) {
+
+                            switch(conmae.getNivel()){
+                                case 5:
+                                    codigo = codigo - conmae.getSubcta();
+                                break;
+                                case 4:
+                                    codigo = codigo - (conmae.getCuenta()*100);
+                                break;
+                                case 3:
+                                    codigo = codigo - (conmae.getMayor()*10000);
+                                break;
+                                case 2:
+                                    codigo = codigo - (conmae.getSubgru()*1000000);
+                                break;
+                                default:
+                                break;
+                            }
+                            conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+
+                            salact = conmae.getSalact();
+                            salac2 = conmae.getSalac2();
+
+                            //debe
+                            debano = conmae.getDebano();
+                            debdia = conmae.getDebdia();
+                            debmes = conmae.getDebmes();
+
+                            deban2 = conmae.getDeban2();
+                            debme2 = conmae.getDebme2();
+                            debdi2 = conmae.getDebdi2();
+
+                            //haber
+                            creano = conmae.getCreano();
+                            credia = conmae.getCredia();
+                            cremes = conmae.getCremes();
+
+                            crean2 = conmae.getCrean2();
+                            creme2 = conmae.getCreme2();
+                            credi2 = conmae.getCredi2();
+
+                            /************MAYORIZACION**************/
+                            if(apropiacion.getDebe() > 0){                
+                                salact = salact - apropiacion.getDebe();
+                                debano = debano - apropiacion.getDebe();
+                                debdia = debdia - apropiacion.getDebe();
+                                debmes = debmes - apropiacion.getDebe();
+
+                                salac2 = salac2 - apropiacion.getMonto();
+                                deban2 = deban2 - apropiacion.getMonto();
+                                debme2 = debme2 - apropiacion.getMonto();
+                                debdi2 = debdi2 - apropiacion.getMonto();
+
+                            }else{                
+                                salact = salact + apropiacion.getHaber();
+                                creano = creano - apropiacion.getHaber();
+                                credia = credia - apropiacion.getHaber();
+                                cremes = cremes - apropiacion.getHaber();
+
+                                salac2 = salac2 + apropiacion.getMonto();
+                                crean2 = crean2 - apropiacion.getMonto();
+                                creme2 = creme2 - apropiacion.getMonto();
+                                credi2 = credi2 - apropiacion.getMonto();
+                            }
+                            conmae.setSalact(salact);
+                            conmae.setDebano(debano);
+                            conmae.setDebdia(debdia);
+                            conmae.setDebmes(debmes);
+
+                            conmae.setSalac2(salac2);
+                            conmae.setDeban2(deban2);
+                            conmae.setDebme2(debme2);
+                            conmae.setDebdi2(debdi2);
+
+                            conmae.setCreano(creano);
+                            conmae.setCredia(credia);
+                            conmae.setCremes(cremes);
+
+                            conmae.setCrean2(crean2);
+                            conmae.setCreme2(creme2);
+                            conmae.setCredi2(credi2);
+
+                            CConmae.modificarConmae(conmae);  
+                            setProgress(i*10);
                         }
-                        conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
-
-                        salact = conmae.getSalact();
-                        salac2 = conmae.getSalac2();
-
-                        //debe
-                        debano = conmae.getDebano();
-                        debdia = conmae.getDebdia();
-                        debmes = conmae.getDebmes();
-
-                        deban2 = conmae.getDeban2();
-                        debme2 = conmae.getDebme2();
-                        debdi2 = conmae.getDebdi2();
-
-                        //haber
-                        creano = conmae.getCreano();
-                        credia = conmae.getCredia();
-                        cremes = conmae.getCremes();
-
-                        crean2 = conmae.getCrean2();
-                        creme2 = conmae.getCreme2();
-                        credi2 = conmae.getCredi2();
-
-                        /************MAYORIZACION**************/
-                        if(apropiacion.getDebe() > 0){                
-                            salact = salact + apropiacion.getDebe();
-                            debano = debano + apropiacion.getDebe();
-                            debdia = debdia + apropiacion.getDebe();
-                            debmes = debmes + apropiacion.getDebe();
-
-                            salac2 = salac2 + apropiacion.getMonto();
-                            deban2 = deban2 + apropiacion.getMonto();
-                            debme2 = debme2 + apropiacion.getMonto();
-                            debdi2 = debdi2 + apropiacion.getMonto();
-
-                        }else{                
-                            salact = salact - apropiacion.getHaber();
-                            creano = creano + apropiacion.getHaber();
-                            credia = credia + apropiacion.getHaber();
-                            cremes = cremes + apropiacion.getHaber();
-
-                            salac2 = salac2 - apropiacion.getMonto();
-                            crean2 = crean2 + apropiacion.getMonto();
-                            creme2 = creme2 + apropiacion.getMonto();
-                            credi2 = credi2 + apropiacion.getMonto();
-                        }
-                        conmae.setSalact(salact);
-                        conmae.setDebano(debano);
-                        conmae.setDebdia(debdia);
-                        conmae.setDebmes(debmes);
-
-                        conmae.setSalac2(salac2);
-                        conmae.setDeban2(deban2);
-                        conmae.setDebme2(debme2);
-                        conmae.setDebdi2(debdi2);
-
-                        conmae.setCreano(creano);
-                        conmae.setCredia(credia);
-                        conmae.setCremes(cremes);
-
-                        conmae.setCrean2(crean2);
-                        conmae.setCreme2(creme2);
-                        conmae.setCredi2(credi2);
-
-                        CConmae.modificarConmae(conmae);
-                        //modificar el conmae
-                        System.out.println("el conmae sube de nivel: "+conmae.getNivel());
-                        System.out.println("el conmae: "+conmae.toString());
                     }
                 }
+                return null;
             }
-        }
-        num++;
-        tabvar.setCorrel(num);
-        CTabvar.modificarTabvar(tabvar);
+            @Override
+            protected void done() {
+                setProgress(100);  
+                progresoBar.setVisible(false);
+            }
+        };
+        worker.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                progresoBar.setValue(worker.getProgress());//actualizamos el valor del progressBar
+            }
+        });
+
+        worker.execute();
         
-        if(tabvarCheque != null){
-            tabvarCheque.setCorrel(Integer.parseInt(iuCheque.getText()));
-            CTabvar.modificarTabvar(tabvarCheque);
-        }
+    }
+    private void guardarContra(){
+        JProgressBar progresoBar = new JProgressBar();
+        progresoBar.setValue(0);
+        //progresoBar.setString("Desmayorizando...");
+        progresoBar.setStringPainted(true);
+        progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
+        progresoBar.setVisible(true);
+        iuTituloMensaje.add(progresoBar);
+        
+        final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                ArrayList<Asiento> lista = iuTabla.modeloTabla.lista;
+                int num = Integer.parseInt(iuNum.getText());
+                int nivel = 0;
+                for (Asiento apropiacion : lista) {
+
+                    long codigo = apropiacion.getCodigo();
+
+                    Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    Contra contra = new Contra(0);            
+
+                    nivel = conmae.getNivel();
+
+                    int tipcon = 0;
+                    switch(iuTipDoc.getSelectedItem().toString()){
+                        case "INGRESOS":
+                            tipcon = 1;
+                        break;
+                        case "EGRESOS":
+                            tipcon = 2;
+                        break;
+                        case "DIARIOS":
+                            tipcon = 3;
+                        break;
+                    }
+
+                    contra.setTipcon(tipcon);
+                    contra.setNumcom(num);
+                    contra.setCorrel(apropiacion.getNro());
+                    contra.setFecha(new Fecha().getFecha());
+                    contra.setGrupo(conmae.getGrup());
+                    contra.setSubgru(conmae.getSubgru());
+                    contra.setMayor(conmae.getMayor());
+                    contra.setCuenta(conmae.getCuenta());
+                    contra.setSubcta(conmae.getSubcta());
+
+                    int apropi = 0;
+                    double salact = conmae.getSalact();
+                    double salac2 = conmae.getSalac2();
+
+                    //debe
+                    double debano = conmae.getDebano();
+                    double debdia = conmae.getDebdia();
+                    double debmes = conmae.getDebmes();
+
+                    double deban2 = conmae.getDeban2();
+                    double debme2 = conmae.getDebme2();
+                    double debdi2 = conmae.getDebdi2();
+
+                    //haber
+                    double creano = conmae.getCreano();
+                    double credia = conmae.getCredia();
+                    double cremes = conmae.getCremes();
+
+                    double crean2 = conmae.getCrean2();
+                    double creme2 = conmae.getCreme2();
+                    double credi2 = conmae.getCredi2();
+
+                    if(apropiacion.getDebe() > 0){
+                        apropi = 1;
+                        salact = salact + apropiacion.getDebe();
+                        debano = debano + apropiacion.getDebe();
+                        debdia = debdia + apropiacion.getDebe();
+                        debmes = debmes + apropiacion.getDebe();
+
+                        salac2 = salac2 + apropiacion.getMonto();
+                        deban2 = deban2 + apropiacion.getMonto();
+                        debme2 = debme2 + apropiacion.getMonto();
+                        debdi2 = debdi2 + apropiacion.getMonto();
+
+                        contra.setMonto1(apropiacion.getDebe());
+                    }else{
+                        apropi = 2;
+                        salact = salact - apropiacion.getHaber();
+                        creano = creano + apropiacion.getHaber();
+                        credia = credia + apropiacion.getHaber();
+                        cremes = cremes + apropiacion.getHaber();
+
+                        salac2 = salac2 - apropiacion.getMonto();
+                        crean2 = crean2 + apropiacion.getMonto();
+                        creme2 = creme2 + apropiacion.getMonto();
+                        credi2 = credi2 + apropiacion.getMonto();
+
+                        contra.setMonto1(apropiacion.getHaber());
+                    }
+                    contra.setApropi(apropi);            
+                    contra.setMonto2(apropiacion.getMonto());
+                    contra.setTipcam(Double.parseDouble(iuTipCam.getText()));
+                    contra.setIndica(nivel);
+                    contra.setNombre(iuDocRef.getText());
+                    contra.setGlosa(iuConcepto.getText());
+                    if(!iuCheque.getText().isEmpty())
+                        contra.setCheque(Integer.parseInt(iuCheque.getText()));
+                    else
+                        contra.setCheque(0);
+                    contra.setNumcue(0);
+                    contra.setCuetot(conmae.getCuetot());
+                    contra.setReduce(0);
+                    contra.setTipcom(tipcon);
+                    contra.setIntern(0);
+                    contra.setNumint(0);
+                    //guarda la empesa, donde se consigue del tabvar (10,1)
+                    contra.setEmpres(1);
+
+                    conmae.setSalact(salact);
+                    conmae.setDebano(debano);
+                    conmae.setDebdia(debdia);
+                    conmae.setDebmes(debmes);
+
+                    conmae.setSalac2(salac2);
+                    conmae.setDeban2(deban2);
+                    conmae.setDebme2(debme2);
+                    conmae.setDebdi2(debdi2);
+
+                    conmae.setCreano(creano);
+                    conmae.setCredia(credia);
+                    conmae.setCremes(cremes);
+
+                    conmae.setCrean2(crean2);
+                    conmae.setCreme2(creme2);
+                    conmae.setCredi2(credi2);
+
+                    //modifica el conmae y guarda el nuevo contra
+                    if(CContra.guardarContra(contra)){
+                        if(CConmae.modificarConmae(conmae)){
+
+                            for (int i = 1; i < nivel; i++) {
+
+                                switch(conmae.getNivel()){
+                                    case 5:
+                                        codigo = codigo - conmae.getSubcta();
+                                    break;
+                                    case 4:
+                                        codigo = codigo - (conmae.getCuenta()*100);
+                                    break;
+                                    case 3:
+                                        codigo = codigo - (conmae.getMayor()*10000);
+                                    break;
+                                    case 2:
+                                        codigo = codigo - (conmae.getSubgru()*1000000);
+                                    break;
+                                    default:
+                                    break;
+                                }
+                                conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+
+                                salact = conmae.getSalact();
+                                salac2 = conmae.getSalac2();
+
+                                //debe
+                                debano = conmae.getDebano();
+                                debdia = conmae.getDebdia();
+                                debmes = conmae.getDebmes();
+
+                                deban2 = conmae.getDeban2();
+                                debme2 = conmae.getDebme2();
+                                debdi2 = conmae.getDebdi2();
+
+                                //haber
+                                creano = conmae.getCreano();
+                                credia = conmae.getCredia();
+                                cremes = conmae.getCremes();
+
+                                crean2 = conmae.getCrean2();
+                                creme2 = conmae.getCreme2();
+                                credi2 = conmae.getCredi2();
+
+                                /************MAYORIZACION**************/
+                                if(apropiacion.getDebe() > 0){                
+                                    salact = salact + apropiacion.getDebe();
+                                    debano = debano + apropiacion.getDebe();
+                                    debdia = debdia + apropiacion.getDebe();
+                                    debmes = debmes + apropiacion.getDebe();
+
+                                    salac2 = salac2 + apropiacion.getMonto();
+                                    deban2 = deban2 + apropiacion.getMonto();
+                                    debme2 = debme2 + apropiacion.getMonto();
+                                    debdi2 = debdi2 + apropiacion.getMonto();
+
+                                }else{                
+                                    salact = salact - apropiacion.getHaber();
+                                    creano = creano + apropiacion.getHaber();
+                                    credia = credia + apropiacion.getHaber();
+                                    cremes = cremes + apropiacion.getHaber();
+
+                                    salac2 = salac2 - apropiacion.getMonto();
+                                    crean2 = crean2 + apropiacion.getMonto();
+                                    creme2 = creme2 + apropiacion.getMonto();
+                                    credi2 = credi2 + apropiacion.getMonto();
+                                }
+                                conmae.setSalact(salact);
+                                conmae.setDebano(debano);
+                                conmae.setDebdia(debdia);
+                                conmae.setDebmes(debmes);
+
+                                conmae.setSalac2(salac2);
+                                conmae.setDeban2(deban2);
+                                conmae.setDebme2(debme2);
+                                conmae.setDebdi2(debdi2);
+
+                                conmae.setCreano(creano);
+                                conmae.setCredia(credia);
+                                conmae.setCremes(cremes);
+
+                                conmae.setCrean2(crean2);
+                                conmae.setCreme2(creme2);
+                                conmae.setCredi2(credi2);
+
+                                CConmae.modificarConmae(conmae);
+                                //modificar el conmae   
+                                setProgress(i);
+                            }
+                        }
+                    }
+                }
+                num++;
+                tabvar.setCorrel(num);
+                CTabvar.modificarTabvar(tabvar);
+
+                if(tabvarCheque != null){
+                    tabvarCheque.setCorrel(Integer.parseInt(iuCheque.getText()));
+                    CTabvar.modificarTabvar(tabvarCheque);
+                }
+                return null;
+            }
+            @Override
+            protected void done() {
+                setProgress(100);  
+                progresoBar.setVisible(false);
+            }
+        };
+        
+        worker.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                progresoBar.setValue(worker.getProgress());//actualizamos el valor del progressBar
+            }
+        });
+
+        worker.execute();
     }
     
     private void sumarColumnasTotales(){
@@ -2083,9 +2138,9 @@ public class VContra extends IUSecundario{
             haber = haber + a.getHaber();             
         }
         
-        iuTotalDebe.setText(String.valueOf(debe));
-        iuTotalHaber.setText(String.valueOf(haber));
-        iuTotalDolares.setText(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
+        iuTotalDebe.setTextoD(String.valueOf(debe));
+        iuTotalHaber.setTextoD(String.valueOf(haber));
+        iuTotalDolares.setTextoD(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
     }
     private boolean debeMenorIgualMonto(){
         boolean verificador = false;
@@ -2257,7 +2312,8 @@ public class VContra extends IUSecundario{
     private void recuperarAsiento(){  
         actualizarPaneles();
         listaContras = CContra.getListaContra("select * from contra where numcom = "+iuNum.getText()+" order by correl asc");        
-        listaAsientos = new ArrayList<>();
+        listaAsientos.clear();
+        ArrayList<Asiento> listaApropiaciones = new ArrayList<>();
         double monto = 0;
         for (int i = 0; i < listaContras.size(); i++) {
             Contra contra = listaContras.get(i);
@@ -2309,13 +2365,14 @@ public class VContra extends IUSecundario{
                 break;
             }
             
-            listaAsientos.add(apropiacion);            
+            listaApropiaciones.add(apropiacion);            
+            listaAsientos.add(apropiacion);
         }        
-        iuTabla.actualizarTabla(listaAsientos);
+        iuTabla.actualizarTabla(listaApropiaciones);
         iuMonto.setText(String.valueOf(monto));
         iuNumLiteral.setText(Numero_a_Letra.Convertir(String.valueOf(monto), true));
         inhabilitarCampos(false);
         sumarColumnasTotales();
-        indice = iuTabla.modeloTabla.getRowCount() + 1;
+        indice = iuTabla.modeloTabla.getRowCount() + 1;        
     }
 }

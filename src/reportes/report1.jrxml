@@ -10,7 +10,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT * FROM CONMAE WHERE GRUP = $P{grup} AND NIVEL <= $P{nivel}]]>
+		<![CDATA[SELECT * FROM CONMAE WHERE GRUP = $P{grup} AND NIVEL <= $P{nivel} GROUP BY CUETOT]]>
 	</queryString>
 	<field name="ID" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>

@@ -11,6 +11,8 @@ import SIGU.recursos.Grid;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -101,6 +103,14 @@ public class IUEtiqueta extends JLabel{
         Map attributes = getFont().getAttributes();
         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);        
         setFont(getFont().deriveFont(attributes));        
+    }
+    public void setTextoD(String texto){
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        df.setDecimalFormatSymbols(dfs);
+        if(!texto.isEmpty())
+            setText(df.format(Double.parseDouble(texto)));
     }
     public void setTachar(boolean tachado){
         this.tachado = tachado;

@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextField;
@@ -91,18 +92,7 @@ public class IUCampoTexto extends JTextField{
         setFocusable(estado);
         setEditable(estado);
     }
-    private void agregarEventos(){
-        
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                //    transferFocus();
-                //}
-                //if(KeyEvent.VK_F2 == e.getKeyCode())
-                    //transferFocusBackward();
-            }
-        });
+    private void agregarEventos(){        
         if(nroColumnas >= 0){
             addKeyListener(new KeyAdapter() {
                 @Override
@@ -140,17 +130,22 @@ public class IUCampoTexto extends JTextField{
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
+                DecimalFormat df = new DecimalFormat("0.00");
+                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setDecimalSeparator('.');
+                df.setDecimalFormatSymbols(dfs);
+                
                 double number = 0.00;
                 if(!getText().isEmpty()){
                     number = Double.parseDouble(getText());                
                     BigDecimal bd = new BigDecimal(number);
                     bd = bd.setScale(nroDecimal, RoundingMode.HALF_UP);
-                    setText(String.valueOf(bd.doubleValue()));
+                    setText(df.format(number));
                 }else{
-                    BigDecimal bd = new BigDecimal(number);
-                    bd = bd.setScale(nroDecimal, RoundingMode.HALF_UP);
-                    setText(String.valueOf(bd.doubleValue()));
-                }                
+                    //BigDecimal bd = new BigDecimal(number);
+                    //bd = bd.setScale(nroDecimal, RoundingMode.HALF_UP);
+                    setText(df.format(number));
+                }
             }
         });
         addKeyListener(new KeyAdapter() {
@@ -170,6 +165,14 @@ public class IUCampoTexto extends JTextField{
                 }*/
             }
         });
+    }
+    public void setTextoD(String texto){
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        df.setDecimalFormatSymbols(dfs);
+        if(!texto.isEmpty())
+            setText(df.format(Double.parseDouble(texto)));
     }
 
     public Border getBordeComponente() {

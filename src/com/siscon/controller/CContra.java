@@ -32,7 +32,7 @@ public class CContra {
             verificador = true;
         return verificador;
     }
-    public static boolean eliminarConmae(Contra contra){
+    public static boolean eliminarContra(Contra contra){
         boolean verificador = false;
         ContraDao contraDao = new ContraDao();
         if(contraDao.deleteContra(contra))

@@ -15,11 +15,10 @@ import SIGU.ventanas.IUPrincipal;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
-import com.siscon.view.contra.VContra;
+import com.siscon.view.conmae.VActualizacionDiferida;
 import com.siscon.view.conmae.VConmae;
-import com.siscon.view.contra.VAsientoTipo;
-import com.siscon.view.contra.VAyudaContra;
 import com.siscon.view.contra.VContra;
+import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.REmisionPC;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
@@ -47,6 +46,8 @@ public class VPrincipal extends IUPrincipal{
     private IUPanel panel;
         private IUPanel panelTitulo;
         private IUEtiqueta iuTitulo;
+    
+    private IUEtiqueta iuTituloEmpresa;
     
     private IUPanel panelDatos;
         private IUPanel panelContenedor;
@@ -110,6 +111,9 @@ public class VPrincipal extends IUPrincipal{
     private void construirPanel(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(8)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(10, 3, panelTitulo.area.An() - 40, panelTitulo.area.Al() - 9));
+        
+        iuTituloEmpresa = new IUEtiqueta(panel, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(), a.Y() + a.AlP(15), a.An(), a.AlP(5)), 20, "CENTER", Ayuda.COLOR_ROJO);
+        iuTituloEmpresa.setSubrayarTexto(true);
         
         panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(8), a.An(), a.AlP(92)), true);
         construirPanelDatos(new Area(panelDatos.area.AnP(10), panelDatos.area.AlP(20), panelDatos.area.An() - panelDatos.area.AnP(10)*2, panelDatos.area.Al() - panelDatos.area.AlP(20)*2));
@@ -278,6 +282,16 @@ public class VPrincipal extends IUPrincipal{
                 VContra iuSimple = new VContra(this, titulo, "grande", usuario, tabvar);
                 iuSimple.mostrarVentana();
                 setOpacity(1f);
+            break;
+            case "17":
+                setOpacity(0.6f);
+                RBalanceComprobacion iuBC = new RBalanceComprobacion(this, titulo, "grande", usuario, tabvar);
+                iuBC.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "25":
+                VActualizacionDiferida iuAD = new VActualizacionDiferida(this, titulo, "grande", usuario, tabvar);
+                iuAD.mostrarVentana();
             break;
             case "28":
                 setOpacity(0.6f);

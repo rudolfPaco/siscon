@@ -12,7 +12,6 @@ import SIGU.paneles.IUPanel;
 import SIGU.paneles.IUPanelEtiqueta;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
-import SIGU.tablas.IUTabla;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.bd.Conexion;
 import com.siscon.controller.CConmae;
@@ -28,37 +27,23 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -75,6 +60,8 @@ public class REmisionPC extends IUSecundario{
         private IUPanel panelTitulo;
         private IUEtiqueta iuTitulo;
     
+    private IUEtiqueta iuTituloEmpresa;    
+        
     private IUPanel panelDatos;
         private IUPanel primerPanel;
             private IUPanel panelContenedor;
@@ -119,6 +106,9 @@ public class REmisionPC extends IUSecundario{
     private void construirPaneles(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(panelTitulo.area.AnP(2), 2, panelTitulo.area.An() - panelTitulo.area.AnP(2)*4, panelTitulo.area.Al() - 4));
+        
+        iuTituloEmpresa = new IUEtiqueta(panel, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(), a.Y() + a.AlP(15), a.An(), a.AlP(5)), 20, "CENTER", Ayuda.COLOR_ROJO);
+        iuTituloEmpresa.setSubrayarTexto(true);
         
         panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), false, Ayuda.COLOR_FONDO);
         construirPanelDatos(new Area(2, 2, panelDatos.area.An() - 4, panelDatos.area.Al() - 6));
@@ -169,11 +159,11 @@ public class REmisionPC extends IUSecundario{
         iuEtiquetaNivel = new IUEtiqueta(panelContenedor, "Confirme el NIVEL de las Cuentas a Emitir:", new Area(a.X(), a.Y(3) + a.AlP(66), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
         iuEtiquetaNivel.setSubrayarTexto(true);
         ArrayList<String> niveles = new ArrayList<>();
-        niveles.add("1");
-        niveles.add("2");
-        niveles.add("3");
-        niveles.add("4");
         niveles.add("5");
+        niveles.add("4");
+        niveles.add("3");
+        niveles.add("2");
+        niveles.add("1");
         iuNivel = new IUComboBox(panelContenedor, niveles, new Area(a.X(2) + a.AnP(60), a.Y(3) + a.AlP(66), a.AnP(40), a.AlP(33)), 18, 50);
         iuNivel.setPosicionHorizontal(SwingConstants.CENTER);
     }
@@ -377,7 +367,7 @@ public class REmisionPC extends IUSecundario{
         switch(tipo){
             case "ARCHIVO o PANTALLA":                
                 actualizarPaneles();
-                IUReporteArchivo iuArchivo = new IUReporteArchivo(this, titulo, "grande", usuario, tabvar, nombreNivel, grupos, grupo, nivel);
+                IUReporteEPC iuArchivo = new IUReporteEPC(this, titulo, "grande", usuario, tabvar, nombreNivel, grupos, grupo, nivel);
                 iuArchivo.setVisible(true);
                 actualizarPaneles();
             break;
@@ -413,7 +403,7 @@ public class REmisionPC extends IUSecundario{
         }
     }
     private void exportarArchivoTXT(int grup, int niv){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv);
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .TXT", "txt");
         chooser.setFileFilter(filter);

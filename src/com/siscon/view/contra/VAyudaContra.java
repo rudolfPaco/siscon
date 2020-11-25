@@ -113,7 +113,7 @@ public class VAyudaContra extends IUSecundario{
         new String[]{"CODIGO", "DESCRIPCION"}, 
         new Class[]{Long.class, String.class}, 
         new int[]{30, 70}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2"), 
+        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 GROUP BY CUETOT"), 
         new ModeloTabla<Conmae>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
