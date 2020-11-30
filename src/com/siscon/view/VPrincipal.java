@@ -15,13 +15,14 @@ import SIGU.ventanas.IUPrincipal;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
-import com.siscon.view.conmae.VActualizacionDiferida;
+import com.siscon.view.actualizacionDiferida.VActualizacionDiferida;
 import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
 import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.REmisionPC;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
+import com.siscon.view.verificacionAsientos.VVerificacionAsientos;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -292,6 +293,10 @@ public class VPrincipal extends IUPrincipal{
             case "25":
                 VActualizacionDiferida iuAD = new VActualizacionDiferida(this, titulo, "grande", usuario, tabvar);
                 iuAD.mostrarVentana();
+            break;
+            case "26":
+                VVerificacionAsientos iuVA = new VVerificacionAsientos(this, titulo, "grande", usuario, tabvar);
+                iuVA.mostrarVentana();
             break;
             case "28":
                 setOpacity(0.6f);
