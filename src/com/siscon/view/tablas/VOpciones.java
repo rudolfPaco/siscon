@@ -38,12 +38,14 @@ public class VOpciones extends IUSecundario{
     private IUPanel panelDatos;
         private IUBoton botonTabvar;
         private IUBoton botonConmae;
+        private IUBoton botonContra;
         
     private IUPanel panelBoton;
         private IUBoton botonSalir;
         
     private String titulo;
     private String OPCION;
+    private int indice = 1;
     
     /**
      *
@@ -58,6 +60,7 @@ public class VOpciones extends IUSecundario{
         this.OPCION = "PRIMERA";
         construirPaneles(new Area(An()-6, Al()-29));
         setEventos();
+        algoritmoInicial();
     }
     private void construirPaneles(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
@@ -77,12 +80,37 @@ public class VOpciones extends IUSecundario{
         botonTabvar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "TABLA [TABVAR]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");        
         botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
         botonConmae = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "TABLA [CONMAE]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
+        botonContra = new IUBoton(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(50), a.An(), a.AlP(25)), "TABLA [CONTRA]", "/imagenes/table.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
     }
     private void construirPanelBoton(Area a){
         botonSalir = new IUBoton(panelBoton, new Area(a.X(), a.Y(), a.An(), a.Al()), "Salir", "/imagenes/cerrar.png", 16, 30, 20, SwingConstants.RIGHT, SwingConstants.CENTER, '{', "");        
         botonSalir.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );        
     }
+    private void algoritmoInicial(){
+        botonTabvar.requestFocus();
+        botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
+    }
+    private void seleccionarBoton(){
+        switch(indice){
+            case 1:                
+                botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
+                botonConmae.setBackground(null);
+                botonContra.setBackground(null);
+            break;
+            case 2:                
+                botonTabvar.setBackground(null);
+                botonConmae.setBackground(Ayuda.COLOR_ATENCION);
+                botonContra.setBackground(null);
+            break;
+            case 3:                
+                botonTabvar.setBackground(null);
+                botonConmae.setBackground(null);
+                botonContra.setBackground(Ayuda.COLOR_ATENCION);
+            break;
+        }
+    }
     private void setEventos(){
+        
         botonSalir.getActionMap().put( "ESC", new AbstractAction(){
             @Override
             public void actionPerformed( ActionEvent e ){                
@@ -96,41 +124,49 @@ public class VOpciones extends IUSecundario{
                 dispose();
             }
         });
+        
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 ), "ENTER" );
+        panel.getActionMap().put( "ENTER", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){                
+                switch(indice){
+                    case 1:                
+                        VTablaTabvar iuTabvar = new VTablaTabvar(ventanaPrincipal, titulo, "grande");
+                        iuTabvar.mostrarVentana();
+                    break;
+                    case 2:                
+                        VTablaConmae iuConmae = new VTablaConmae(ventanaPrincipal, titulo, "grande");
+                        iuConmae.mostrarVentana();
+                    break;
+                    case 3:                
+                        VTablaContra iuContra = new VTablaContra(ventanaPrincipal, titulo, "grande");
+                        iuContra.mostrarVentana();
+                    break;
+                }
+                dispose();
+            }
+        });
+        
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_UP, 0 ), "UP" );
         panel.getActionMap().put( "UP", new AbstractAction(){
             @Override
-            public void actionPerformed( ActionEvent e ){                
-                botonTabvar.setBackground(Ayuda.COLOR_ATENCION);
-                botonConmae.setBackground(null);
-                OPCION = "PRIMERA";
+            public void actionPerformed( ActionEvent e ){
+                
+                if(indice > 1){                    
+                    indice--;                    
+                    seleccionarBoton();                    
+                }
             }
         });
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_DOWN, 0 ), "DOWN" );
         panel.getActionMap().put( "DOWN", new AbstractAction(){
             @Override
-            public void actionPerformed( ActionEvent e ){                
-                botonConmae.setBackground(Ayuda.COLOR_ATENCION);
-                botonTabvar.setBackground(null);
-                OPCION = "SEGUNDA";
+            public void actionPerformed( ActionEvent e ){                   
+                if(indice < panelDatos.getComponentCount() ){
+                    indice++;
+                    seleccionarBoton();                    
+                }                
             }
         });
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 ), "ENTER" );
-        panel.getActionMap().put( "ENTER", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){                
-                switch(OPCION){
-                    case "PRIMERA":
-                        VTablaTabvar  iuTabvar = new VTablaTabvar(ventanaPrincipal, titulo, "grande");
-                        iuTabvar.mostrarVentana();
-                        dispose();
-                    break;
-                    case "SEGUNDA":
-                        VTablaConmae iuComnae = new VTablaConmae(ventanaPrincipal, titulo, "grande");
-                        iuComnae.mostrarVentana();
-                        dispose();
-                    break;
-                }
-            }
-        });        
     }
 }

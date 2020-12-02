@@ -100,10 +100,10 @@ public class IUReporteBC extends IUSecundario{
         iuTabla = new IUTabla(
         panelDatos, 
         new Area(a.X(), a.Y(), a.An(), a.AlP(95)), 
-        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO ACTUAL"}, 
+        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO DEBE", "SALDO HABER"}, 
         new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, Double.class, Double.class}, 
         new int[]{5, 15, 40, 10, 10, 10, 10}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE ABS(DEBMES) > 0 OR ABS(CREMES) > 0 OR ABS(SALACT) GROUP BY CUETOT"), 
+        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 AND (ABS(DEBMES) > 0 OR ABS(CREMES) > 0 OR ABS(SALACT)) GROUP BY CUETOT"), 
         new ModeloTabla<Conmae>(){            
             
             @Override
@@ -195,7 +195,7 @@ public class IUReporteBC extends IUSecundario{
         }
         
         iuTotalDebitos.setTextoD(String.valueOf(totalDebmes));
-        iuTotalCreditos.setTextoD(String.valueOf(totalCremes*(-1)));
+        iuTotalCreditos.setTextoD(String.valueOf(totalCremes));
         iuTotalSaldos.setTextoD(String.valueOf(totalSalact));
     }
     private void algoritmosInicial(){

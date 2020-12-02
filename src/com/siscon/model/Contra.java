@@ -36,6 +36,14 @@ public class Contra {
     private int numint;
     private int empres;
     
+    private double debeB;
+    private double haberB;
+    private double totalB;
+    
+    private double debeD;
+    private double haberD;
+    private double totalD;
+    
     public Contra(int id) {
         this.id = id;
     }
@@ -237,6 +245,56 @@ public class Contra {
     public void setEmpres(int empres) {
         this.empres = empres;
     }
+
+    public double getDebeB() {
+        return debeB;
+    }
+
+    public void setDebeB(double debeB) {
+        this.debeB = debeB;
+    }
+
+    public double getHaberB() {
+        return haberB;
+    }
+
+    public void setHaberB(double haberB) {
+        this.haberB = haberB;
+    }
+
+    public double getTotalB() {
+        return totalB;
+    }
+
+    public void setTotalB(double totalB) {
+        this.totalB = totalB;
+    }
+
+    public double getDebeD() {
+        return debeD;
+    }
+
+    public void setDebeD(double debeD) {
+        this.debeD = debeD;
+    }
+
+    public double getHaberD() {
+        return haberD;
+    }
+
+    public void setHaberD(double haberD) {
+        this.haberD = haberD;
+    }
+
+    public double getTotalD() {
+        return totalD;
+    }
+
+    public void setTotalD(double totalD) {
+        this.totalD = totalD;
+    }
+    
+    
     @Override
     public String toString() {
         return "Asiento{" + "id=" + id + ", tipcon=" + tipcon + ", numcom=" + numcom + ", correl=" + correl + ", fecha=" + fecha + ", grupo=" + grupo + ", subgru=" + subgru + ", mayor=" + mayor + ", cuenta=" + cuenta + ", subcta=" + subcta + ", apropi=" + apropi + ", monto1=" + monto1 + ", monto2=" + monto2 + ", tipcam=" + tipcam + ", indica=" + indica + ", nombre=" + nombre + ", glosa=" + glosa + ", cheque=" + cheque + ", numcue=" + numcue + ", cuetot=" + cuetot + ", reduce=" + reduce + ", tipcom=" + tipcom + ", intern=" + intern + ", numint=" + numint + ", empres=" + empres + '}';

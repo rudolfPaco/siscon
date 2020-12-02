@@ -40,6 +40,22 @@ public class Ayuda {
     public static Color COLOR_TEXTO = new Color(2, 67, 109);
     public static Color COLOR_ROJO = new Color(120, 0, 0);
     public static Color COLOR_ATENCION = new Color(255, 255, 159);
+
+    public static String getTipoDoc(int numero){
+        String tipcon = "";
+        switch(numero){
+            case 1: 
+                tipcon = "I";
+            break;
+            case 2: 
+                tipcon = "E";
+            break;
+            case 3: 
+                tipcon = "D";
+            break;            
+        }
+        return tipcon;
+    }
     
     public static String getParseCadena(char[] caracteres){
         String dato = "";        

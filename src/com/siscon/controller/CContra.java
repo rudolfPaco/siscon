@@ -46,5 +46,12 @@ public class CContra {
     public static ArrayList<Contra> getListaContra(String sql){
         ContraDao contraDao = new ContraDao();
         return contraDao.getAllList(sql);
-    }    
+    }
+    public static boolean eliminarTodoContra(){
+        boolean verificador = false;
+        ContraDao contraDao = new ContraDao();
+        if(contraDao.removeAll())
+            verificador = true;
+        return verificador;
+    }
 }

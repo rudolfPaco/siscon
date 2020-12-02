@@ -529,7 +529,7 @@ public class VConmae extends IUSecundario{
                     if(!campoG.getText().isEmpty()){
                         G = Integer.parseInt(campoG.getText());
                         
-                        actualizarPaneles();
+                        //actualizarPaneles();
                         campoNivel.setText("1");
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));                        
                         campoG.setText(String.valueOf(G));
@@ -544,6 +544,18 @@ public class VConmae extends IUSecundario{
                 }
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
                     limpiarCampos();
+                }
+                if(KeyEvent.VK_F7 == e.getKeyCode()){
+                    campoG.setText(String.valueOf(G));
+                    campoS.setText(String.valueOf(S));
+                    campoMy.setText(String.valueOf(My));
+                    campoAn.setText(String.valueOf(An));
+                    campoSa.setText(String.valueOf(Sa));
+                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = 0 AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 1);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 2);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = 0 AND SUBCTA = 0"), 3);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 4);
+                    focoCampoSa();
                 }
             }
         });
@@ -561,14 +573,11 @@ public class VConmae extends IUSecundario{
                         G = Integer.parseInt(campoG.getText());
                         S = Integer.parseInt(campoS.getText());
                         
-                        campoPresup.setText(String.valueOf(G));
-                        
-                        actualizarPaneles();
+                        //actualizarPaneles();
+                        campoPresup.setText("0");
                         campoActividad.setText("1");
                         
-                        if(S > 0){                            
-                            
-                            
+                        if(S > 0){
                             campoNivel.setText("2");
                             iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));                            
                             campoG.setText(String.valueOf(G));
@@ -576,6 +585,7 @@ public class VConmae extends IUSecundario{
                             
                             cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 2);
                         }else{
+                            establecerNivel("S");
                             iuTabla.actualizarTabla(new ArrayList());
                         }
                         focoCampoMy();
@@ -612,7 +622,7 @@ public class VConmae extends IUSecundario{
                         if(My > 0){
                             campoNivel.setText("3");
                             
-                            actualizarPaneles();
+                            //actualizarPaneles();
                             iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" GROUP BY CUETOT "));                            
                             campoG.setText(String.valueOf(G));
                             campoS.setText(String.valueOf(S));
@@ -620,6 +630,7 @@ public class VConmae extends IUSecundario{
                             
                             cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 3);
                         }else{
+                            establecerNivel("My");
                             iuTabla.actualizarTabla(new ArrayList());
                         }                        
                         focoCampoAn();
@@ -652,12 +663,13 @@ public class VConmae extends IUSecundario{
                         My = Integer.parseInt(campoMy.getText());
                         An = Integer.parseInt(campoAn.getText());
                                                 
-                        actualizarPaneles();
+                        //actualizarPaneles();
                         campoActividad.setText("1");
                         
                         if(An > 0){
                             campoNivel.setText("4");                            
                         }else{
+                            establecerNivel("An");
                             iuTabla.actualizarTabla(new ArrayList());
                         }     
                         
@@ -709,13 +721,17 @@ public class VConmae extends IUSecundario{
                         An = Integer.parseInt(campoAn.getText());
                         Sa = Integer.parseInt(campoSa.getText());
                                                 
-                        actualizarPaneles();
+                        //actualizarPaneles();
                         campoActividad.setText("1");
                         
-                        if(Sa > 0)
-                            campoNivel.setText("5");                                                        
-                        else
+                        if(Sa > 0){                            
+                            campoNivel.setText("5");
+                        }
+                        else{
+                            establecerNivel("Sa");
                             iuTabla.actualizarTabla(new ArrayList());
+                        }
+                            
                         
                         
                         iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));                        
@@ -752,6 +768,44 @@ public class VConmae extends IUSecundario{
                 }
             }
         });
+    }
+    private void establecerNivel(String nivel){
+        switch(nivel){
+            case "S":
+                if(G > 0)
+                    campoNivel.setText("1");
+            break;
+            case "My":
+                if(S > 0)
+                    campoNivel.setText("2");
+                else
+                    if(G > 0)
+                        campoNivel.setText("1");
+            break;
+            case "An":
+                if(My > 0)
+                    campoNivel.setText("3");
+                else
+                    if(S > 0)
+                        campoNivel.setText("2");
+                    else
+                        if(G > 0)
+                            campoNivel.setText("1");
+            break;
+            case "Sa":
+                if(An > 0)
+                    campoNivel.setText("4");
+                else
+                    if(My > 0)
+                        campoNivel.setText("3");
+                    else
+                        if(S > 0)
+                            campoNivel.setText("2");
+                        else
+                            if(G > 0)
+                                campoNivel.setText("1");
+            break;
+        }
     }
     private void focoCampoDescripcion(){        
         restringirCampos("Descripcion", true);
@@ -837,51 +891,52 @@ public class VConmae extends IUSecundario{
     
     private void guardarConmae(){
         Conmae c = new Conmae(0);
-        c.setGrup(Integer.parseInt(campoG.getText()));
-        c.setSubgru(Integer.parseInt(campoS.getText()));
-        c.setMayor(Integer.parseInt(campoMy.getText()));
-        c.setCuenta(Integer.parseInt(campoAn.getText()));
-        c.setSubcta(Integer.parseInt(campoSa.getText()));
-        c.setCuetot(G*10000000 + S*1000000 + My*10000 + An*100 + Sa);
-        c.setNumcue(0);
-        c.setDescri(campoDescripcion.getText());
-        c.setNivel(Integer.parseInt(campoNivel.getText()));
-        c.setActivi(Integer.parseInt(campoActividad.getText()));
-        c.setLugar(0);
-        c.setPresup(Integer.parseInt(campoPresup.getText()));
-        c.setSalini(0);
-        c.setAntdia(0);
-        c.setAntmes(0);
-        c.setSalact(0);
-        c.setDebano(0);
-        c.setCreano(0);
-        c.setDebmes(0);
-        c.setCremes(0);
-        c.setDebdia(0);
-        c.setCredia(0);
-        c.setIndica(0);
-        c.setSalin2(0);
-        c.setDebme2(0);
-        c.setAntme2(0);
-        c.setCreme2(0);
-        c.setSalac2(0);
-        c.setFecha(null);
-        c.setNompre(0);
-        c.setDeban2(0);
-        c.setCrean2(0);
-        c.setAntdi2(0);
-        c.setDebdi2(0);
-        c.setCredi2(0);
-        c.setFecha2(null);
-        
-        setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "CONFIRMACION")){
-            if(CConmae.guardarConmae(c)){
-                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "CORRECTO");
-                limpiarCampos();
+        try {
+            c.setGrup(Integer.parseInt(campoG.getText()));
+            c.setSubgru(Integer.parseInt(campoS.getText()));
+            c.setMayor(Integer.parseInt(campoMy.getText()));
+            c.setCuenta(Integer.parseInt(campoAn.getText()));
+            c.setSubcta(Integer.parseInt(campoSa.getText()));
+            c.setCuetot(G*10000000 + S*1000000 + My*10000 + An*100 + Sa);
+            c.setNumcue(0);
+            c.setDescri(campoDescripcion.getText());
+            c.setNivel(Integer.parseInt(campoNivel.getText()));
+            c.setActivi(Integer.parseInt(campoActividad.getText()));
+            c.setLugar(0);
+            c.setPresup(Integer.parseInt(campoPresup.getText()));
+            c.setSalini(0);
+            c.setAntdia(0);
+            c.setAntmes(0);
+            c.setSalact(0);
+            c.setDebano(0);
+            c.setCreano(0);
+            c.setDebmes(0);
+            c.setCremes(0);
+            c.setDebdia(0);
+            c.setCredia(0);
+            c.setIndica(0);
+            c.setSalin2(0);
+            c.setDebme2(0);
+            c.setAntme2(0);
+            c.setCreme2(0);
+            c.setSalac2(0);
+            c.setFecha(null);
+            c.setNompre(0);
+            c.setDeban2(0);
+            c.setCrean2(0);
+            c.setAntdi2(0);
+            c.setDebdi2(0);
+            c.setCredi2(0);
+            c.setFecha2(null);
+            setOpacity(0.5f);
+            if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "CONFIRMACION")){
+                if(CConmae.guardarConmae(c)){
+                    Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "CORRECTO");
+                    limpiarCampos();
+                }
             }
-        }
-        setOpacity(1f);
+            setOpacity(1f);
+        } catch (Exception e) {System.out.println("Error: "+e);iuMensaje.setTexto("ERROR: "+e);}
     }
     private void modificarConmae(){
         conmae.setDescri(campoDescripcion.getText());
@@ -1213,11 +1268,11 @@ public class VConmae extends IUSecundario{
         campoActividad.setEditar(false);
         campoPresup.setEditar(false);
         
-        G = 0;
+        /*G = 0;
         S = 0;
         My = 0;
         An = 0;
-        Sa = 0;
+        Sa = 0;*/
         
         iuMensaje.setTexto("");
         iuInformacion.setTexto("");
@@ -1409,7 +1464,7 @@ public class VConmae extends IUSecundario{
                     campoDescripcion.setText(c.getDescri());
                     campoNivel.setText(String.valueOf(c.getNivel()));
                     campoActividad.setText(String.valueOf(c.getActivi()));
-                    campoPresup.setText(String.valueOf(c.getLugar()));
+                    campoPresup.setText(String.valueOf(c.getPresup()));
                 break;
                 case 1:
                     campoG1.setText(String.valueOf(c.getGrup()));

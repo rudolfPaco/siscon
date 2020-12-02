@@ -20,6 +20,7 @@ import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
 import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.REmisionPC;
+import com.siscon.view.reportes.RMayorAnaliticoCuenta;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
 import com.siscon.view.verificacionAsientos.VVerificacionAsientos;
@@ -282,6 +283,12 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(0.6f);                
                 VContra iuSimple = new VContra(this, titulo, "grande", usuario, tabvar);
                 iuSimple.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "16":
+                setOpacity(0.6f);                
+                RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(this, titulo, "grande", usuario, tabvar);
+                iuM.mostrarVentana();
                 setOpacity(1f);
             break;
             case "17":

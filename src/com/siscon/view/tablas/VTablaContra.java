@@ -13,13 +13,13 @@ import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
+import com.siscon.controller.CContra;
 import com.siscon.model.Conmae;
+import com.siscon.model.Contra;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,17 +37,13 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author neo
  */
-public class VTablaConmae extends IUSecundario{
-    
+public class VTablaContra extends IUSecundario{
     private VPrincipal ventanaPrincipal;
     private IUPanel panel;
         private IUPanel panelTitulo;
@@ -60,7 +56,7 @@ public class VTablaConmae extends IUSecundario{
         private IUPanel panelTabla;
         private IUTabla iuTabla;
     
-    public VTablaConmae(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
+    public VTablaContra(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         construirPaneles();
@@ -84,7 +80,7 @@ public class VTablaConmae extends IUSecundario{
         construirPanelTabla(new Area(4, 4, panelTabla.area.An() - 8, panelTabla.area.Al() - 8));
     }
     private void construirPanelTitulo(Area a){
-        iuTitulo = new IUEtiqueta(panelTitulo, "Tabla CONMAE (PLAN DE CUENTAS)", new Area(a.X(), a.Y(), a.AnP(50), a.Al()), 24, "CENTER", new Color(120, 0, 0));
+        iuTitulo = new IUEtiqueta(panelTitulo, "Tabla CONTRA (ASIENTOS CONTABLES)", new Area(a.X(), a.Y(), a.AnP(50), a.Al()), 24, "CENTER", new Color(120, 0, 0));
         
         panelBotones = new IUPanel(panelTitulo, new Area(a.X(2) + a.AnP(50), a.Y(), a.AnP(50), a.Al()), true);
         construirPanelBotones(new Area(2, 2, panelBotones.area.An() - 10, panelBotones.area.Al() - 4));
@@ -131,93 +127,67 @@ public class VTablaConmae extends IUSecundario{
         });
     }
     private void construirPanelTabla(Area a){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE");
+        ArrayList<Contra> lista = CContra.getListaContra("SELECT * FROM CONTRA");
         
         iuTabla = new IUTabla(panelTabla,
                 new Area(a.X(), a.Y(), a.An(), a.Al()), 
-                new String[]{"ID", "G", "S", "My", "An", "Sa", "CUETOT", "NUMCUE", "DESCRI", "ACTVI", "NIVEL", "LUGAR", "PRESUP", "SALINI", "ANTDIA", "ANTMES", "SALACT", "DEBANO", "CREANO", "DEBMES", "CREMES", "DEBDIA", "CREDIA", "INDICA", "SALIN2", "DEBME2", "ANTME2","CREME2", "SALAC2", "FECHA", "NOMPRE", "DEBAN2", "CREAN2", "ANTDI2", "DEBDI2", "CREDI2", "FECHA2"}, 
-                new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Double.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Integer.class, Double.class, Double.class, Double.class, Double.class, Double.class, String.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, String.class}, 
-                new int[]{2,2,2,2,2,2,6,2,16,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5,2,2,2,2,2,2,5}, 
-                lista, new ModeloTabla<Conmae>(){
+                new String[]{"ID", "TIPCON", "NUMCOM", "CORREL", "FECHA", "GRUPO", "SUBGRU", "MAYOR", "CUENTA", "SUBCTA", "APROPI", "MONTO1", "MONTO2", "TIPCAM", "INDICA", "NOMBRE", "GLOSA", "CHEQUE", "NUMCUE", "CUETOT", "REDUCE", "TIPCOM", "INTERN", "NUMINT", "EMPRES"}, 
+                new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Double.class, Double.class, Double.class, Integer.class, String.class, String.class, Integer.class, Integer.class, Double.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class}, 
+                new int[]{2,3,5,3,6,3,3,3,3,3,3,5,5,3 ,3,10,17,3,3,4,2,2,2,2,2}, 
+                lista, new ModeloTabla<Contra>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 switch (columnIndex) {
                     case 0:
                         return lista.get(rowIndex).getId();
                     case 1:                
-                        return lista.get(rowIndex).getGrup();
+                        return lista.get(rowIndex).getTipcon();
                     case 2:                
-                        return lista.get(rowIndex).getSubgru();
+                        return lista.get(rowIndex).getNumcom();
                     case 3:
-                        return lista.get(rowIndex).getMayor();
+                        return lista.get(rowIndex).getCorrel();
                     case 4:
-                        return lista.get(rowIndex).getCuenta();
-                    case 5:
-                        return lista.get(rowIndex).getSubcta();
-                    case 6:
-                        return lista.get(rowIndex).getCuetot();
-                    case 7:
-                        return lista.get(rowIndex).getNumcue();
-                    case 8:
-                        return lista.get(rowIndex).getDescri();
-                    case 9:
-                        return lista.get(rowIndex).getActivi();
-                    case 10:
-                        return lista.get(rowIndex).getNivel();
-                    case 11:
-                        return lista.get(rowIndex).getLugar();
-                    case 12:
-                        return lista.get(rowIndex).getPresup();
-                        
-                    case 13:
-                        return lista.get(rowIndex).getSalini();
-                    case 14:
-                        return lista.get(rowIndex).getAntdia();
-                    case 15:
-                        return lista.get(rowIndex).getAntmes();
-                    case 16:
-                        return lista.get(rowIndex).getSalact();
-                    case 17:
-                        return lista.get(rowIndex).getDebano();
-                    case 18:
-                        return lista.get(rowIndex).getCreano();
-                    case 19:
-                        return lista.get(rowIndex).getDebmes();
-                    case 20:
-                        return lista.get(rowIndex).getCremes();
-                    case 21:
-                        return lista.get(rowIndex).getDebdia();
-                    case 22:
-                        return lista.get(rowIndex).getCredia();
-                    case 23:
-                        return lista.get(rowIndex).getIndica();
-                        
-                    case 24:
-                        return lista.get(rowIndex).getSalin2();
-                    case 25:
-                        return lista.get(rowIndex).getDebme2();
-                    case 26:
-                        return lista.get(rowIndex).getAntme2();
-                    case 27:
-                        return lista.get(rowIndex).getCreme2();
-                    case 28:
-                        return lista.get(rowIndex).getSalac2();
-                    case 29:
                         return lista.get(rowIndex).getFecha();
-                    case 30:
-                        return lista.get(rowIndex).getNompre();
-                    case 31:
-                        return lista.get(rowIndex).getDeban2();
-                    case 32:
-                        return lista.get(rowIndex).getCrean2();
-                    case 33:
-                        return lista.get(rowIndex).getAntdi2();
-                    case 34:
-                        return lista.get(rowIndex).getDebdi2();
-                    case 35:
-                        return lista.get(rowIndex).getCredi2();
-                    case 36:
-                        return lista.get(rowIndex).getFecha2();                        
+                    case 5:
+                        return lista.get(rowIndex).getGrupo();
+                    case 6:
+                        return lista.get(rowIndex).getSubgru();
+                    case 7:
+                        return lista.get(rowIndex).getMayor();
+                    case 8:
+                        return lista.get(rowIndex).getCuenta();
+                    case 9:
+                        return lista.get(rowIndex).getSubcta();
+                    case 10:
+                        return lista.get(rowIndex).getApropi();
+                    case 11:
+                        return lista.get(rowIndex).getMonto1();
+                    case 12:
+                        return lista.get(rowIndex).getMonto2();
+                    case 13:
+                        return lista.get(rowIndex).getTipcam();
+                    case 14:
+                        return lista.get(rowIndex).getIndica();
+                    case 15:
+                        return lista.get(rowIndex).getNombre();
+                    case 16:
+                        return lista.get(rowIndex).getGlosa();
+                    case 17:
+                        return lista.get(rowIndex).getCheque();
+                    case 18:
+                        return lista.get(rowIndex).getNumcue();
+                    case 19:
+                        return lista.get(rowIndex).getCuetot();
+                    case 20:
+                        return lista.get(rowIndex).getReduce();
+                    case 21:
+                        return lista.get(rowIndex).getTipcom();
+                    case 22:
+                        return lista.get(rowIndex).getIntern();
+                    case 23:
+                        return lista.get(rowIndex).getNumint();
+                    case 24:
+                        return lista.get(rowIndex).getEmpres();
                     default:
                         return null;
                 }
@@ -265,13 +235,13 @@ public class VTablaConmae extends IUSecundario{
         }
     }
     private void cargarArchivoTxt(){
-        ArrayList<Conmae> lista = new ArrayList<>();
+        ArrayList<Contra> lista = new ArrayList<>();
         
         String urlArchivo = Ayuda.examinarArchivo(ventanaPrincipal, System.getProperties().getProperty("user.dir"));
         //obtengo el nombre del archivo
         String nombreArchivo = urlArchivo.substring(urlArchivo.lastIndexOf('/')+1, urlArchivo.lastIndexOf('.'));
         
-        if(nombreArchivo.equalsIgnoreCase("CONMAE")){
+        if(nombreArchivo.equalsIgnoreCase("CONTRA")){
             //Declarar una variable BufferedReader
             BufferedReader br = null;
             try {
@@ -288,63 +258,43 @@ public class VTablaConmae extends IUSecundario{
                    texto = texto.trim();
                    ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
                    if(!texto.isEmpty()){
-    //cadena = registro.get(2).replaceAll("\"", "");
-    //tabla.setDescri(cadena);
                         try {
                            String cadena = "";
-    //"ID", "G", "S", "My", "An", "Sa", 
-                            Conmae conmae = new Conmae(id);
-                            conmae.setGrup(Integer.parseInt(registro.get(0)));
-                            conmae.setSubgru(Integer.parseInt(registro.get(1)));
-                            conmae.setMayor(Integer.parseInt(registro.get(2)));                    
-                            conmae.setCuenta(Integer.parseInt(registro.get(3)));
-                            conmae.setSubcta(Integer.parseInt(registro.get(4)));
-        //"CUETOT", "NUMCUE", "DESCRI", "ACTVI", "NIVEL", "LUGAR", "PRESUP", 
-                            conmae.setCuetot(Long.parseLong(registro.get(5)));
-                            conmae.setNumcue(Integer.parseInt(registro.get(6)));                        
-                            cadena = registro.get(7).replaceAll("\"", "");
-                            conmae.setDescri(cadena);
-                            conmae.setActivi(Integer.parseInt(registro.get(8)));
-                            conmae.setNivel(Integer.parseInt(registro.get(9)));
-                            conmae.setLugar(Integer.parseInt(registro.get(10)));
-                            conmae.setPresup(Integer.parseInt(registro.get(11)));
-        //"SALINI", "ANTDIA", "ANTMES", "SALACT", "DEBANO", "CREANO", "DEBMES", "CREMES", "DEBDIA", "CREDIA", "INDICA",                     
-                            conmae.setSalini(Double.parseDouble(registro.get(12)));
-                            conmae.setAntdia(Double.parseDouble(registro.get(13)));
-                            conmae.setAntmes(Double.parseDouble(registro.get(14)));
-                            conmae.setSalact(Double.parseDouble(registro.get(15)));
-                            conmae.setDebano(Double.parseDouble(registro.get(16)));
-                            conmae.setCreano(Double.parseDouble(registro.get(17)));
-                            conmae.setDebmes(Double.parseDouble(registro.get(18)));
-                            conmae.setCremes(Double.parseDouble(registro.get(19)));
-                            conmae.setDebdia(Double.parseDouble(registro.get(20)));
-                            conmae.setCredia(Double.parseDouble(registro.get(21)));
-                            conmae.setIndica(Integer.parseInt(registro.get(22)));
-        //"SALIN2", "DEBME2", "ANTME2","CREME2", "SALAC2", "FECHA", "NOMPRE", "DEBAN2", "CREAN2", "ANTDI2", "DEBDI2", "CREDI2", "FECHA2"                    
-                            conmae.setSalin2(Double.parseDouble(registro.get(23)));
-                            conmae.setDebme2(Double.parseDouble(registro.get(24)));
-                            conmae.setAntme2(Double.parseDouble(registro.get(25)));
-                            conmae.setCreme2(Double.parseDouble(registro.get(26)));
-                            conmae.setSalac2(Double.parseDouble(registro.get(27)));
-                            cadena = registro.get(28).replaceAll("\"", "");
-                            conmae.setFecha(Ayuda.formatDate(cadena));
-                            conmae.setNompre(Double.parseDouble(registro.get(29)));
-                            conmae.setDeban2(Double.parseDouble(registro.get(30)));
-                            conmae.setCrean2(Double.parseDouble(registro.get(31)));                        
-                            conmae.setAntdi2(Double.parseDouble(registro.get(32)));
-                            conmae.setDebdi2(Double.parseDouble(registro.get(33)));
-                            conmae.setCredi2(Double.parseDouble(registro.get(34)));
-                            cadena = "";
-                            //cadena = registro.get(35).replaceAll("\"", "");
-                            //conmae.setFecha2(Ayuda.formatDate(cadena));
-                            conmae.setFecha2(cadena);
-                            
-
-                            lista.add(conmae);
-                            id++;
-                       } catch (Exception e) {System.out.println(e);
-                       System.out.println(registro);
-                       }
+                        Contra tabla = new Contra(id);
+                        tabla.setTipcon(Integer.parseInt(registro.get(0)));
+                        tabla.setNumcom(Integer.parseInt(registro.get(1)));
+                        tabla.setCorrel(Integer.parseInt(registro.get(2)));
+                        cadena = registro.get(3).replaceAll("\"", "");
+                        tabla.setFecha(Ayuda.formatDate(cadena));
+                        tabla.setGrupo(Integer.parseInt(registro.get(4)));
+                        tabla.setSubgru(Integer.parseInt(registro.get(5)));
+                        tabla.setMayor(Integer.parseInt(registro.get(6)));                        
+                        
+                        tabla.setCuenta(Integer.parseInt(registro.get(7)));
+                        tabla.setSubcta(Integer.parseInt(registro.get(8)));
+                        tabla.setApropi(Integer.parseInt(registro.get(9)));
+                        tabla.setMonto1(Double.parseDouble(registro.get(10)));
+                        tabla.setMonto2(Double.parseDouble(registro.get(11)));
+                        tabla.setTipcam(Double.parseDouble(registro.get(12)));
+                        tabla.setIndica(Integer.parseInt(registro.get(13)));
+                        
+                        cadena = registro.get(14).replaceAll("\"", "");
+                        tabla.setNombre(cadena);
+                        
+                        cadena = registro.get(15).replaceAll("\"", "");
+                        tabla.setGlosa(cadena);
+                        
+                        tabla.setCheque(Integer.parseInt(registro.get(16)));
+                        tabla.setNumcue(Integer.parseInt(registro.get(17)));
+                        tabla.setCuetot(Long.parseLong(registro.get(18)));
+                        tabla.setReduce(Integer.parseInt(registro.get(19)));
+                        tabla.setTipcom(Integer.parseInt(registro.get(20)));
+                        tabla.setIntern(Integer.parseInt(registro.get(21)));
+                        tabla.setNumint(Integer.parseInt(registro.get(22)));
+                        tabla.setEmpres(Integer.parseInt(registro.get(23)));                        
+                        lista.add(tabla);
+                        id++;
+                       } catch (Exception e) {System.out.println(e);System.out.println(registro);}
                         
                    }
                    //Leer la siguiente línea
@@ -372,18 +322,18 @@ public class VTablaConmae extends IUSecundario{
             iuTabla.actualizarTabla(lista);
             showHideBotones("CARGAR");
         }else{
-            JOptionPane.showMessageDialog( ventanaPrincipal, "Error: El Archivo que cargo. no es un archivo con nombre CONMAE que pertenezca a la tabla...! \ningrese otro archivo con el nombre CONMAE", "ERROR DE ARCHIVO", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( ventanaPrincipal, "Error: El Archivo que cargo. no es un archivo con nombre CONTRA que pertenezca a la tabla...! \ningrese otro archivo con el nombre CONMAE", "ERROR DE ARCHIVO", JOptionPane.ERROR_MESSAGE );
         }        
     }
     private void eliminarArchivo(){
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
+        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONTRA....?", "CONFIRMAR")){
             /*ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
             listaConmae.forEach((conmae) -> {
                 CConmae.eliminarConmae(conmae);
             });*/
-            CConmae.eliminarTodoConmae();
+            CContra.eliminarTodoContra();
             iuTabla.modeloTabla.limpiarTabla();
-            JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado TODOS LOS REGISTROS DE LA TABLA CONMAE...!");
+            JOptionPane.showMessageDialog(ventanaPrincipal, "se ha eliminado TODOS LOS REGISTROS DE LA TABLA CONTRA...!");
             showHideBotones("ELIMINAR");                        
         }
     }
@@ -400,18 +350,13 @@ public class VTablaConmae extends IUSecundario{
             protected Object doInBackground() throws Exception {
                 if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
                     for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {                        
-                        Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
+                        Contra contra = (Contra)iuTabla.modeloTabla.lista.get(i);
                         try {
-                            if(conmae.getFecha().isEmpty())
-                                conmae.setFecha(null);
-                        } catch (Exception e) {conmae.setFecha(null);}
+                            if(contra.getFecha().isEmpty())
+                                contra.setFecha(null);
+                        } catch (Exception e) {contra.setFecha(null);}
 
-                        try {
-                            if(conmae.getFecha2().isEmpty())
-                                conmae.setFecha2(null);
-                        } catch (Exception e) {conmae.setFecha2(null);}
-
-                        CConmae.guardarConmae(conmae);
+                        CContra.guardarContra(contra);
                         setProgress(i);
                     }
                 }
@@ -421,7 +366,7 @@ public class VTablaConmae extends IUSecundario{
             protected void done() {
                 setProgress(100);
                 showHideBotones("GUARDAR");
-                JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONMAE correctamente...!");
+                JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONTRA correctamente...!");
             }
              //agregamos un escuchador de cambio de propiedad           
         };
@@ -461,5 +406,4 @@ public class VTablaConmae extends IUSecundario{
             }
         });
     }
-    
 }

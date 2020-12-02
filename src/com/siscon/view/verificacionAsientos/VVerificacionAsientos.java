@@ -13,11 +13,15 @@ import SIGU.paneles.IUPanel;
 import SIGU.paneles.IUPanelEtiqueta;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
+import SIGU.tablas.IUTabla;
+import SIGU.tablas.ModeloTabla;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
 import com.siscon.controller.CContra;
 import com.siscon.model.Conmae;
 import com.siscon.model.Contra;
+import com.siscon.model.Descuadre;
+import com.siscon.model.Errores;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
@@ -65,7 +69,9 @@ public class VVerificacionAsientos extends IUSecundario{
                     private IUPanelEtiqueta haber;
                     private IUCampoTexto iuHaber;
                                         
-                    private IUPanelEtiqueta iuDocumentosDescuadrados;
+                    private IUEtiqueta iuDocumentosDescuadrados;
+                    private IUTabla iuTablaDescuadrados;
+                    
                     private IUPanelEtiqueta descuadreNroComprobante;
                     private IUCampoTexto iuDescuadreNroComprobante;
                     private IUPanelEtiqueta debitos;
@@ -77,6 +83,7 @@ public class VVerificacionAsientos extends IUSecundario{
                     private IUCampoTexto iuLeidos;
                     private IUPanelEtiqueta nroDocumento;
                     private IUCampoTexto iuNroDocumento1;
+                    private IUTabla iuTablaErrores;
                     private IUPanelEtiqueta hacia;
                     private IUCampoTexto iuNroDocuemnto2;
                     private IUPanelEtiqueta codigoCuenta;
@@ -151,10 +158,11 @@ public class VVerificacionAsientos extends IUSecundario{
         construirPanelContenido(new Area(2, 2, a.An() - 4, a.Al() - 6));
     }
     private void construirPanelContenido(Area a){
-        panelUno = new IUPanel(panelContenido, new Area(a.X(), a.Y(), a.An(), a.AlP(75)), false);
+        panelUno = new IUPanel(panelContenido, new Area(a.X(), a.Y(), a.An(), a.AlP(60)), false);
         construirPanelUno(new Area(2, 2, a.An() - 18, a.Al() - 8));
         
-        //panelDos = new IUPanel(panelContenido, new Area(a.X(), a.Y(2) + a.AlP(75), a.An(), a.AlP(25)), true);        
+        panelDos = new IUPanel(panelContenido, new Area(a.X(), a.Y(2) + a.AlP(60), a.An(), a.AlP(40)), false);        
+        construirPanelDos(new Area(2, 2, panelDos.area.An() - 18, panelDos.area.Al() - 8));
     }
     private void construirPanelUno(Area a){
         iuEtiquetaObjetivo = new IUEtiqueta(panelUno, "OBJETIVO:", new Area(a.X(), a.Y(), a.AnP(30), a.AlP(5)), 16, "CENTER", true);
@@ -186,36 +194,86 @@ public class VVerificacionAsientos extends IUSecundario{
         iuHaber = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(4) + a.AnP(40), a.Y(4) + a.AlP(40), a.AnP(15), a.AlP(5)), SwingConstants.CENTER);
         iuHaber.setEditar(false);
         
-        iuDocumentosDescuadrados = new IUPanelEtiqueta(panelUno, new Area(a.X() + a.AnP(58), a.Y(2) + a.AlP(25), a.AnP(43), a.AlP(5)), "DOCUMENTO DESCUADRADO", 20, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        iuDocumentosDescuadrados = new IUEtiqueta(panelUno, "DOCUMENTOS DESCUADRADOS", new Area(a.X() + a.AnP(58), a.Y(2) + a.AlP(25), a.AnP(43), a.AlP(5)), 20, "CENTER", true);
         
+        iuTablaDescuadrados = new IUTabla(panelUno, new Area(a.X() + a.AnP(58), a.Y(3) + a.AlP(30), a.AnP(43), a.AlP(25)),
+        new String[]{"NRO.", "DEBITOS", "ABONOS"}, 
+        new Class[]{String.class, String.class, String.class}, 
+        new int[]{20, 40, 40}, 
+        new ArrayList<Descuadre>(), new ModeloTabla<Descuadre>(){
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return lista.get(rowIndex).getNroComprobante();
+                    case 1:                
+                        return lista.get(rowIndex).getDebito();
+                    case 2:
+                        return lista.get(rowIndex).getAbono();
+                    default:
+                        return null;
+                }
+            }
+        });
+    }    
+    private void construirPanelDos(Area a){
         descuadreNroComprobante = new IUPanelEtiqueta(panelUno, new Area(a.X() + a.AnP(58), a.Y(3) + a.AlP(35), a.AnP(13), a.AlP(5)), "Nro Comp.", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        descuadreNroComprobante.setVisible(false);
         iuDescuadreNroComprobante = new IUCampoTexto(panelUno, 10, 16, new Area(a.X() + a.AnP(58), a.Y(4) + a.AlP(40), a.AnP(13), a.AlP(5)), SwingConstants.CENTER);
         iuDescuadreNroComprobante.setEditar(false);
+        iuDescuadreNroComprobante.setVisible(false);
         
         debitos = new IUPanelEtiqueta(panelUno, new Area(a.X(2) + a.AnP(71), a.Y(3) + a.AlP(35), a.AnP(15), a.AlP(5)), "DEBITOS", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        debitos.setVisible(false);
         iuDebitos = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(2) + a.AnP(71), a.Y(4) + a.AlP(40), a.AnP(15), a.AlP(5)), SwingConstants.CENTER);
         iuDebitos.setEditar(false);
+        iuDebitos.setVisible(false);
         
         abonos = new IUPanelEtiqueta(panelUno, new Area(a.X(3) + a.AnP(86), a.Y(3) + a.AlP(35), a.AnP(15), a.AlP(5)), "ABONOS", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        abonos.setVisible(false);
         iuAbonos = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(3) + a.AnP(86), a.Y(4) + a.AlP(40), a.AnP(15), a.AlP(5)), SwingConstants.CENTER);
         iuAbonos.setEditar(false);
+        iuAbonos.setVisible(false);
         
-        leidos = new IUPanelEtiqueta(panelUno, new Area(a.X(), a.Y(4) + a.AlP(60), a.AnP(10), a.AlP(5)), "Leidos: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuLeidos = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(2) + a.AnP(10), a.Y(4) + a.AlP(60), a.AnP(15), a.AlP(5)), SwingConstants.CENTER);
+        leidos = new IUPanelEtiqueta(panelDos, new Area(a.X(), a.Y(), a.AnP(10), a.AlP(14)), "Leidos: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        iuLeidos = new IUCampoTexto(panelDos, 20, 16, new Area(a.X(2) + a.AnP(10), a.Y(), a.AnP(15), a.AlP(14)), SwingConstants.CENTER);
         iuLeidos.setEditar(false);
         
-        nroDocumento = new IUPanelEtiqueta(panelUno, new Area(a.X(3) + a.AnP(25), a.Y(4) + a.AlP(60), a.AnP(20), a.AlP(5)), "Nro Documento: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuNroDocumento1 = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(4) + a.AnP(45), a.Y(4) + a.AlP(60), a.AnP(10), a.AlP(5)), SwingConstants.CENTER);
+        nroDocumento = new IUPanelEtiqueta(panelDos, new Area(a.X(3) + a.AnP(25), a.Y(), a.AnP(20), a.AlP(14)), "Nro Documento: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);        
+        iuNroDocumento1 = new IUCampoTexto(panelDos, 20, 16, new Area(a.X(4) + a.AnP(45), a.Y(), a.AnP(10), a.AlP(14)), SwingConstants.CENTER);
         iuNroDocumento1.setEditar(false);
         
+        iuTablaErrores = new IUTabla(panelDos, new Area(a.X() + a.AnP(58), a.Y(), a.AnP(43), a.AlP(80)),
+        new String[]{"CODIGO", "ERROR EN CONMAE"}, 
+        new Class[]{String.class, String.class}, 
+        new int[]{30, 70}, 
+        new ArrayList<Errores>(), new ModeloTabla<Errores>(){
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return lista.get(rowIndex).getCuetot();
+                    case 1:                
+                        return lista.get(rowIndex).getError();
+                    default:
+                        return null;
+                }
+            }
+        });
+        iuTablaErrores.deslizador.setVisible(false);
+        
         hacia = new IUPanelEtiqueta(panelUno, new Area(a.X(5) + a.AnP(55), a.Y(4) + a.AlP(60), a.AnP(5), a.AlP(5)), "a: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        hacia.setVisible(false);
         iuNroDocuemnto2 = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(6) + a.AnP(60), a.Y(4) + a.AlP(60), a.AnP(10), a.AlP(5)), SwingConstants.CENTER);
         iuNroDocuemnto2.setEditar(false);
+        iuNroDocuemnto2.setVisible(false);
         
         codigoCuenta = new IUPanelEtiqueta(panelUno, new Area(a.X(7) + a.AnP(70), a.Y(4) + a.AlP(60), a.AnP(15), a.AlP(5)), "Codigo Cta.: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        codigoCuenta.setVisible(false);
         iuCodigoCuenta = new IUCampoTexto(panelUno, 20, 16, new Area(a.X(8) + a.AnP(85), a.Y(4) + a.AlP(60), a.AnP(15), a.AlP(5)), SwingConstants.CENTER);
         iuCodigoCuenta.setEditar(false);
-    }    
+        iuCodigoCuenta.setVisible(false);
+    }
     private void construirSegundoPanel(Area a){
         iuTituloMensaje = new IUEtiqueta(segundoPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
         iuTituloMensaje.setSubrayarTexto(true);
@@ -344,6 +402,18 @@ public class VVerificacionAsientos extends IUSecundario{
             }
         });        
     }
+    private boolean existeCuetotTabla(long cuetot){
+        boolean existe = false;
+        int contador = 0;
+        while (contador < iuTablaErrores.modeloTabla.lista.size() && !existe){
+            Errores falla = (Errores)iuTablaErrores.modeloTabla.lista.get(contador);
+            if(Long.parseLong(falla.getCuetot()) == cuetot){
+                existe = true;
+            }
+            contador++;
+        }
+        return existe;
+    }
     private void verificacionAsientos(){
         boolean error = false;
         iuNroComprobante.setText("0");
@@ -351,6 +421,9 @@ public class VVerificacionAsientos extends IUSecundario{
         iuDebe.setText("0");
         iuHaber.setText("0");
         iuLeidos.setText("0");
+        iuTablaErrores.modeloTabla.limpiarTabla();        
+        iuTablaErrores.deslizador.setVisible(true);
+        iuTablaDescuadrados.modeloTabla.limpiarTabla();        
         ArrayList<Contra> listaContras = new ArrayList<>(); 
         ArrayList<Contra> listaContrasDiferentes = CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM"); 
         
@@ -391,16 +464,16 @@ public class VVerificacionAsientos extends IUSecundario{
                         //apropiacion = DEBE
                         if(contra.getApropi() == 1){
                             if(moneda.equalsIgnoreCase(bolivianos)){
-                                totalDebe = totalDebe + contra.getMonto1();
+                                totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto1(), 2);
                             }else{
-                                totalDebe = totalDebe + contra.getMonto2();
+                                totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto2(), 2);
                             }
                         }else{
                             //apropiacion = HABER
                             if(moneda.equalsIgnoreCase(bolivianos)){
-                                totalHaber = totalHaber + contra.getMonto1();
+                                totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto1(), 2);
                             }else{
-                                totalHaber = totalHaber + contra.getMonto2();
+                                totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto2(), 2);
                             }
                         }
                         iuLeidos.setText(String.valueOf(cantComprobantesLeidos));
@@ -411,28 +484,48 @@ public class VVerificacionAsientos extends IUSecundario{
                                 deshabilitarCampoS_N();
                                 iuMensaje.setTexto("ERROR: NO EXISTE CUENTA EN (CONMAE).");
                                 iuInformacion.setTexto("ESC = SUSPENDER");
+                                
+                                if(!existeCuetotTabla(contra.getCuetot())){
+                                    Errores falla = new Errores();
+                                    falla.setCuetot(String.valueOf(contra.getCuetot()));
+                                    falla.setError("NO EXISTE CUENTA (CONMAE)!!");
+                                    iuTablaErrores.modeloTabla.setFila(falla);
+                                }
                                 iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
                                 iuCodigoCuenta.setBackground(Color.RED);
                                 error = true;                                
-                                break;
                             }else{
                                 if(conmae.getActivi() == 1){
                                     deshabilitarCampoS_N();
                                     iuMensaje.setTexto("ERROR: LA CUENTA NO TIENE MOVIMIENTO.");
                                     iuInformacion.setTexto("ESC = SUSPENDER");
                                     iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
+                                    
+                                    if(!existeCuetotTabla(contra.getCuetot())){
+                                        Errores falla = new Errores();
+                                        falla.setCuetot(String.valueOf(contra.getCuetot()));
+                                        falla.setError("CUENTA SIN MOVIMIENTO!!!");
+                                        iuTablaErrores.modeloTabla.setFila(falla);
+                                    }
+                                    
                                     iuCodigoCuenta.setBackground(Color.RED);
-                                    error = true;
-                                    break;
+                                    error = true;                                    
                                 }else{
                                     if(conmae.getNivel() != contra.getIndica()){
                                         deshabilitarCampoS_N();
                                         iuMensaje.setTexto("ERROR: NIVELES INCONSISTENTES.");
                                         iuInformacion.setTexto("ESC = SUSPENDER");
                                         iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
+                                        
+                                        if(!existeCuetotTabla(contra.getCuetot())){
+                                            Errores falla = new Errores();
+                                            falla.setCuetot(String.valueOf(contra.getCuetot()));
+                                            falla.setError("NIVELES INCONSISTENTES!!");
+                                            iuTablaErrores.modeloTabla.setFila(falla);
+                                        }                                        
+                                        
                                         iuCodigoCuenta.setBackground(Color.RED);
-                                        error = true;
-                                        break;
+                                        error = true;                                        
                                     }
                                 }
                             }                        
@@ -448,20 +541,26 @@ public class VVerificacionAsientos extends IUSecundario{
                     
                     iuDescuadreNroComprobante.setText(String.valueOf(ultimoComprobante));
                     iuDebitos.setTextoD(String.valueOf(totalDebe));
-                    iuAbonos.setTextoD(String.valueOf(totalHaber));
+                    iuAbonos.setTextoD(String.valueOf(totalHaber));                    
                     
                     iuDescuadreNroComprobante.setBackground(Color.RED);
                     iuDebitos.setBackground(Color.RED);
                     iuAbonos.setBackground(Color.RED);
                     
+                    Descuadre des = new Descuadre();
+                    des.setNroComprobante(String.valueOf(ultimoComprobante));
+                    des.setDebito(String.valueOf(totalDebe));
+                    des.setAbono(String.valueOf(totalHaber));
+                    
+                    iuTablaDescuadrados.modeloTabla.setFila(des);
+                    
                     error = true;
-                    break;
                 }else{
                     totalDebe = totalDebe + Double.parseDouble(iuDebe.getText());
                     totalHaber = totalHaber + Double.parseDouble(iuHaber.getText());
                 }
                 iuDebe.setTextoD(String.valueOf(totalDebe));
-                iuHaber.setTextoD(String.valueOf(totalHaber));                
+                iuHaber.setTextoD(String.valueOf(totalHaber));                                
             }
         }
         if(!error){
@@ -473,6 +572,8 @@ public class VVerificacionAsientos extends IUSecundario{
             iuLeidos.setBackground(Color.GREEN);
             focoCampoSalir();
         }        
+        if(iuTablaErrores.modeloTabla.isVacia())
+            iuTablaErrores.deslizador.setVisible(false);
     }
     private void deshabilitarCampoS_N(){
         campoS_N1.setVisible(false);

@@ -200,4 +200,20 @@ public class ContraDao {
         conexion.cerrar_conexion();
         return verificador;
     }
+    public boolean removeAll(){
+        boolean verificador = false;
+        String sql = "TRUNCATE TABLE CONTRA";
+        Conexion conexion = new Conexion();
+        try {
+            PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
+            int estado = ps.executeUpdate();
+            if(estado > 0)
+                verificador = true;
+            
+        } catch (SQLException e) {
+            System.out.println("Error ContraDao.removeAll(): "+e.getMessage());
+        }
+        conexion.cerrar_conexion();
+        return verificador;
+    }
 }

@@ -2138,8 +2138,8 @@ public class VContra extends IUSecundario{
             haber = haber + a.getHaber();             
         }
         
-        iuTotalDebe.setTextoD(String.valueOf(debe));
-        iuTotalHaber.setTextoD(String.valueOf(haber));
+        iuTotalDebe.setTextoD(String.valueOf(Ayuda.acotarNumero(debe, 2)));
+        iuTotalHaber.setTextoD(String.valueOf(Ayuda.acotarNumero(haber, 2)));
         iuTotalDolares.setTextoD(String.valueOf(Ayuda.acotarNumero(dolares, 2)));
     }
     private boolean debeMenorIgualMonto(){
@@ -2349,27 +2349,44 @@ public class VContra extends IUSecundario{
                 }else
                     iuCheque.setText(String.valueOf(contra.getCheque()));
             }
-            Conmae getConmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
+            Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
             Asiento apropiacion = new Asiento(i+1);
-            apropiacion.setCodigo(contra.getCuetot());
-            apropiacion.setCuenta(getConmae.getDescri());
-            switch(contra.getApropi()){
-                case 1:
-                    monto = monto + contra.getMonto1();
-                    apropiacion.setDebe(contra.getMonto1());
-                    apropiacion.setMonto(contra.getMonto2());
-                break;
-                case 2:
-                    apropiacion.setHaber(contra.getMonto1());
-                    apropiacion.setMonto(contra.getMonto2());
-                break;
+            if(conmae != null){                
+                apropiacion.setCodigo(contra.getCuetot());
+                apropiacion.setCuenta(conmae.getDescri());
+                switch(contra.getApropi()){
+                    case 1:
+                        monto = monto + contra.getMonto1();
+                        apropiacion.setDebe(contra.getMonto1());
+                        apropiacion.setMonto(contra.getMonto2());
+                    break;
+                    case 2:
+                        apropiacion.setHaber(contra.getMonto1());
+                        apropiacion.setMonto(contra.getMonto2());
+                    break;
+                }
+                
+            }else{                
+                apropiacion.setCodigo(contra.getCuetot());
+                apropiacion.setCuenta("NO EXISTE!!! CUENTA EN EL PLAN DE CUENTAS");
+                
+                switch(contra.getApropi()){
+                    case 1:
+                        monto = monto + contra.getMonto1();
+                        apropiacion.setDebe(contra.getMonto1());
+                        apropiacion.setMonto(contra.getMonto2());
+                    break;
+                    case 2:
+                        apropiacion.setHaber(contra.getMonto1());
+                        apropiacion.setMonto(contra.getMonto2());
+                    break;
+                }
             }
-            
             listaApropiaciones.add(apropiacion);            
             listaAsientos.add(apropiacion);
         }        
         iuTabla.actualizarTabla(listaApropiaciones);
-        iuMonto.setText(String.valueOf(monto));
+        iuMonto.setText(String.valueOf(Ayuda.acotarNumero(monto, 2)));
         iuNumLiteral.setText(Numero_a_Letra.Convertir(String.valueOf(monto), true));
         inhabilitarCampos(false);
         sumarColumnasTotales();
