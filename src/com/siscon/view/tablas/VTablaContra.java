@@ -102,7 +102,9 @@ public class VTablaContra extends IUSecundario{
             @Override
             public void actionPerformed( ActionEvent e ){                
                 iuBotonGrabar.doClick();
-                guardarArchivo();
+                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+                    guardarArchivo();
+                }                
             }
         });
         
@@ -339,8 +341,10 @@ public class VTablaContra extends IUSecundario{
     }
     private void guardarArchivo(){ 
         JProgressBar progresoBar = new JProgressBar();
-        progresoBar.setValue(0);
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("guardando datos....");
         progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);
         progresoBar.setBounds(panel.getWidth()/2 - panel.getWidth()/8, panel.getHeight()/2 - panel.getHeight()/8, panel.getWidth()/8, panel.getHeight()/8);
         progresoBar.setVisible(true);
         panel.add(progresoBar);
@@ -348,23 +352,22 @@ public class VTablaContra extends IUSecundario{
         final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
-                    for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {                        
-                        Contra contra = (Contra)iuTabla.modeloTabla.lista.get(i);
-                        try {
-                            if(contra.getFecha().isEmpty())
-                                contra.setFecha(null);
-                        } catch (Exception e) {contra.setFecha(null);}
+                
+                for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {                        
+                    Contra contra = (Contra)iuTabla.modeloTabla.lista.get(i);
+                    try {
+                        if(contra.getFecha().isEmpty())
+                            contra.setFecha(null);
+                    } catch (Exception e) {contra.setFecha(null);}
 
-                        CContra.guardarContra(contra);
-                        setProgress(i);
-                    }
+                    CContra.guardarContra(contra);                        
                 }
+                
                 return null;
             }
             @Override
             protected void done() {
-                setProgress(100);
+                progresoBar.setVisible(false);
                 showHideBotones("GUARDAR");
                 JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONTRA correctamente...!");
             }

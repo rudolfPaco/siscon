@@ -120,6 +120,7 @@ public class IUReporteEPC extends IUSecundario{
             
         });
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
+        iuTabla.setPosicionTextoHorizontal(5, SwingConstants.RIGHT);
         iuTabla.setFocusable(true);
     }
     private void algoritmosInicial(){

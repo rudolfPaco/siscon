@@ -89,7 +89,7 @@ public class IUReporteBC extends IUSecundario{
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: BC ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
         iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: "+moneda+"   |   Forma: "+forma, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "BALANCE DE COMPROBACION ACUMULACION POR RANGO DE FECHAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 16, "CENTER", false);                
+        iuTitulo = new IUEtiqueta(panelTitulo, "BALANCE DE COMPROBACION", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 16, "CENTER", false);                
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "Por Cuentas Activas", new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
         iuTitulo.setSubrayarTexto(true);
@@ -100,10 +100,10 @@ public class IUReporteBC extends IUSecundario{
         iuTabla = new IUTabla(
         panelDatos, 
         new Area(a.X(), a.Y(), a.An(), a.AlP(95)), 
-        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO DEBE", "SALDO HABER"}, 
+        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO"}, 
         new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, Double.class, Double.class}, 
         new int[]{5, 15, 40, 10, 10, 10, 10}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 AND (ABS(DEBMES) > 0 OR ABS(CREMES) > 0 OR ABS(SALACT)) GROUP BY CUETOT"), 
+        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 AND (DEBMES > 0 OR CREMES > 0) ORDER BY CUETOT"),
         new ModeloTabla<Conmae>(){            
             
             @Override
@@ -161,6 +161,10 @@ public class IUReporteBC extends IUSecundario{
             
         });
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
+        iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
+        iuTabla.setPosicionTextoHorizontal(4, SwingConstants.RIGHT);
+        iuTabla.setPosicionTextoHorizontal(5, SwingConstants.RIGHT);
+        iuTabla.setPosicionTextoHorizontal(6, SwingConstants.RIGHT);
         iuTabla.setFocusable(true);
         
         panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(95), a.An(), a.AlP(5)), true, Ayuda.COLOR_ATENCION);

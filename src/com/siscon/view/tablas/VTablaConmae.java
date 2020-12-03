@@ -106,7 +106,9 @@ public class VTablaConmae extends IUSecundario{
             @Override
             public void actionPerformed( ActionEvent e ){                
                 iuBotonGrabar.doClick();
-                guardarArchivo();
+                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+                    guardarArchivo();
+                }                
             }
         });
         
@@ -389,16 +391,17 @@ public class VTablaConmae extends IUSecundario{
     }
     private void guardarArchivo(){ 
         JProgressBar progresoBar = new JProgressBar();
-        progresoBar.setValue(0);
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("guardando datos....");
         progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);        
         progresoBar.setBounds(panel.getWidth()/2 - panel.getWidth()/8, panel.getHeight()/2 - panel.getHeight()/8, panel.getWidth()/8, panel.getHeight()/8);
         progresoBar.setVisible(true);
         panel.add(progresoBar);
         
         final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
             @Override
-            protected Object doInBackground() throws Exception {
-                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+            protected Object doInBackground() throws Exception {                
                     for (int i = 0; i < iuTabla.modeloTabla.lista.size(); i++) {                        
                         Conmae conmae = (Conmae)iuTabla.modeloTabla.lista.get(i);
                         try {
@@ -412,14 +415,14 @@ public class VTablaConmae extends IUSecundario{
                         } catch (Exception e) {conmae.setFecha2(null);}
 
                         CConmae.guardarConmae(conmae);
-                        setProgress(i);
-                    }
-                }
+                        //setProgress(i);
+                    }                
                 return null;
             }
             @Override
             protected void done() {
-                setProgress(100);
+                //setProgress(100);
+                progresoBar.setVisible(false);
                 showHideBotones("GUARDAR");
                 JOptionPane.showMessageDialog(ventanaPrincipal, "se ha guardado todos los datos de la tabla CONMAE correctamente...!");
             }

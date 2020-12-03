@@ -349,7 +349,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
                                 iuMensaje.setTexto("ERROR: CUENTA SIN MOVIMIENTO....");
                                 iuInformacion.setTexto("");
                             }else{
-                                //descripcion = conmae.getDescri();
+                                descripcion = conmae.getDescri();
                                 iuDescipcion.setText(conmae.getDescri());
                                 iuInformacion.setTexto(" ATENCION: ESC=SUSPENDE,  F2=RETROCEDE,  ENTER=AVANZA");
                                 focoCampoFecha1();

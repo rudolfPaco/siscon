@@ -321,20 +321,28 @@ public class VActualizacionDiferida extends IUSecundario{
     }
     private void cargarComprobantes(){
         ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA");
-        int cantComprobantes = CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM").size();
+        int cantComprobantes = 1;// CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM").size();
         double debe = 0;
         double haber = 0;
+        long numero = listaContras.get(0).getNumcom();
         for (int i = 0; i < listaContras.size(); i++) {
             Contra contra = listaContras.get(i);
+            long codigo = contra.getNumcom();
+            
             if(contra.getApropi() == 1){
                 debe = debe + contra.getMonto1();
             }else{
                 haber = haber + contra.getMonto1();
             }            
+            if(numero != codigo){
+                numero = codigo;
+                cantComprobantes++;
+            }
+                
         }        
         iuCant.setText(String.valueOf(cantComprobantes));
-        iuDebe.setTextoD(String.valueOf(debe));
-        iuHaber.setTextoD(String.valueOf(haber));
+        iuDebe.setTextoD(String.valueOf(Ayuda.acotarNumero(debe, 2)));
+        iuHaber.setTextoD(String.valueOf(Ayuda.acotarNumero(haber, 2)));
         
         iuCant.setBackground(Color.GREEN);
         iuDebe.setBackground(Color.GREEN);
@@ -470,9 +478,10 @@ public class VActualizacionDiferida extends IUSecundario{
     }
     private void borrarSaldos(){
         JProgressBar progresoBar = new JProgressBar();
-        progresoBar.setValue(0);
-        //progresoBar.setString("Desmayorizando...");
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("Cereando todos los campos acumulativos....");
         progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);
         progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
         progresoBar.setVisible(true);
         iuTituloMensaje.add(progresoBar);
@@ -512,13 +521,13 @@ public class VActualizacionDiferida extends IUSecundario{
 
                     cantidad++;
                     cuenta = c.getDescri();
-                    setProgress(cantidad);
+                    iuCantCuentas.setText(String.valueOf(cantidad));
+                    iuCuentaProcesada.setText(cuenta);                
                 }                
                 return null;
             }
             @Override
-            protected void done() {
-                setProgress(100);
+            protected void done() {                
                 progresoBar.setVisible(false);
                 iuCantCuentas.setText(String.valueOf(cantidad));
                 iuCuentaProcesada.setText(cuenta);                
@@ -535,10 +544,11 @@ public class VActualizacionDiferida extends IUSecundario{
         worker.execute();
     }
     private void inicializarSaldos(){
-        JProgressBar progresoBar = new JProgressBar();
-        progresoBar.setValue(0);
-        //progresoBar.setString("Desmayorizando...");
+        JProgressBar progresoBar = new JProgressBar();                
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("Inicializando campos acumulativos....");
         progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);
         progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
         progresoBar.setVisible(true);
         iuTituloMensaje.add(progresoBar);
@@ -574,14 +584,14 @@ public class VActualizacionDiferida extends IUSecundario{
                     c.setCredi2(0);
                     CConmae.modificarConmae(c);
                     cantidad++;
-                    cuenta = c.getDescri();
-                    setProgress(cantidad);
+                    cuenta = c.getDescri();                    
+                    iuCantCuentas.setText(String.valueOf(cantidad));
+                    iuCuentaProcesada.setText(cuenta);
                 }
                 return null;
             }
             @Override
-            protected void done() {
-                setProgress(100);
+            protected void done() {                
                 progresoBar.setVisible(false);
                 iuCantCuentas.setText(String.valueOf(cantidad));
                 iuCuentaProcesada.setText(cuenta);                
@@ -688,9 +698,10 @@ public class VActualizacionDiferida extends IUSecundario{
     private void reconstruccionCuentas(){
         
         JProgressBar progresoBar = new JProgressBar();
-        progresoBar.setValue(0);
-        //progresoBar.setString("Desmayorizando...");
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("reconstruyendo campos acumulativos....".toUpperCase());
         progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);
         progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
         progresoBar.setVisible(true);
         iuTituloMensaje.add(progresoBar);
@@ -699,17 +710,31 @@ public class VActualizacionDiferida extends IUSecundario{
         final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                int numero = 0;
+                
+                int numero = 1;
+                double debe = 0;
+                double haber = 0;
+                
+                iuCant.setText(String.valueOf(numero));
+                
                 ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA");                                                
+                long acumulativo = listaContras.get(0).getNumcom();
                 int nivel = 0;
                 for (Contra contra : listaContras) {
-
+                    
                     long codigo = contra.getCuetot();
+                    int numcom = contra.getNumcom();
 
                     Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
 
                     nivel = conmae.getNivel();
                     //la fecha del contra se mantiene
+                    
+                    if(acumulativo != numcom){                        
+                        acumulativo = numcom;
+                        numero++;                        
+                        iuCant.setText(String.valueOf(numero));
+                    }
 
                     double salact = conmae.getSalact();
                     double salac2 = conmae.getSalac2();
@@ -733,26 +758,32 @@ public class VActualizacionDiferida extends IUSecundario{
                     double credi2 = conmae.getCredi2();
 
                     if(contra.getApropi() == 1){                        
-                        salact = salact + contra.getMonto1();
-                        debano = debano + contra.getMonto1();
-                        debdia = debdia + contra.getMonto1();
-                        debmes = debmes + contra.getMonto1();
+                        debe = Ayuda.acotarNumero(debe + contra.getMonto1(), 2);
+                        
+                        salact = Ayuda.acotarNumero(salact + contra.getMonto1(), 2);
+                        debano = Ayuda.acotarNumero(debano + contra.getMonto1(), 2);
+                        debdia = Ayuda.acotarNumero(debdia + contra.getMonto1(), 2);
+                        debmes = Ayuda.acotarNumero(debmes + contra.getMonto1(), 2);
 
-                        salac2 = salac2 + contra.getMonto2();
-                        deban2 = deban2 + contra.getMonto2();
-                        debme2 = debme2 + contra.getMonto2();
-                        debdi2 = debdi2 + contra.getMonto2();
+                        salac2 = Ayuda.acotarNumero(salac2 + contra.getMonto2(), 2);
+                        deban2 = Ayuda.acotarNumero(deban2 + contra.getMonto2(), 2);
+                        debme2 = Ayuda.acotarNumero(debme2 + contra.getMonto2(), 2);
+                        debdi2 = Ayuda.acotarNumero(debdi2 + contra.getMonto2(), 2);
                     }else{                        
-                        salact = salact - contra.getMonto1();
-                        creano = creano + contra.getMonto1();
-                        credia = credia + contra.getMonto1();
-                        cremes = cremes + contra.getMonto1();
+                        haber = Ayuda.acotarNumero(haber + contra.getMonto1(), 2);
+                        
+                        salact = Ayuda.acotarNumero(salact - contra.getMonto1(), 2);
+                        creano = Ayuda.acotarNumero(creano + contra.getMonto1(), 2);
+                        credia = Ayuda.acotarNumero(credia + contra.getMonto1(), 2);
+                        cremes = Ayuda.acotarNumero(cremes + contra.getMonto1(), 2);
 
-                        salac2 = salac2 - contra.getMonto2();
-                        crean2 = crean2 + contra.getMonto2();
-                        creme2 = creme2 + contra.getMonto2();
-                        credi2 = credi2 + contra.getMonto2();
+                        salac2 = Ayuda.acotarNumero(salac2 - contra.getMonto2(), 2);
+                        crean2 = Ayuda.acotarNumero(crean2 + contra.getMonto2(), 2);
+                        creme2 = Ayuda.acotarNumero(creme2 + contra.getMonto2(), 2);
+                        credi2 = Ayuda.acotarNumero(credi2 + contra.getMonto2(), 2);
                     }
+                    iuDebe.setText(String.valueOf(debe));
+                    iuHaber.setText(String.valueOf(haber));
                     conmae.setSalact(salact);
                     conmae.setDebano(debano);
                     conmae.setDebdia(debdia);
@@ -770,14 +801,11 @@ public class VActualizacionDiferida extends IUSecundario{
                     conmae.setCrean2(crean2);
                     conmae.setCreme2(creme2);
                     conmae.setCredi2(credi2);
-
-                    //modifica el conmae y guarda el nuevo contra
-
+                    
                     if(CConmae.modificarConmae(conmae)){
 
                         for (int i = 1; i < nivel; i++) {
-
-                            numero++;
+                            
                             switch(conmae.getNivel()){
                                 case 5:
                                     codigo = codigo - conmae.getSubcta();
@@ -819,26 +847,26 @@ public class VActualizacionDiferida extends IUSecundario{
 
                             /************MAYORIZACION**************/
                             if(contra.getApropi() == 1){
-                                salact = salact + contra.getMonto1();
-                                debano = debano + contra.getMonto1();
-                                debdia = debdia + contra.getMonto1();
-                                debmes = debmes + contra.getMonto1();
+                                salact = Ayuda.acotarNumero(salact + contra.getMonto1(), 2);
+                                debano = Ayuda.acotarNumero(debano + contra.getMonto1(), 2);
+                                debdia = Ayuda.acotarNumero(debdia + contra.getMonto1(), 2);
+                                debmes = Ayuda.acotarNumero(debmes + contra.getMonto1(), 2);
 
-                                salac2 = salac2 + contra.getMonto2();
-                                deban2 = deban2 + contra.getMonto2();
-                                debme2 = debme2 + contra.getMonto2();
-                                debdi2 = debdi2 + contra.getMonto2();
+                                salac2 = Ayuda.acotarNumero(salac2 + contra.getMonto2(), 2);
+                                deban2 = Ayuda.acotarNumero(deban2 + contra.getMonto2(), 2);
+                                debme2 = Ayuda.acotarNumero(debme2 + contra.getMonto2(), 2);
+                                debdi2 = Ayuda.acotarNumero(debdi2 + contra.getMonto2(), 2);
 
                             }else{                
-                                salact = salact - contra.getMonto1();
-                                creano = creano + contra.getMonto1();
-                                credia = credia + contra.getMonto1();
-                                cremes = cremes + contra.getMonto1();
+                                salact = Ayuda.acotarNumero(salact - contra.getMonto1(), 2);
+                                creano = Ayuda.acotarNumero(creano + contra.getMonto1(), 2);
+                                credia = Ayuda.acotarNumero(credia + contra.getMonto1(), 2);
+                                cremes = Ayuda.acotarNumero(cremes + contra.getMonto1(), 2);
 
-                                salac2 = salac2 - contra.getMonto2();
-                                crean2 = crean2 + contra.getMonto2();
-                                creme2 = creme2 + contra.getMonto2();
-                                credi2 = credi2 + contra.getMonto2();
+                                salac2 = Ayuda.acotarNumero(salac2 - contra.getMonto2(), 2);
+                                crean2 = Ayuda.acotarNumero(crean2 + contra.getMonto2(), 2);
+                                creme2 = Ayuda.acotarNumero(creme2 + contra.getMonto2(), 2);
+                                credi2 = Ayuda.acotarNumero(credi2 + contra.getMonto2(), 2);
                             }
                             conmae.setSalact(salact);
                             conmae.setDebano(debano);
@@ -859,16 +887,13 @@ public class VActualizacionDiferida extends IUSecundario{
                             conmae.setCredi2(credi2);
 
                             CConmae.modificarConmae(conmae);
-                            //modificar el conmae                             
-                            setProgress(numero+20);
                         }
-                    }                    
-                }                
-                return null;
+                    }
+                }
+                return null;                
             }
             @Override
             protected void done() {
-                setProgress(100);  
                 progresoBar.setVisible(false);
                 setEstado(true);
                 proceso = true;
