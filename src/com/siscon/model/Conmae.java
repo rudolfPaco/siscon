@@ -48,6 +48,12 @@ public class Conmae {
     private double debdi2;
     private double credi2;
     private String fecha2;
+    
+    private String codigo;
+    private String descripcion;
+    private String parcial;
+    private String subTotal;
+    private String total;
 
     public Conmae(int id) {
         this.id = id;
@@ -349,6 +355,45 @@ public class Conmae {
         this.fecha2 = fecha2;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getParcial() {
+        return parcial;
+    }
+
+    public void setParcial(String parcial) {
+        this.parcial = parcial;
+    }
+
+    public String getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(String subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
     @Override
     public String toString() {
         return "Conmae{" + "id=" + id + ", grup=" + grup + ", subgru=" + subgru + ", mayor=" + mayor + ", cuenta=" + cuenta + ", subcta=" + subcta + ", cuetot=" + cuetot + ", numcue=" + numcue + ", descri=" + descri + ", activi=" + activi + ", nivel=" + nivel + ", lugar=" + lugar + ", presup=" + presup + ", salini=" + salini + ", antdia=" + antdia + ", antmes=" + antmes + ", salact=" + salact + ", debano=" + debano + ", creano=" + creano + ", debmes=" + debmes + ", cremes=" + cremes + ", debdia=" + debdia + ", credia=" + credia + ", indica=" + indica + ", salin2=" + salin2 + ", debme2=" + debme2 + ", antme2=" + antme2 + ", creme2=" + creme2 + ", salac2=" + salac2 + ", fecha=" + fecha + ", nompre=" + nompre + ", deban2=" + deban2 + ", crean2=" + crean2 + ", antdi2=" + antdi2 + ", debdi2=" + debdi2 + ", credi2=" + credi2 + ", fecha2=" + fecha2 + '}';

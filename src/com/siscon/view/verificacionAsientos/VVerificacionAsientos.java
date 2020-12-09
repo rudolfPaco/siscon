@@ -30,9 +30,12 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
@@ -414,166 +417,196 @@ public class VVerificacionAsientos extends IUSecundario{
         }
         return existe;
     }
-    private void verificacionAsientos(){
-        boolean error = false;
-        iuNroComprobante.setText("0");
-        iuCantComprobante.setText("0");
-        iuDebe.setText("0");
-        iuHaber.setText("0");
-        iuLeidos.setText("0");
-        iuTablaErrores.modeloTabla.limpiarTabla();        
-        iuTablaErrores.deslizador.setVisible(true);
-        iuTablaDescuadrados.modeloTabla.limpiarTabla();        
-        ArrayList<Contra> listaContras = new ArrayList<>(); 
-        ArrayList<Contra> listaContrasDiferentes = CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM"); 
+    private void verificacionAsientos(){        
         
-        String bolivianos = Ayuda.getDatoCadena("descri", "select * from tabvar where tipo = 17 and numero = 1");        
-        int cantComprobantes = 0;
-        int ultimoComprobante = 0;
-        double totalDebe = 0;
-        double totalHaber = 0;
-        int cantComprobantesLeidos = 0;
+        JProgressBar progresoBar = new JProgressBar();
+        progresoBar.setIndeterminate(true);
+        progresoBar.setString("reconstruyendo campos acumulativos....".toUpperCase());
+        progresoBar.setStringPainted(true);
+        progresoBar.setBorderPainted(true);
+        progresoBar.setBounds(0, 0, iuTituloMensaje.getWidth(), iuTituloMensaje.getHeight());        
+        progresoBar.setVisible(true);
+        iuTituloMensaje.add(progresoBar);
         
-        if(listaContrasDiferentes.isEmpty()){
-            focoCampoSalir();
-        }else{
-            for (int i = 0; i < listaContrasDiferentes.size(); i++) {
-                totalDebe = 0;
-                totalHaber = 0;
-                Contra contraUnico = listaContrasDiferentes.get(i);
+        final javax.swing.SwingWorker worker = new javax.swing.SwingWorker() {
+            boolean error = false;
+            @Override
+            protected Object doInBackground() throws Exception {
                 
-                ultimoComprobante = contraUnico.getNumcom();
-                iuNroComprobante.setText(String.valueOf(ultimoComprobante));
-                
-                cantComprobantes++;
-                iuCantComprobante.setText(String.valueOf(cantComprobantes));
-                
-                listaContras = CContra.getListaContra("SELECT * FROM CONTRA WHERE NUMCOM = "+ultimoComprobante);
-                if(listaContras.isEmpty()){
-                    deshabilitarCampoS_N();
-                    iuMensaje.setTexto("ERROR: NO EXISTE APROPIACIONES EN ESTE ASIENTO.");
-                    iuInformacion.setTexto("ESC = SUSPENDER");
-                    iuNroDocumento1.setText(String.valueOf(ultimoComprobante));
-                    iuNroDocumento1.setBackground(Color.RED);
-                    error = true;
-                    break;
+                iuNroComprobante.setText("0");
+                iuCantComprobante.setText("0");
+                iuDebe.setText("0");
+                iuHaber.setText("0");
+                iuLeidos.setText("0");
+                iuTablaErrores.modeloTabla.limpiarTabla();
+                iuTablaErrores.deslizador.setVisible(true);
+                iuTablaDescuadrados.modeloTabla.limpiarTabla();
+                ArrayList<Contra> listaContras = new ArrayList<>();
+                ArrayList<Contra> listaContrasDiferentes = CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM");
+
+                String bolivianos = Ayuda.getDatoCadena("descri", "select * from tabvar where tipo = 17 and numero = 1");
+                int cantComprobantes = 0;
+                int ultimoComprobante = 0;
+                double totalDebe = 0;
+                double totalHaber = 0;
+                int cantComprobantesLeidos = 0;
+
+                if(listaContrasDiferentes.isEmpty()){
+                    focoCampoSalir();
                 }else{
-                    for (int j = 0; j < listaContras.size(); j++) {
-                        cantComprobantesLeidos++;
-                        Contra contra = listaContras.get(j);
-                        //apropiacion = DEBE
-                        if(contra.getApropi() == 1){
-                            if(moneda.equalsIgnoreCase(bolivianos)){
-                                totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto1(), 2);
-                            }else{
-                                totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto2(), 2);
-                            }
+                    for (int i = 0; i < listaContrasDiferentes.size(); i++) {
+                        totalDebe = 0;
+                        totalHaber = 0;
+                        Contra contraUnico = listaContrasDiferentes.get(i);
+
+                        ultimoComprobante = contraUnico.getNumcom();
+                        iuNroComprobante.setText(String.valueOf(ultimoComprobante));
+
+                        cantComprobantes++;
+                        iuCantComprobante.setText(String.valueOf(cantComprobantes));
+
+                        listaContras = CContra.getListaContra("SELECT * FROM CONTRA WHERE NUMCOM = "+ultimoComprobante);
+                        if(listaContras.isEmpty()){
+                            deshabilitarCampoS_N();
+                            iuMensaje.setTexto("ERROR: NO EXISTE APROPIACIONES EN ESTE ASIENTO.");
+                            iuInformacion.setTexto("ESC = SUSPENDER");
+                            iuNroDocumento1.setText(String.valueOf(ultimoComprobante));
+                            iuNroDocumento1.setBackground(Color.RED);
+                            error = true;
+                            break;
                         }else{
-                            //apropiacion = HABER
-                            if(moneda.equalsIgnoreCase(bolivianos)){
-                                totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto1(), 2);
-                            }else{
-                                totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto2(), 2);
-                            }
-                        }
-                        iuLeidos.setText(String.valueOf(cantComprobantesLeidos));
-                        Conmae conmae = null;
-                        try {
-                            conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
-                            if(conmae == null){
-                                deshabilitarCampoS_N();
-                                iuMensaje.setTexto("ERROR: NO EXISTE CUENTA EN (CONMAE).");
-                                iuInformacion.setTexto("ESC = SUSPENDER");
-                                
-                                if(!existeCuetotTabla(contra.getCuetot())){
-                                    Errores falla = new Errores();
-                                    falla.setCuetot(String.valueOf(contra.getCuetot()));
-                                    falla.setError("NO EXISTE CUENTA (CONMAE)!!");
-                                    iuTablaErrores.modeloTabla.setFila(falla);
-                                }
-                                iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
-                                iuCodigoCuenta.setBackground(Color.RED);
-                                error = true;                                
-                            }else{
-                                if(conmae.getActivi() == 1){
-                                    deshabilitarCampoS_N();
-                                    iuMensaje.setTexto("ERROR: LA CUENTA NO TIENE MOVIMIENTO.");
-                                    iuInformacion.setTexto("ESC = SUSPENDER");
-                                    iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
-                                    
-                                    if(!existeCuetotTabla(contra.getCuetot())){
-                                        Errores falla = new Errores();
-                                        falla.setCuetot(String.valueOf(contra.getCuetot()));
-                                        falla.setError("CUENTA SIN MOVIMIENTO!!!");
-                                        iuTablaErrores.modeloTabla.setFila(falla);
+                            for (int j = 0; j < listaContras.size(); j++) {
+                                cantComprobantesLeidos++;
+                                Contra contra = listaContras.get(j);
+                                //apropiacion = DEBE
+                                if(contra.getApropi() == 1){
+                                    if(moneda.equalsIgnoreCase(bolivianos)){
+                                        totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto1(), 2);
+                                    }else{
+                                        totalDebe = Ayuda.acotarNumero(totalDebe + contra.getMonto2(), 2);
                                     }
-                                    
-                                    iuCodigoCuenta.setBackground(Color.RED);
-                                    error = true;                                    
                                 }else{
-                                    if(conmae.getNivel() != contra.getIndica()){
+                                    //apropiacion = HABER
+                                    if(moneda.equalsIgnoreCase(bolivianos)){
+                                        totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto1(), 2);
+                                    }else{
+                                        totalHaber = Ayuda.acotarNumero(totalHaber + contra.getMonto2(), 2);
+                                    }
+                                }
+                                iuLeidos.setText(String.valueOf(cantComprobantesLeidos));
+                                Conmae conmae = null;
+                                try {
+                                    conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
+                                    if(conmae == null){
                                         deshabilitarCampoS_N();
-                                        iuMensaje.setTexto("ERROR: NIVELES INCONSISTENTES.");
+                                        iuMensaje.setTexto("ERROR: NO EXISTE CUENTA EN (CONMAE).");
                                         iuInformacion.setTexto("ESC = SUSPENDER");
-                                        iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
-                                        
+
                                         if(!existeCuetotTabla(contra.getCuetot())){
                                             Errores falla = new Errores();
                                             falla.setCuetot(String.valueOf(contra.getCuetot()));
-                                            falla.setError("NIVELES INCONSISTENTES!!");
+                                            falla.setError("NO EXISTE CUENTA (CONMAE)!!");
                                             iuTablaErrores.modeloTabla.setFila(falla);
-                                        }                                        
-                                        
+                                        }
+                                        iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
                                         iuCodigoCuenta.setBackground(Color.RED);
-                                        error = true;                                        
-                                    }
-                                }
-                            }                        
+                                        error = true;                                
+                                    }else{
+                                        if(conmae.getActivi() == 1){
+                                            deshabilitarCampoS_N();
+                                            iuMensaje.setTexto("ERROR: LA CUENTA NO TIENE MOVIMIENTO.");
+                                            iuInformacion.setTexto("ESC = SUSPENDER");
+                                            iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
 
-                        } catch (Exception e) {}
+                                            if(!existeCuetotTabla(contra.getCuetot())){
+                                                Errores falla = new Errores();
+                                                falla.setCuetot(String.valueOf(contra.getCuetot()));
+                                                falla.setError("CUENTA SIN MOVIMIENTO!!!");
+                                                iuTablaErrores.modeloTabla.setFila(falla);
+                                            }
 
+                                            iuCodigoCuenta.setBackground(Color.RED);
+                                            error = true;                                    
+                                        }else{
+                                            if(conmae.getNivel() != contra.getIndica()){
+                                                deshabilitarCampoS_N();
+                                                iuMensaje.setTexto("ERROR: NIVELES INCONSISTENTES.");
+                                                iuInformacion.setTexto("ESC = SUSPENDER");
+                                                iuCodigoCuenta.setText(String.valueOf(contra.getCuetot()));
+
+                                                if(!existeCuetotTabla(contra.getCuetot())){
+                                                    Errores falla = new Errores();
+                                                    falla.setCuetot(String.valueOf(contra.getCuetot()));
+                                                    falla.setError("NIVELES INCONSISTENTES!!");
+                                                    iuTablaErrores.modeloTabla.setFila(falla);
+                                                }                                        
+
+                                                iuCodigoCuenta.setBackground(Color.RED);
+                                                error = true;                                        
+                                            }
+                                        }
+                                    }                        
+
+                                } catch (Exception e) {}
+
+                            }
+                        }                                
+                        if(totalDebe != totalHaber){                    
+                            deshabilitarCampoS_N();
+                            iuMensaje.setTexto("ATENCION: DOCUMENTO DESCUADRADO. Es apropiado hacer un ASIENTO DE AJUSTE, para controlar el DESCUADRE.");
+                            iuInformacion.setTexto("ESC = SUSPENDER");
+
+                            iuDescuadreNroComprobante.setText(String.valueOf(ultimoComprobante));
+                            iuDebitos.setTextoD(String.valueOf(totalDebe));
+                            iuAbonos.setTextoD(String.valueOf(totalHaber));                    
+
+                            iuDescuadreNroComprobante.setBackground(Color.RED);
+                            iuDebitos.setBackground(Color.RED);
+                            iuAbonos.setBackground(Color.RED);
+
+                            Descuadre des = new Descuadre();
+                            des.setNroComprobante(String.valueOf(ultimoComprobante));
+                            des.setDebito(String.valueOf(totalDebe));
+                            des.setAbono(String.valueOf(totalHaber));
+
+                            iuTablaDescuadrados.modeloTabla.setFila(des);
+
+                            error = true;
+                        }else{
+                            totalDebe = totalDebe + Double.parseDouble(iuDebe.getText());
+                            totalHaber = totalHaber + Double.parseDouble(iuHaber.getText());
+                        }
+                        iuDebe.setTextoD(String.valueOf(totalDebe));
+                        iuHaber.setTextoD(String.valueOf(totalHaber));                                
                     }
-                }                                
-                if(totalDebe != totalHaber){                    
-                    deshabilitarCampoS_N();
-                    iuMensaje.setTexto("ATENCION: DOCUMENTO DESCUADRADO. Es apropiado hacer un ASIENTO DE AJUSTE, para controlar el DESCUADRE.");
-                    iuInformacion.setTexto("ESC = SUSPENDER");
-                    
-                    iuDescuadreNroComprobante.setText(String.valueOf(ultimoComprobante));
-                    iuDebitos.setTextoD(String.valueOf(totalDebe));
-                    iuAbonos.setTextoD(String.valueOf(totalHaber));                    
-                    
-                    iuDescuadreNroComprobante.setBackground(Color.RED);
-                    iuDebitos.setBackground(Color.RED);
-                    iuAbonos.setBackground(Color.RED);
-                    
-                    Descuadre des = new Descuadre();
-                    des.setNroComprobante(String.valueOf(ultimoComprobante));
-                    des.setDebito(String.valueOf(totalDebe));
-                    des.setAbono(String.valueOf(totalHaber));
-                    
-                    iuTablaDescuadrados.modeloTabla.setFila(des);
-                    
-                    error = true;
-                }else{
-                    totalDebe = totalDebe + Double.parseDouble(iuDebe.getText());
-                    totalHaber = totalHaber + Double.parseDouble(iuHaber.getText());
                 }
-                iuDebe.setTextoD(String.valueOf(totalDebe));
-                iuHaber.setTextoD(String.valueOf(totalHaber));                                
+                return null;
             }
-        }
-        if(!error){
-            iuMoneda.setBackground(Color.GREEN);
-            iuNroComprobante.setBackground(Color.GREEN);
-            iuCantComprobante.setBackground(Color.GREEN);
-            iuDebe.setBackground(Color.GREEN);
-            iuHaber.setBackground(Color.GREEN);
-            iuLeidos.setBackground(Color.GREEN);
-            focoCampoSalir();
-        }        
-        if(iuTablaErrores.modeloTabla.isVacia())
-            iuTablaErrores.deslizador.setVisible(false);
+            @Override
+            protected void done() {
+                progresoBar.setVisible(false);
+                if(!error){
+                    iuMoneda.setBackground(Color.GREEN);
+                    iuNroComprobante.setBackground(Color.GREEN);
+                    iuCantComprobante.setBackground(Color.GREEN);
+                    iuDebe.setBackground(Color.GREEN);
+                    iuHaber.setBackground(Color.GREEN);
+                    iuLeidos.setBackground(Color.GREEN);
+                    focoCampoSalir();
+                }        
+                if(iuTablaErrores.modeloTabla.isVacia())
+                    iuTablaErrores.deslizador.setVisible(false);                
+                }
+        };
+
+        worker.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                progresoBar.setValue(worker.getProgress());//actualizamos el valor del progressBar
+            }
+        });
+
+        worker.execute();
     }
     private void deshabilitarCampoS_N(){
         campoS_N1.setVisible(false);

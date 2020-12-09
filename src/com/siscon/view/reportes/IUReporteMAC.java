@@ -13,6 +13,7 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
+import SIGU.tablas.RenderDatosDecimales;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CContra;
 import com.siscon.model.Contra;
@@ -120,19 +121,19 @@ public class IUReporteMAC extends IUSecundario{
                     case 2:                        
                         return contra.getGlosa();
                     case 3:                        
-                        return contra.getDebeB();
+                        return String.valueOf(contra.getDebeB());
                     case 4:                        
-                        return contra.getHaberB();
+                        return String.valueOf(contra.getHaberB());
                     case 5:
-                        return contra.getTotalB();
+                        return String.valueOf(contra.getTotalB());
                     case 6:
-                        return contra.getDebeD();
+                        return String.valueOf(contra.getDebeD());
                     case 7:
-                        return contra.getHaberD();
+                        return String.valueOf(contra.getHaberD());
                     case 8:                        
-                        return contra.getTotalD();
+                        return String.valueOf(contra.getTotalD());
                     case 9:
-                        return contra.getTipcam();
+                        return String.valueOf(contra.getTipcam());
                     default:
                         return null;                
                 }
@@ -146,7 +147,12 @@ public class IUReporteMAC extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(7, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(8, SwingConstants.RIGHT);
         
-        iuTabla.setFocusable(true);        
+        iuTabla.setFocusable(true);     
+        
+        int[] columnas = {3, 4, 5, 6, 7, 8, 9};
+        for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
+            iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
+        }
     }
     private void construirPanelTotal(Area a){
         iuTotal = new IUEtiqueta(panelTotal, "T O T A L E S "+moneda.toUpperCase(), new Area(a.X(), a.Y(), a.AnP(60), a.Al()), 20, "CENTER", true);
@@ -176,7 +182,7 @@ public class IUReporteMAC extends IUSecundario{
                 contra.setHaberB(Ayuda.acotarNumero(contra.getMonto1(), 2));
                 totalBolivianos = Ayuda.acotarNumero(totalBolivianos - contra.getMonto1(), 2);
                 contra.setHaberD(contra.getMonto2());
-                totalDolares = Ayuda.acotarNumero(totalDolares + contra.getMonto2(), 2);
+                totalDolares = Ayuda.acotarNumero(totalDolares - contra.getMonto2(), 2);
             }
             contra.setTotalB(totalBolivianos);
             contra.setTotalD(totalDolares);

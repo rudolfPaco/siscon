@@ -6,16 +6,13 @@
 package SIGU.botones;
 
 import SIGU.paneles.IUPanel;
-import SIGU.paneles.SIUPanel;
 import SIGU.recursos.Area;
-import SIGU.recursos.Grid;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;

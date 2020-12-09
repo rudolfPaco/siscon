@@ -22,6 +22,7 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
+import SIGU.tablas.RenderDatosDecimales;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
 import com.siscon.model.Conmae;
@@ -30,6 +31,7 @@ import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -56,7 +58,8 @@ public class IUReporteBC extends IUSecundario{
                 private IUEtiqueta iuTotal;
                 private IUCampoTexto iuTotalDebitos;
                 private IUCampoTexto iuTotalCreditos;
-                private IUCampoTexto iuTotalSaldos;
+                private IUCampoTexto iuTotalSaldosDebe;
+                private IUCampoTexto iuTotalSaldosHaber;
     
     private final Usuario usuario;
     private final Tabvar tabvar;
@@ -99,10 +102,10 @@ public class IUReporteBC extends IUSecundario{
     private void construirPanelDatos(Area a){
         iuTabla = new IUTabla(
         panelDatos, 
-        new Area(a.X(), a.Y(), a.An(), a.AlP(95)), 
-        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO"}, 
-        new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, Double.class, Double.class}, 
-        new int[]{5, 15, 40, 10, 10, 10, 10}, 
+        new Area(a.X(), a.Y(), a.An(), a.AlP(96)), 
+        new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "SALDO INICIAL", "DEBITOS", "CREDITOS", "SALDO DEBE", "SALDO HABER"}, 
+        new Class[]{Integer.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class}, 
+        new int[]{5, 10, 35, 10, 10, 10, 10, 10}, 
         CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 AND (DEBMES > 0 OR CREMES > 0) ORDER BY CUETOT"),
         new ModeloTabla<Conmae>(){            
             
@@ -122,13 +125,31 @@ public class IUReporteBC extends IUSecundario{
                                     error = "";
                                 return lista.get(rowIndex).getDescri()+error;
                             case 3:
-                                return lista.get(rowIndex).getSalini();
+                                if(lista.get(rowIndex).getSalini() > 0)
+                                    return String.valueOf(lista.get(rowIndex).getSalini());
+                                else
+                                    return "";
                             case 4:                        
-                                return lista.get(rowIndex).getDebmes();
+                                if(lista.get(rowIndex).getDebmes() > 0)
+                                    return String.valueOf(lista.get(rowIndex).getDebmes());
+                                else
+                                    return "";
                             case 5:
-                                return lista.get(rowIndex).getCremes();
+                                if(lista.get(rowIndex).getCremes() > 0)
+                                    return String.valueOf(lista.get(rowIndex).getCremes());
+                                return "";
                             case 6:
-                                return lista.get(rowIndex).getSalact();
+                                double saldoDebe = lista.get(rowIndex).getSalact();
+                                if(saldoDebe > 0)
+                                    return String.valueOf(lista.get(rowIndex).getSalact());
+                                else
+                                    return "";
+                            case 7:
+                                double saldoHaber = lista.get(rowIndex).getSalact();
+                                if(saldoHaber < 0)
+                                    return String.valueOf(lista.get(rowIndex).getSalact());
+                                else
+                                    return "";
                             default:
                                 return null;
                         }
@@ -146,13 +167,31 @@ public class IUReporteBC extends IUSecundario{
                                 error = "";
                             return lista.get(rowIndex).getDescri()+error;
                         case 3:
-                            return lista.get(rowIndex).getSalin2();
+                            if(lista.get(rowIndex).getSalin2() > 0)
+                                return String.valueOf(lista.get(rowIndex).getSalin2());
+                            else
+                                return "";
                         case 4:                        
-                            return lista.get(rowIndex).getDebme2();
+                            if(lista.get(rowIndex).getDebme2() > 0)
+                                return String.valueOf(lista.get(rowIndex).getDebme2());
+                            else
+                                return "";
                         case 5:
-                            return lista.get(rowIndex).getCreme2();
+                            if(lista.get(rowIndex).getCreme2() > 0)
+                                return String.valueOf(lista.get(rowIndex).getCreme2());
+                            return "";
                         case 6:
-                            return lista.get(rowIndex).getSalac2();
+                            double saldoDebe = lista.get(rowIndex).getSalac2();
+                            if(saldoDebe > 0)
+                                return String.valueOf(lista.get(rowIndex).getSalac2());
+                            else
+                                return "";
+                        case 7:
+                            double saldoHaber = lista.get(rowIndex).getSalac2();
+                            if(saldoHaber < 0)
+                                return String.valueOf(lista.get(rowIndex).getSalac2());
+                            else
+                                return "";
                         default:
                             return null;
                     }
@@ -167,40 +206,54 @@ public class IUReporteBC extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(6, SwingConstants.RIGHT);
         iuTabla.setFocusable(true);
         
-        panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(95), a.An(), a.AlP(5)), true, Ayuda.COLOR_ATENCION);
+        int[] columnas = {3, 4, 5, 6, 7};
+        for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
+            iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
+        }
+        
+        panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(96), a.An(), a.AlP(4)), true, Ayuda.COLOR_ATENCION);
         construirPanelTotal(new Area(2, 2, panelTotal.area.An() - 12, panelTotal.area.Al() - 4));
         sumarTotales();
     }
     private void construirPanelTotal(Area a){
         iuTotal = new IUEtiqueta(panelTotal, "T O T A L E S "+moneda.toUpperCase(), new Area(a.X(), a.Y(), a.AnP(60), a.Al()), 20, "CENTER", true);
-        iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 20, new Area(a.X(2) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalDebitos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
-        iuTotalCreditos  = new IUCampoTexto(panelTotal, 20, 20, new Area(a.X(3) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotalCreditos  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalCreditos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
-        iuTotalSaldos  = new IUCampoTexto(panelTotal, 20, 20, new Area(a.X(4) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
-        iuTotalSaldos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
+        iuTotalSaldosDebe  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
+        iuTotalSaldosDebe.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
+        iuTotalSaldosHaber  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
+        iuTotalSaldosHaber.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
     }
     private void sumarTotales(){
         double totalDebmes = 0;
         double totalCremes = 0;
-        double totalSalact = 0;
+        double totalSalactDebe = 0;
+        double totalSalactHaber = 0;
         for (Iterator it = iuTabla.modeloTabla.lista.iterator(); it.hasNext();) {
             Conmae c = (Conmae) it.next();
             if(moneda.equalsIgnoreCase("(B)OLIVIANOS")){
                 totalDebmes = totalDebmes + c.getDebmes();
                 totalCremes = totalCremes + Math.abs(c.getCremes());
-                totalSalact = totalSalact + c.getSalact();
+                if(c.getSalact() > 0)
+                    totalSalactDebe = totalSalactDebe + c.getSalact();
+                else
+                    totalSalactHaber = totalSalactHaber + c.getSalact();
             }else{
                 totalDebmes = totalDebmes + c.getDebme2();
                 totalCremes = totalCremes + Math.abs(c.getCreme2());
-                totalSalact = totalSalact + c.getSalac2();
+                if(c.getSalac2() > 0)
+                    totalSalactDebe = totalSalactDebe + c.getSalac2();
+                else
+                    totalSalactHaber = totalSalactHaber + c.getSalac2();
             }
             
-        }
-        
-        iuTotalDebitos.setTextoD(String.valueOf(totalDebmes));
-        iuTotalCreditos.setTextoD(String.valueOf(totalCremes));
-        iuTotalSaldos.setTextoD(String.valueOf(totalSalact));
+        }        
+        iuTotalDebitos.setText(String.valueOf(Ayuda.formatearNumber(totalDebmes)));
+        iuTotalCreditos.setText(String.valueOf(Ayuda.formatearNumber(totalCremes)));
+        iuTotalSaldosDebe.setText(String.valueOf(Ayuda.formatearNumber(totalSalactDebe)));
+        iuTotalSaldosHaber.setText(String.valueOf(Ayuda.formatearNumber(totalSalactHaber)));
     }
     private void algoritmosInicial(){
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );

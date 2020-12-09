@@ -11,6 +11,7 @@ import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
+import SIGU.tablas.RenderDatosDecimales;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
 import com.siscon.model.Conmae;
@@ -93,7 +94,7 @@ public class IUReporteEPC extends IUSecundario{
         panelDatos, 
         new Area(a.X(), a.Y(), a.An(), a.Al()), 
         new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "SALDO (Bs.-)"}, 
-        new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, Double.class}, 
+        new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, String.class}, 
         new int[]{5, 15, 50, 10, 10, 10}, 
         CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grupos+" AND NIVEL <= "+nivel+" GROUP BY CUETOT"), 
         new ModeloTabla<Conmae>(){
@@ -112,7 +113,7 @@ public class IUReporteEPC extends IUSecundario{
                     case 4:
                         return lista.get(rowIndex).getActivi();
                     case 5:
-                        return lista.get(rowIndex).getSalact();
+                        return String.valueOf(lista.get(rowIndex).getSalact());
                     default:
                         return null;
                 }
@@ -122,6 +123,11 @@ public class IUReporteEPC extends IUSecundario{
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(5, SwingConstants.RIGHT);
         iuTabla.setFocusable(true);
+        
+        int[] columnas = {5};
+        for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
+            iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
+        }
     }
     private void algoritmosInicial(){
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );

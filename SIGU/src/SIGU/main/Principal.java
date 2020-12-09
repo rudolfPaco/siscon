@@ -28,14 +28,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Principal {
 
     public static void main(String[] arg){
-        
-        /*try {
+        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        try {
             // setTheme(String themeName, String licenseKey, String logoString)
             //com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "my company");
             UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         
         IUPrincipal sec = new IUPrincipal("Titulo de la Ventana", "/img/tienda.png");
         
@@ -54,6 +54,7 @@ public class Principal {
         Area a3 = new Area(4, 4, (panel.area.An()-10)/10, (panel.area.Al()-4)/14);
         
         IUBoton boton1 = new IUBoton(panel, new Area(a3.X(), a3.Y(), a3.An(), a3.Al()), "usuario", "/img/user.png", 14, 20, 15, SwingConstants.RIGHT, SwingConstants.CENTER, 'u', "boton usuario");
+        //sec.getRootPane().setDefaultButton(boton1);
         IUBoton boton2 = new IUBoton(panel, new Area(a3.X(2) + a3.An(3), a3.Y(), a3.An(), a3.Al()), "usuario", "/img/user.png", 14, 20, 15, SwingConstants.RIGHT, SwingConstants.CENTER, 'u', "boton usuario");
         
         IUBotonCheckBox check = new IUBotonCheckBox(panel, new Area(a3.X(5), a3.Y(2) + a3.Al(2), a3.An(), a3.Al()), "Libros de Java", 16, true);

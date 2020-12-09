@@ -20,6 +20,7 @@ import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
 import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.REmisionPC;
+import com.siscon.view.reportes.REstadoPerdidaGanancia;
 import com.siscon.view.reportes.RMayorAnaliticoCuenta;
 import com.siscon.view.tablas.VOpciones;
 import com.siscon.view.tabvar.VTabvar;
@@ -187,8 +188,8 @@ public class VPrincipal extends IUPrincipal{
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "22. Manejo Archivos...", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "23. Indices - Estados...", 16, SwingConstants.LEFT, Color.WHITE, true));
         
-        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(4) + a.AlP(63), a.An(), a.AlP(7)), "25. Actualizacion Diferida", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(5) + a.AlP(70), a.An(), a.AlP(7)), "26. Verificacion Asientos", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(4) + a.AlP(63), a.An(), a.AlP(7)), "25. Verificacion Asientos", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(5) + a.AlP(70), a.An(), a.AlP(7)), "26. Actualizacion Diferida", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(6) + a.AlP(77), a.An(), a.AlP(7)), "27. Integracion Sistemas", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(7) + a.AlP(84), a.An(), a.AlP(7)), "28. Cargar Tablas al Sistema", 16, SwingConstants.LEFT, Color.WHITE, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(8) + a.AlP(91), a.An(), a.AlP(7)), "30. Respaldo - Desplazo...", 16, SwingConstants.LEFT, Color.WHITE, true));
@@ -297,13 +298,19 @@ public class VPrincipal extends IUPrincipal{
                 iuBC.mostrarVentana();
                 setOpacity(1f);
             break;
+            case "18":
+                setOpacity(0.6f);
+                REstadoPerdidaGanancia iuEPG = new REstadoPerdidaGanancia(this, titulo, "grande", usuario, tabvar);
+                iuEPG.mostrarVentana();
+                setOpacity(1f);
+            break;
             case "25":
-                VActualizacionDiferida iuAD = new VActualizacionDiferida(this, titulo, "grande", usuario, tabvar);
-                iuAD.mostrarVentana();
+                VVerificacionAsientos iuVA = new VVerificacionAsientos(this, titulo, "grande", usuario, tabvar);
+                iuVA.mostrarVentana();                
             break;
             case "26":
-                VVerificacionAsientos iuVA = new VVerificacionAsientos(this, titulo, "grande", usuario, tabvar);
-                iuVA.mostrarVentana();
+                VActualizacionDiferida iuAD = new VActualizacionDiferida(this, titulo, "grande", usuario, tabvar);
+                iuAD.mostrarVentana();
             break;
             case "28":
                 setOpacity(0.6f);

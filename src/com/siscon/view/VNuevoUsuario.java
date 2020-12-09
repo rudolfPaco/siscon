@@ -164,7 +164,7 @@ public class VNuevoUsuario extends IUSecundario{
         
         etiquetaTIPCAM = new IUEtiqueta(panelContenedorDatos, "Tipo Cambio", new Area(a.X(2) + a.AnP(40), a.Y(6) + a.AlP(28), a.AnP(25), a.AlP(7)), 16, "LEFT", true);
         campoTIPCAM = new IUCampoTexto(panelContenedorDatos, 8, 16, new Area(a.X(2) + a.AnP(40), a.Y(6) + a.AlP(35), a.AnP(25), a.AlP(7)), SwingConstants.LEFT);
-        campoTIPCAM.setRestriccionNumeroDecimal(4);
+        //campoTIPCAM.setRestriccionNumeroDecimal(4);
         etiquetaUNIDAD = new IUEtiqueta(panelContenedorDatos, "Bs/$us", new Area(a.X(2) + a.AnP(65), a.Y(6) + a.AlP(35), a.AnP(15), a.AlP(7)), 16, "CENTER", true);
         
         etiquetaDIRECCION = new IUEtiqueta(panelContenedorDatos, "Direccion", new Area(a.X(), a.Y(8) + a.AlP(42), a.An(), a.AlP(7)), 16, "LEFT", true);

@@ -17,6 +17,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -222,12 +223,16 @@ public class Ayuda {
             vMes = tokens.nextToken();
             vAno = tokens.nextToken();
             return vAno + "-" + vMes + "-" + vDia;
-        }else
+        }else   
             return "";        
     }
     public static double acotarNumero(double numero, int cota){
         BigDecimal big = new BigDecimal(numero);
         return big.setScale(cota, RoundingMode.HALF_UP).doubleValue();
+    }
+    public static String formatearNumber(double number){
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        return df.format(number);
     }
     
     public static void main(String[] arg) {

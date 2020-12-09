@@ -130,7 +130,7 @@ public class VLogueo extends IUSecundario{
         
         etiquetaTipoCambio = new IUEtiqueta(panelContenedor, "T.C.: ", new Area(a.X(), a.Y(4) + a.AlP(40), a.AnP(35), a.AlP(10)), 16, "LEFT", false);
         campoTipoCambio = new IUCampoTexto(panelContenedor, 8, 16, new Area(a.X() + a.AnP(35), a.Y(4) + a.AlP(40), a.AnP(35), a.AlP(10)), SwingConstants.LEFT);
-        campoTipoCambio.setRestriccionNumeroDecimal(4);
+        //campoTipoCambio.setRestriccionNumeroDecimal(4);
         
         etiquetaUnidad = new IUEtiqueta(panelContenedor, "Bs/$us", new Area(a.X() + a.AnP(70), a.Y(4) + a.AlP(40), a.AnP(30), a.AlP(10)), 16, "LEFT", false);
         
