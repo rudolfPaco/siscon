@@ -18,6 +18,7 @@ import com.siscon.recursos.Ayuda;
 import com.siscon.view.actualizacionDiferida.VActualizacionDiferida;
 import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
+import com.siscon.view.contra.VContraDoble;
 import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.REmisionPC;
 import com.siscon.view.reportes.REstadoPerdidaGanancia;
@@ -171,9 +172,9 @@ public class VPrincipal extends IUPrincipal{
     private void construirPanelB(Area a){
         tituloB = new IUEtiqueta(panelB, "PROCESOS", new Area(a.X() + a.AnP(30), a.Y(4), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
         tituloB.setSubrayarTexto(true);
-        iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y() + a.AlP(21), a.An(), a.AlP(7)), "11. Asiento Simple", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y() + a.AlP(21), a.An(), a.AlP(7)), "11. Asiento SIMPLE", 16, SwingConstants.LEFT, Color.WHITE, true));
         //iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "12. Asiento Multiple", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "13. Asiento de Ajuste", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelB, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "13. Asiento Multiple", 16, SwingConstants.LEFT, Color.WHITE, true));
         
         tituloB = new IUEtiqueta(panelB, "REPORTES", new Area(a.X() + a.AnP(30), a.Y(7) + a.AlP(42), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
         tituloB.setSubrayarTexto(true);
@@ -284,6 +285,12 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(0.6f);                
                 VContra iuSimple = new VContra(this, titulo, "grande", usuario, tabvar);
                 iuSimple.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "13":
+                setOpacity(0.6f);                
+                VContraDoble iuDoble = new VContraDoble(this, titulo, "grande", usuario, tabvar);
+                iuDoble.mostrarVentana();
                 setOpacity(1f);
             break;
             case "16":

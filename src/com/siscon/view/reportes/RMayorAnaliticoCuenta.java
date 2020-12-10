@@ -22,6 +22,7 @@ import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.contra.VAyudaContra;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -327,7 +328,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
         iuCodigo.setEditar(true);
         iuCodigo.requestFocus();
         iuMensaje.setTexto("DIGITE EL CODIGO DE LA CUENTA QUE DESEA CONSULTAR.");
-        iuInformacion.setTexto(" ATENCION: ESC=SUSPENDE,  F2=RETROCEDE,  ENTER=AVANZA");
+        iuInformacion.setTexto(" ATENCION: ESC=SUSPENDE, F1=Ayuda,  F2=RETROCEDE,  ENTER=AVANZA");
         iuCodigo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -355,6 +356,20 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
                             }                            
                         }
                     }
+                }
+                if(KeyEvent.VK_F1 == e.getKeyCode()){
+                    
+                    setOpacity(0.5f);
+                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE LEFT JOIN CONTRA ON CONTRA.CUETOT = CONMAE.CUETOT WHERE CONMAE.ACTIVI = 2");
+                    iuAyuda.mostrarVentana();
+                    if(iuAyuda.getEstado()){
+                        Conmae conmae = iuAyuda.getConmae();
+                        codigo = String.valueOf(conmae.getCuetot());
+                        iuCodigo.setText(codigo);
+                        descripcion = conmae.getDescri();
+                        iuDescipcion.setText(conmae.getDescri());
+                    }
+                    setOpacity(1f);
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoMoneda();

@@ -181,6 +181,22 @@ public class Ayuda {
         conexion.cerrar_conexion();
         return dato;
     }
+    
+    public static double getDatoDecimal(String columna, String sql){        
+        Conexion conexion = new Conexion();
+        double dato = 0;
+        try {            
+            PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();            
+            while (rs.next()) {
+                dato = rs.getDouble(columna);
+            }
+        } catch (SQLException e) {            
+            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());            
+        }
+        conexion.cerrar_conexion();
+        return dato;
+    }
 
     public static String cambiarFormatoFecha(String fecha) {
         System.out.println("la fecha es: "+fecha);

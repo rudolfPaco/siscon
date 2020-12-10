@@ -64,14 +64,23 @@ public class VAyudaContra extends IUSecundario{
                 private IUPanelEtiqueta iuInformacion;
                 private IUCampoTexto campoS_N;
     private Conmae conmae;
+    private final String SQL;
     
-    public VAyudaContra(VPrincipal ventanaPrincipal, String titulo, String tipoSize) {
-        super(ventanaPrincipal, titulo, tipoSize);        
+    /**
+     *
+     * @param ventanaPrincipal
+     * @param titulo
+     * @param tipoSize
+     * @param SQL
+     */
+    public VAyudaContra(VPrincipal ventanaPrincipal, String titulo, String tipoSize, String SQL) {
+        super(ventanaPrincipal, titulo, tipoSize);                
         this.ventanaPrincipal = ventanaPrincipal;
         this.conmae = new Conmae(0);
+        this.SQL = SQL;
         
         construirPanel(new Area(An()-6, Al()-29));
-        algoritmoInicial();
+        algoritmoInicial();        
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
@@ -113,7 +122,7 @@ public class VAyudaContra extends IUSecundario{
         new String[]{"CODIGO", "DESCRIPCION"}, 
         new Class[]{Long.class, String.class}, 
         new int[]{30, 70}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE ACTIVI = 2 GROUP BY CUETOT"), 
+        CConmae.getLista(SQL), 
         new ModeloTabla<Conmae>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
