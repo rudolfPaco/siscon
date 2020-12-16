@@ -288,12 +288,13 @@ public class VTablaConmae extends IUSecundario{
                    //Hacer lo que sea con la línea leída
                    //System.out.println(texto);
                    texto = texto.trim();
-                   ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
+                   //ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
+                   ArrayList<String> registro = Ayuda.splinter(texto);
                    if(!texto.isEmpty()){
     //cadena = registro.get(2).replaceAll("\"", "");
     //tabla.setDescri(cadena);
                         try {
-                           String cadena = "";
+                           //String cadena = "";
     //"ID", "G", "S", "My", "An", "Sa", 
                             Conmae conmae = new Conmae(id);
                             conmae.setGrup(Integer.parseInt(registro.get(0)));
@@ -304,8 +305,8 @@ public class VTablaConmae extends IUSecundario{
         //"CUETOT", "NUMCUE", "DESCRI", "ACTVI", "NIVEL", "LUGAR", "PRESUP", 
                             conmae.setCuetot(Long.parseLong(registro.get(5)));
                             conmae.setNumcue(Integer.parseInt(registro.get(6)));                        
-                            cadena = registro.get(7).replaceAll("\"", "");
-                            conmae.setDescri(cadena);
+                            //cadena = registro.get(7).replaceAll("\"", "");
+                            conmae.setDescri(registro.get(7));
                             conmae.setActivi(Integer.parseInt(registro.get(8)));
                             conmae.setNivel(Integer.parseInt(registro.get(9)));
                             conmae.setLugar(Integer.parseInt(registro.get(10)));
@@ -328,25 +329,23 @@ public class VTablaConmae extends IUSecundario{
                             conmae.setAntme2(Double.parseDouble(registro.get(25)));
                             conmae.setCreme2(Double.parseDouble(registro.get(26)));
                             conmae.setSalac2(Double.parseDouble(registro.get(27)));
-                            cadena = registro.get(28).replaceAll("\"", "");
-                            conmae.setFecha(Ayuda.formatDate(cadena));
+                            //cadena = registro.get(28).replaceAll("\"", "");
+                            conmae.setFecha(Ayuda.formatDate(registro.get(28)));
                             conmae.setNompre(Double.parseDouble(registro.get(29)));
                             conmae.setDeban2(Double.parseDouble(registro.get(30)));
                             conmae.setCrean2(Double.parseDouble(registro.get(31)));                        
                             conmae.setAntdi2(Double.parseDouble(registro.get(32)));
                             conmae.setDebdi2(Double.parseDouble(registro.get(33)));
                             conmae.setCredi2(Double.parseDouble(registro.get(34)));
-                            cadena = "";
+                            //cadena = "";
                             //cadena = registro.get(35).replaceAll("\"", "");
                             //conmae.setFecha2(Ayuda.formatDate(cadena));
-                            conmae.setFecha2(cadena);
+                            conmae.setFecha2("");
                             
 
                             lista.add(conmae);
                             id++;
-                       } catch (Exception e) {System.out.println(e);
-                       System.out.println(registro);
-                       }
+                       } catch (NumberFormatException e) {System.out.println(e);System.out.println(registro);}
                         
                    }
                    //Leer la siguiente línea

@@ -151,7 +151,7 @@ public class VVerificacionAsientos extends IUSecundario{
     }
     private void construirPanelDatos(Area a){
         primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(85)), false);
-        construirPrimerPanel(new Area(a.AnP(20), a.AlP(10), primerPanel.area.An() - a.AnP(20)*2, primerPanel.area.Al() - a.AlP(10)*2));
+        construirPrimerPanel(new Area(a.AnP(15), a.AlP(10), primerPanel.area.An() - a.AnP(15)*2, primerPanel.area.Al() - a.AlP(10)*2));
         
         segundoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(85), a.An(), a.AlP(15)), false);
         construirSegundoPanel(new Area(8, 2, segundoPanel.area.An() - 24, segundoPanel.area.Al() - 8));
@@ -200,9 +200,9 @@ public class VVerificacionAsientos extends IUSecundario{
         iuDocumentosDescuadrados = new IUEtiqueta(panelUno, "DOCUMENTOS DESCUADRADOS", new Area(a.X() + a.AnP(58), a.Y(2) + a.AlP(25), a.AnP(43), a.AlP(5)), 20, "CENTER", true);
         
         iuTablaDescuadrados = new IUTabla(panelUno, new Area(a.X() + a.AnP(58), a.Y(3) + a.AlP(30), a.AnP(43), a.AlP(25)),
-        new String[]{"NRO.", "DEBITOS", "ABONOS"}, 
-        new Class[]{String.class, String.class, String.class}, 
-        new int[]{20, 40, 40}, 
+        new String[]{"NRO.", "DEBITOS", "ABONOS", "DIFERENCIA"}, 
+        new Class[]{String.class, String.class, String.class, String.class}, 
+        new int[]{20, 27, 27, 26}, 
         new ArrayList<Descuadre>(), new ModeloTabla<Descuadre>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
@@ -213,6 +213,8 @@ public class VVerificacionAsientos extends IUSecundario{
                         return lista.get(rowIndex).getDebito();
                     case 2:
                         return lista.get(rowIndex).getAbono();
+                    case 3:
+                        return Double.parseDouble(lista.get(rowIndex).getDebito()) - Double.parseDouble(lista.get(rowIndex).getAbono());    
                     default:
                         return null;
                 }

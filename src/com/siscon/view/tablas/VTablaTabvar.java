@@ -138,25 +138,26 @@ public class VTablaTabvar extends IUSecundario{
                //Hacer lo que sea con la línea leída
                //System.out.println(texto);
                texto = texto.trim();
-               ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
+               //ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
+               ArrayList<String> registro = Ayuda.splinter(texto);
                if(!texto.isEmpty()){
-                    String cadena = "";
+                    //String cadena = "";
                     Tabvar tabla = new Tabvar(RECORD);
                     tabla.setTipo(Integer.parseInt(registro.get(0)));
                     tabla.setNumero(Integer.parseInt(registro.get(1)));
-                    cadena = registro.get(2).replaceAll("\"", "");
-                    tabla.setDescri(cadena);
+                    //cadena = registro.get(2).replaceAll("\"", "");
+                    tabla.setDescri(registro.get(2));
                     tabla.setCodcon(Integer.parseInt(registro.get(3)));
                     tabla.setCorrel(Integer.parseInt(registro.get(4)));
                     tabla.setMonto(Double.parseDouble(registro.get(5)));
-                    cadena = registro.get(6).replaceAll("\"", "");
-                    tabla.setObserv(cadena);
+                    //cadena = registro.get(6).replaceAll("\"", "");
+                    tabla.setObserv(registro.get(6));
                     
-                    cadena = registro.get(7).replaceAll("\"", "");
-                    tabla.setFecha(Ayuda.formatDate(cadena));
+                    //cadena = registro.get(7).replaceAll("\"", "");
+                    tabla.setFecha(Ayuda.formatDate(registro.get(7)));
                     
-                    cadena = registro.get(8).replaceAll("\"", "");
-                    tabla.setFecha2(Ayuda.formatDate(cadena));                    
+                    //cadena = registro.get(8).replaceAll("\"", "");
+                    tabla.setFecha2(Ayuda.formatDate(registro.get(8)));
                     
                     tabla.setMonto2(Double.parseDouble(registro.get(9)));
                     tabla.setTipcam(Double.parseDouble(registro.get(10)));

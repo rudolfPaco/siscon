@@ -492,7 +492,7 @@ public class VContra extends IUSecundario{
             public Object getValueAt(int rowIndex, int columnIndex) {
                 switch (columnIndex) {
                     case 0:
-                        return rowIndex + 1;
+                        return lista.get(rowIndex).getNro();
                     case 1:
                         return lista.get(rowIndex).getCodigo();
                     case 2:
@@ -850,13 +850,13 @@ public class VContra extends IUSecundario{
                             Ayuda.mostrarMensajeError(ventanaPrincipal, "Error: USTED NO PUEDE ELIMINAR EL ASIENTO. DEBE REALIZAR CONTRA ASIENTOS, PARA ESTA PROCEDEMIENTO.", "ERROR");
                             actualizarPaneles();
                             inhabilitarCampos(true);
-                            limpiarCamposFila();
+                            limpiarCampos();
                             focoCampoNumero();
                         break;
                         case "N":
                             actualizarPaneles();
                             inhabilitarCampos(true);
-                            limpiarCamposFila();
+                            limpiarCampos();
                             focoCampoNumero();
                         break;
                         default:
@@ -1247,6 +1247,8 @@ public class VContra extends IUSecundario{
                                     }
                                 }
                             }                            
+                        }else{
+                            Ayuda.mostrarMensajeError(ventanaPrincipal, "No puede Finalizar. por que EXISTE UN DESCUADRE en los TOTALES.", "ERROR");
                         }
                     }
                 }
@@ -1344,7 +1346,7 @@ public class VContra extends IUSecundario{
                             }
                         }
                         actualizarPaneles();                        
-                        //limpiarCamposFila();
+                        limpiarCamposFila();
                         focoCampoCodigo();
                         setOpacity(1f);
                     }
@@ -1515,7 +1517,7 @@ public class VContra extends IUSecundario{
                                 iuTabla.modeloTabla.removeFila(iuTabla.getSelectedRow());
                                 sumarColumnasTotales();
                                 actualizarPaneles();
-                                //limpiarCamposFila();
+                                limpiarCamposFila();
                                 focoCampoNro();                                
                             }
                         break;
@@ -2195,13 +2197,13 @@ public class VContra extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     switch(campoS_N3.getText()){
                         case "S":
-                            if(debeMenorIgualMonto()){
+                            //if(debeMenorIgualMonto()){
                                 if(existeItemTabla(iuCodigo.getText())){                                
                                     if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
                                         modificarRegistroTabla();
                                         sumarColumnasTotales();
                                         actualizarPaneles();
-                                        //limpiarCamposFila();
+                                        limpiarCamposFila();
                                         focoCampoNro();
                                     }else{                                
                                         Asiento a = new Asiento(Integer.parseInt(iuNro.getText()));
@@ -2214,7 +2216,7 @@ public class VContra extends IUSecundario{
                                             iuTabla.modeloTabla.setFila(a);
                                             sumarColumnasTotales();
                                             actualizarPaneles();
-                                            //limpiarCamposFila();
+                                            limpiarCamposFila();
                                             focoCampoNro();
                                         }
                                     }
@@ -2229,16 +2231,16 @@ public class VContra extends IUSecundario{
                                         iuTabla.modeloTabla.setFila(a);
                                         sumarColumnasTotales();
                                         actualizarPaneles();
-                                        //limpiarCamposFila();
+                                        limpiarCamposFila();
                                         focoCampoNro();
                                     }
                                 }
-                            }else{
+                            /*}else{
                                 JOptionPane.showMessageDialog( ventanaPrincipal, "Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.", "ADVERTENCIA", JOptionPane.ERROR_MESSAGE );                                
                                 actualizarPaneles();
-                                //limpiarCamposFila();
+                                limpiarCamposFila();
                                 focoCampoCodigo();
-                            }
+                            }*/
                         break;
                         case "N":                            
                             focoCampoCodigo();
@@ -2250,7 +2252,8 @@ public class VContra extends IUSecundario{
             }
         });        
     }
-    private void limpiarCamposFila(){
+    
+    private void limpiarCampos(){
         
         iuCodigo.setText("");
         iuDescripcion.setText("");
@@ -2262,21 +2265,28 @@ public class VContra extends IUSecundario{
         iuDocRef.setText("");
         iuNumLiteral.setText("");
         iuConcepto.setText("");        
-        iuAreaGlosa.setText("");
-        iuCuenta.setText("");
-        iuBanco.setText("");
-        iuCheque.setText("");
+        //iuAreaGlosa.setText("");
+        //iuCuenta.setText("");
+        //iuBanco.setText("");
+        //iuCheque.setText("");
         
         iuTabla.modeloTabla.limpiarTabla();
         sumarColumnasTotales();
         indice = 1;
+    }
+    private void limpiarCamposFila(){
+        iuCodigo.setText("");
+        iuDescripcion.setText("");
+        iuDebe.setText("");
+        iuHaber.setText("");
+        iuDolares.setText("");
     }
     private boolean existeItemTabla(String codigo){
         boolean encontro = false;
         int contador = 0;
         if(!codigo.isEmpty()){
             while(contador < iuTabla.modeloTabla.lista.size() && !encontro){
-                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(codigo)){
+                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(codigo) && ((Asiento)iuTabla.modeloTabla.lista.get(contador)).getNro() == Integer.parseInt(iuNro.getText())){
                     encontro = true;
                 }
                 contador++;
@@ -2290,7 +2300,7 @@ public class VContra extends IUSecundario{
                 
         while(contador < iuTabla.modeloTabla.lista.size() && !encontro){
             if(!iuCodigo.getText().isEmpty()){
-                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(iuCodigo.getText())){
+                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(iuCodigo.getText()) && ((Asiento)iuTabla.modeloTabla.lista.get(contador)).getNro() == Integer.parseInt(iuNro.getText())){
                     Asiento a = new Asiento(contador+1);
                     a.setCodigo(Long.parseLong(iuCodigo.getText()));
                     a.setCuenta(iuDescripcion.getText());

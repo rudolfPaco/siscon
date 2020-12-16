@@ -16,6 +16,7 @@ import SIGU.tablas.RenderDatosDecimales;
 import SIGU.tablas.RendererDatosTabla;
 import SIGU.ventanas.IUSecundario;
 import com.siscon.controller.CConmae;
+import com.siscon.controller.CTabvar;
 import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
@@ -132,7 +133,12 @@ public class IUReporteEGP extends IUSecundario{
         construirPanelTotal(new Area(2, 2, panelTotal.area.An() - 12, panelTotal.area.Al() - 4));
     }    
     private void construirPanelTotal(Area a){
-        iuTotal = new IUEtiqueta(panelTotal, "UTILIDAD o PERDIDA ("+moneda.toUpperCase()+")", new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(50), a.Al()), 16, "RIGHT", true);
+        String unidad = "";
+        if(moneda.equalsIgnoreCase("(B)OLIVIANOS"))
+            unidad = "Bs.";
+        else
+            unidad = "$us.";
+        iuTotal = new IUEtiqueta(panelTotal, "UTILIDAD o (-PERDIDA)  "+unidad, new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(50), a.Al()), 16, "RIGHT", true);
         iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 20, new Area(a.X(2) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalDebitos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
         iuTotalDebitos.setVisible(false);
@@ -278,6 +284,18 @@ public class IUReporteEGP extends IUSecundario{
         }
         iuTabla.actualizarTabla(list);
         iuTotalSaldos.setText(String.valueOf(Ayuda.formatearNumber(Ayuda.acotarNumero(Math.abs(toting) - Math.abs(totgas), 2))));
+        
+        Tabvar t = CTabvar.getTabvar("SELECT * FROM tabvar where tipo = 2 and numero = 4");
+        if(t != null){
+            if(moneda.equalsIgnoreCase("(B)OLIVIANOS")){            
+                t.setCorrel(1);            
+            }else{
+                t.setCorrel(2);            
+            }
+            t.setMonto(Ayuda.acotarNumero(Math.abs(toting) - Math.abs(totgas), 2));
+            CTabvar.modificarTabvar(t);                
+        }
+        
     }    
     private void algoritmosInicial(){
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );

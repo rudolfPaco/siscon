@@ -389,14 +389,17 @@ public class VContraDoble extends IUSecundario{
     }
     private void construirPrimerPanelC(Area a){
         iuEtiquetaTipDoc = new IUPanelEtiqueta(primerPanelC, new Area(a.X(), a.Y(), a.AnP(13), a.Al()), "Tipo Documento: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
+        iuEtiquetaTipDoc.setVisible(false);
         iuTipDoc = new IUComboBox(primerPanelC, Ayuda.aOpciones(Ayuda.getListColumnas("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 2 AND (NUMERO >= 1 AND NUMERO <= 3)"), "- Elija -"), new Area(a.X(2) + a.AnP(13), a.Y(), a.AnP(10), a.Al()), 16, 30);
         iuTipDoc.setEditar(false);
         iuTipDoc.setFont(new Font("Verdana", Font.PLAIN, 16));
+        iuTipDoc.setVisible(false);
         
         iuEtiquetaDoc = new IUPanelEtiqueta(primerPanelC, new Area(a.X(3) + a.AnP(23), a.Y(), a.AnP(13), a.Al()), "DOCUMENTO de: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuDoc = new IUCampoTexto(primerPanelC, 30, 16, new Area(a.X(4) + a.AnP(36), a.Y(), a.AnP(9), a.Al()), SwingConstants.CENTER);
         iuDoc.setEditar(false);
         iuDoc.setFont(new Font("Verdana", Font.BOLD, 16));
+        iuDoc.setText("DIARIOS");
         
         iuEtiquetaNum = new IUPanelEtiqueta(primerPanelC, new Area(a.X(5) + a.AnP(45), a.Y(), a.AnP(7), a.Al()), "No.: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuNum = new IUCampoTexto(primerPanelC, 8, 16, new Area(a.X(6) + a.AnP(52), a.Y(), a.AnP(7), a.Al()), SwingConstants.CENTER);
@@ -496,7 +499,7 @@ public class VContraDoble extends IUSecundario{
             public Object getValueAt(int rowIndex, int columnIndex) {
                 switch (columnIndex) {
                     case 0:
-                        return rowIndex + 1;
+                        return lista.get(rowIndex).getNro();
                     case 1:
                         return lista.get(rowIndex).getCodigo();
                     case 2:
@@ -531,8 +534,10 @@ public class VContraDoble extends IUSecundario{
     }
     
     private void algoritmoInicial(){
-        restringirCampos("TIPDOC", true);
-        focoCampoTipoDocumento();
+        //restringirCampos("TIPDOC", true);
+        //focoCampoTipoDocumento();
+        seleccionarTipoDocumento("DIARIOS");
+        focoCampoNumero();
         
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
         panel.getActionMap().put( "ESC", new AbstractAction(){
@@ -776,7 +781,7 @@ public class VContraDoble extends IUSecundario{
                         focoCampoMonto();
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    focoCampoTipoDocumento();
+                    //focoCampoTipoDocumento();
                 }
             }
         });
@@ -804,7 +809,8 @@ public class VContraDoble extends IUSecundario{
                         break;
                         case "N":
                             inhabilitarCampos(true);
-                            focoCampoTipoDocumento();
+                            focoCampoNumero();
+                            //focoCampoTipoDocumento();
                         break;
                         default:
                         break;
@@ -1202,6 +1208,8 @@ public class VContraDoble extends IUSecundario{
                                     }
                                 }
                             }                            
+                        }else{
+                            Ayuda.mostrarMensajeError(ventanaPrincipal, "No puede Finalizar. por que EXISTE UN DESCUADRE en los TOTALES.", "ERROR");
                         }
                     }
                 }
@@ -2144,7 +2152,7 @@ public class VContraDoble extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     switch(campoS_N3.getText()){
                         case "S":
-                            if(debeMenorIgualMonto()){
+                            //if(debeMenorIgualMonto()){
                                 if(existeItemTabla(iuCodigo.getText())){                                
                                     if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
                                         modificarRegistroTabla();
@@ -2184,12 +2192,12 @@ public class VContraDoble extends IUSecundario{
                                         focoCampoNro();
                                     }
                                 }
-                            }else{
+                            /*}else{
                                 JOptionPane.showMessageDialog( ventanaPrincipal, "Atencion: Usted NO debe ingresar un MONTO SUPERIOR al MONTO INCIAL.\nPor SEGURIDAD se borrara los campos ingresados.", "ADVERTENCIA", JOptionPane.ERROR_MESSAGE );                                
                                 actualizarPaneles();
                                 limpiarCamposFila();
                                 focoCampoCodigo();
-                            }
+                            }*/
                         break;
                         case "N":                            
                             focoCampoCodigo();
@@ -2234,7 +2242,7 @@ public class VContraDoble extends IUSecundario{
         int contador = 0;
         if(!codigo.isEmpty()){
             while(contador < iuTabla.modeloTabla.lista.size() && !encontro){
-                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(codigo)){
+                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(codigo) && ((Asiento)iuTabla.modeloTabla.lista.get(contador)).getNro() == Integer.parseInt(iuNro.getText())){
                     encontro = true;
                 }
                 contador++;
@@ -2248,7 +2256,7 @@ public class VContraDoble extends IUSecundario{
                 
         while(contador < iuTabla.modeloTabla.lista.size() && !encontro){
             if(!iuCodigo.getText().isEmpty()){
-                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(iuCodigo.getText())){
+                if(((Asiento)iuTabla.modeloTabla.lista.get(contador)).getCodigo() == Long.parseLong(iuCodigo.getText()) && ((Asiento)iuTabla.modeloTabla.lista.get(contador)).getNro() == Integer.parseInt(iuNro.getText())){
                     Asiento a = new Asiento(contador+1);
                     a.setCodigo(Long.parseLong(iuCodigo.getText()));
                     a.setCuenta(iuDescripcion.getText());

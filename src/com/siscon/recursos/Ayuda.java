@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -250,10 +251,45 @@ public class Ayuda {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return df.format(number);
     }
-    
-    public static void main(String[] arg) {
-        String fecha = "01/01/2015";
-        System.out.println("la fecha es: " + fecha);
-        System.out.println("la convertimos: " + Ayuda.formatDate(fecha));
+    public static ArrayList<String> splinter(String texto){
+        String palabra = "";
+        ArrayList<String> lista = new ArrayList<>();
+        char[] c = texto.trim().toCharArray();
+        boolean[] pasos = {false, true};
+        boolean paso = true;
+        int j = 0;
+        for (int i = 0; i < c.length; i++){
+            //System.out.println("i = "+i+"    "+c[i]);
+            if(c[i] == '"'){                
+                paso = pasos[j];
+                if(paso == true)
+                    j = 0;
+                else
+                    j = 1;
+            }else{
+                if(paso == true){
+                    if(c[i] == ','){                        
+                        lista.add(palabra);
+                        palabra = "";
+                    }else{
+                        palabra = palabra+c[i];
+                    }
+                }else{
+                    palabra = palabra+c[i];
+                }
+            }            
+        }
+        lista.add(palabra);        
+        return lista;
     }
+    /*public static void main(String[] arg) {
+        String fecha = "01/01/2015";
+        ArrayList<String> lista = Ayuda.splinter("3,19896,19,\"31/01/2011\",1,1,1,4,2,1,3520.00,500.00,7.04,5,\"\",\"DEPOSITO AMPARO TOKO, MARIA PARRADO, MA. RODRIGUEZ\",0,11,11010402,0,3,0,0,1");
+        for (int i = 0; i < lista.size(); i++) {
+            String cadena = lista.get(i);
+            System.out.println(cadena);
+        }
+        
+        System.out.println("la convertimos: " + Ayuda.formatDate(fecha));
+    }*/
 }

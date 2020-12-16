@@ -257,44 +257,45 @@ public class VTablaContra extends IUSecundario{
                while(texto != null){
                    //Hacer lo que sea con la línea leída
                    //System.out.println(texto);
-                   texto = texto.trim();
-                   ArrayList<String> registro = new ArrayList<>(Arrays.asList(texto.split(",")));
+                   texto = texto.trim();                   
+                   ArrayList<String> registro = Ayuda.splinter(texto);
+                   //System.out.println(registro);
                    if(!texto.isEmpty()){
                         try {
-                           String cadena = "";
-                        Contra tabla = new Contra(id);
-                        tabla.setTipcon(Integer.parseInt(registro.get(0)));
-                        tabla.setNumcom(Integer.parseInt(registro.get(1)));
-                        tabla.setCorrel(Integer.parseInt(registro.get(2)));
-                        cadena = registro.get(3).replaceAll("\"", "");
-                        tabla.setFecha(Ayuda.formatDate(cadena));
-                        tabla.setGrupo(Integer.parseInt(registro.get(4)));
-                        tabla.setSubgru(Integer.parseInt(registro.get(5)));
-                        tabla.setMayor(Integer.parseInt(registro.get(6)));                        
+                           //String cadena = "";
+                        Contra contra = new Contra(id);
+                        contra.setTipcon(Integer.parseInt(registro.get(0)));
+                        contra.setNumcom(Integer.parseInt(registro.get(1)));
+                        contra.setCorrel(Integer.parseInt(registro.get(2)));
+                        //cadena = registro.get(3).replaceAll("\"", "");
+                        contra.setFecha(Ayuda.formatDate(registro.get(3)));
+                        contra.setGrupo(Integer.parseInt(registro.get(4)));
+                        contra.setSubgru(Integer.parseInt(registro.get(5)));
+                        contra.setMayor(Integer.parseInt(registro.get(6)));                        
                         
-                        tabla.setCuenta(Integer.parseInt(registro.get(7)));
-                        tabla.setSubcta(Integer.parseInt(registro.get(8)));
-                        tabla.setApropi(Integer.parseInt(registro.get(9)));
-                        tabla.setMonto1(Double.parseDouble(registro.get(10)));
-                        tabla.setMonto2(Double.parseDouble(registro.get(11)));
-                        tabla.setTipcam(Double.parseDouble(registro.get(12)));
-                        tabla.setIndica(Integer.parseInt(registro.get(13)));
+                        contra.setCuenta(Integer.parseInt(registro.get(7)));
+                        contra.setSubcta(Integer.parseInt(registro.get(8)));
+                        contra.setApropi(Integer.parseInt(registro.get(9)));
+                        contra.setMonto1(Double.parseDouble(registro.get(10)));
+                        contra.setMonto2(Double.parseDouble(registro.get(11)));
+                        contra.setTipcam(Double.parseDouble(registro.get(12)));
+                        contra.setIndica(Integer.parseInt(registro.get(13)));
                         
-                        cadena = registro.get(14).replaceAll("\"", "");
-                        tabla.setNombre(cadena);
+                        //cadena = registro.get(14).replaceAll("\"", "");
+                        contra.setNombre(registro.get(14));
                         
-                        cadena = registro.get(15).replaceAll("\"", "");
-                        tabla.setGlosa(cadena);
+                        //cadena = registro.get(15).replaceAll("\"", "");                            
+                        contra.setGlosa(registro.get(15));
                         
-                        tabla.setCheque(Integer.parseInt(registro.get(16)));
-                        tabla.setNumcue(Integer.parseInt(registro.get(17)));
-                        tabla.setCuetot(Long.parseLong(registro.get(18)));
-                        tabla.setReduce(Integer.parseInt(registro.get(19)));
-                        tabla.setTipcom(Integer.parseInt(registro.get(20)));
-                        tabla.setIntern(Integer.parseInt(registro.get(21)));
-                        tabla.setNumint(Integer.parseInt(registro.get(22)));
-                        tabla.setEmpres(Integer.parseInt(registro.get(23)));                        
-                        lista.add(tabla);
+                        contra.setCheque(Integer.parseInt(registro.get(16)));
+                        contra.setNumcue(Integer.parseInt(registro.get(17)));
+                        contra.setCuetot(Long.parseLong(registro.get(18)));
+                        contra.setReduce(Integer.parseInt(registro.get(19)));
+                        contra.setTipcom(Integer.parseInt(registro.get(20)));
+                        contra.setIntern(Integer.parseInt(registro.get(21)));
+                        contra.setNumint(Integer.parseInt(registro.get(22)));
+                        contra.setEmpres(Integer.parseInt(registro.get(23)));                        
+                        lista.add(contra);
                         id++;
                        } catch (Exception e) {System.out.println(e);System.out.println(registro);}
                         

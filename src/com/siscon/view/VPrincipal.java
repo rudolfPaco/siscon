@@ -20,6 +20,7 @@ import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
 import com.siscon.view.contra.VContraDoble;
 import com.siscon.view.reportes.RBalanceComprobacion;
+import com.siscon.view.reportes.RBalanceGeneral;
 import com.siscon.view.reportes.REmisionPC;
 import com.siscon.view.reportes.REstadoPerdidaGanancia;
 import com.siscon.view.reportes.RMayorAnaliticoCuenta;
@@ -309,6 +310,12 @@ public class VPrincipal extends IUPrincipal{
                 setOpacity(0.6f);
                 REstadoPerdidaGanancia iuEPG = new REstadoPerdidaGanancia(this, titulo, "grande", usuario, tabvar);
                 iuEPG.mostrarVentana();
+                setOpacity(1f);
+            break;
+            case "19":
+                setOpacity(0.6f);
+                RBalanceGeneral iuBG = new RBalanceGeneral(this, titulo, "grande", usuario);
+                iuBG.mostrarVentana();
                 setOpacity(1f);
             break;
             case "25":
