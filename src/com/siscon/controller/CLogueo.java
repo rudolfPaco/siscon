@@ -31,4 +31,11 @@ public class CLogueo {
             verificador = true;
         return verificador;
     }
+    public static boolean modificarUsuario(Usuario u){
+        boolean verificador = false;
+        UsuarioDao usuarioDao = new UsuarioDao();
+        if(usuarioDao.modifyUsuario(u))
+            verificador = true;
+        return verificador;
+    }
 }

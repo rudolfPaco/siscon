@@ -20,8 +20,10 @@ import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
+import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.AbstractAction;
@@ -51,7 +54,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author neo
  */
-public class REstadoPerdidaGanancia extends IUSecundario{
+public class RLibroDiario extends IUSecundario{
     
     private VPrincipal ventanaPrincipal;
     private String titulo;
@@ -60,18 +63,21 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         private IUPanel panelTitulo;
         private IUEtiqueta iuTitulo;
     
+    private IUEtiqueta iuTituloEmpresa;    
+        
     private IUPanel panelDatos;
         private IUPanel primerPanel;
             private IUPanel panelContenedor;
-                private IUPanel panelUno;
-                    private IUEtiqueta iuEtiquetaTipo;
-                    private IUComboBox iuTipo;
-                    private IUEtiqueta iuEtiquetaGrupos;
-                    private IUComboBox iuMoneda;
-                    private IUEtiqueta iuEtiquetaNivel;
-                    private IUComboBox iuNivel;
-                private IUPanel panelDos;
-        
+                private IUEtiqueta iuEtiquetaTipo;
+                private IUComboBox iuTipo;
+                private IUEtiqueta iuEtiquetaGrupos;
+                private IUComboBox iuMoneda;                
+                
+                private IUEtiqueta iuEtiquetaFechaInicial;
+                private JDateChooser iuFecha1 = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
+                private IUEtiqueta iuEtiquetaFechaFinal;
+                private JDateChooser iuFecha2 = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
+                
         private IUPanel segundoPanel;
             private IUEtiqueta iuTituloMensaje;
             private IUPanelEtiqueta iuMensaje;
@@ -81,21 +87,20 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             private IUCampoTexto campoS_N3;
     
     private final Usuario usuario;
-    private final Tabvar tabvar;
     
     private String tipo;
     private String moneda;
-    private String nivel;
+    private String fechaInicial;
+    private String fechaFinal;
     
-    public REstadoPerdidaGanancia(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
+    public RLibroDiario(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
-        this.tabvar = tabvar;
-        
         this.tipo = "";
         this.moneda = "";
-        this.nivel = "";
+        this.fechaInicial = "";
+        this.fechaFinal = "";
         
         construirPanel(new Area(An()-6, Al()-29));
         algoritmosInicial();
@@ -108,63 +113,76 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(panelTitulo.area.AnP(2), 2, panelTitulo.area.An() - panelTitulo.area.AnP(2)*4, panelTitulo.area.Al() - 4));
         
+        iuTituloEmpresa = new IUEtiqueta(panel, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(), a.Y() + a.AlP(15), a.An(), a.AlP(5)), 20, "CENTER", Ayuda.COLOR_ROJO);
+        iuTituloEmpresa.setSubrayarTexto(true);
+        
         panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), false, Ayuda.COLOR_FONDO);
         construirPanelDatos(new Area(2, 2, panelDatos.area.An() - 4, panelDatos.area.Al() - 6));
     }
     
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "ESTADO DE RESULTADO o  PERDIDA y GANANCIAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
+        iuTitulo = new IUEtiqueta(panelTitulo, "REPORTE: LDC", new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        
+        iuTitulo = new IUEtiqueta(panelTitulo, "LIBRO DIARIO DE COMPROBANTES", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Por: GRUPO - NIVEL", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);                
-        iuTitulo.setSubrayarTexto(true);
+        //iuTitulo = new IUEtiqueta(panelTitulo, "por: CUENTA", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);                
+        //iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         
-        iuTitulo = new IUEtiqueta(panelTitulo, "REPORTE: EPG ", new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        
     }
     private void construirPanelDatos(Area a){
-        primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(85)), false);
-        construirPrimerPanel(new Area(a.AnP(25), a.AlP(30), primerPanel.area.An() - a.AnP(25)*2, primerPanel.area.Al() - a.AlP(30)*2));
+        primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(85)), true);
+        construirPrimerPanel(new Area(a.AnP(20), a.AlP(25), primerPanel.area.An() - a.AnP(20)*2, primerPanel.area.Al() - a.AlP(25)*2));
         
-        segundoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(85), a.An(), a.AlP(15)), false);
+        segundoPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(85), a.An(), a.AlP(15)), true);
         construirSegundoPanel(new Area(8, 2, segundoPanel.area.An() - 24, segundoPanel.area.Al() - 8));
     }
     private void construirPrimerPanel(Area a){
-        panelContenedor = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        construirPanelContenedor(new Area(2, 2, a.An() - 4, a.Al() - 6));
+        panelContenedor = new IUPanel(primerPanel, new Area(a.X(), a.Y(), a.An(), a.Al()), true, Ayuda.COLOR_FONDO);
+        construirPanelContenedor(new Area(10, 10, panelContenedor.area.An() - 30, panelContenedor.area.Al() - 50));
     }
     private void construirPanelContenedor(Area a){
-        iuEtiquetaTipo = new IUEtiqueta(panelContenedor, "Tipo de Reporte que se Visualizara:", new Area(a.X(), a.Y(), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
+        iuEtiquetaTipo = new IUEtiqueta(panelContenedor, "Tipo de Reporte que se Visualizara:", new Area(a.X(), a.Y(), a.AnP(60), a.AlP(25)), 18, "LEFT", false);
         iuEtiquetaTipo.setSubrayarTexto(true);
         ArrayList<String> tipos = new ArrayList<>();
-        tipos.add("PANTALLA");
-        tipos.add("EXPORTABLE");
+        tipos.add("PANTALLA");        
         tipos.add("IMPRESORA");
-        iuTipo = new IUComboBox(panelContenedor, tipos, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(33)), 18, 50);
+        iuTipo = new IUComboBox(panelContenedor, tipos, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(25)), 18, 50);
         iuTipo.setPosicionHorizontal(SwingConstants.CENTER);
         
-        iuEtiquetaGrupos = new IUEtiqueta(panelContenedor, "Emision de Moneda Bolivianos/Dolares:", new Area(a.X(), a.Y(2) + a.AlP(33), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
+        iuEtiquetaGrupos = new IUEtiqueta(panelContenedor, "Emision de Moneda Bolivianos/Dolares:", new Area(a.X(), a.Y(2) + a.AlP(25), a.AnP(60), a.AlP(25)), 18, "LEFT", false);
         iuEtiquetaGrupos.setSubrayarTexto(true);
         ArrayList<String> opciones = new ArrayList<>();
         opciones.add("(B)olivianos");
         opciones.add("(D)olares");        
-        iuMoneda = new IUComboBox(panelContenedor, opciones, new Area(a.X(2) + a.AnP(60), a.Y(2) + a.AlP(33), a.AnP(40), a.AlP(33)), 18, 50);
+        iuMoneda = new IUComboBox(panelContenedor, opciones, new Area(a.X(2) + a.AnP(60), a.Y(2) + a.AlP(25), a.AnP(40), a.AlP(25)), 18, 50);
         iuMoneda.setPosicionHorizontal(SwingConstants.CENTER);
         
+        iuEtiquetaFechaInicial = new IUEtiqueta(panelContenedor, "Indique el RANGO DE FECHAS de Proceso  del:", new Area(a.X(), a.Y(3) + a.AlP(50), a.AnP(60), a.AlP(25)), 18, "RIGHT", false);        
+        iuFecha1.setBounds(a.X(2) + a.AnP(80), a.Y(3) + a.AlP(50), a.AnP(20), a.AlP(25));        
+        iuFecha1.getDateEditor().getUiComponent().setFont(new Font("Verdana", Font.PLAIN, 16));
+        iuFecha1.getDateEditor().getUiComponent().setForeground(new Color(2, 67, 109));
+        iuFecha1.getCalendarButton().setVisible(false);
+        iuFecha1.setDateFormatString("yyyy-MM-dd");
+        iuFecha1.setDate(new Fecha(Ayuda.getDatoCadena("fecha", "select fecha from tabvar where tipo = 1 and numero = 1")).getDate());
+        iuFecha1.getDateEditor().getUiComponent().setFocusable(false);
+        iuFecha1.getDateEditor().getUiComponent().setEnabled(false);
+        panelContenedor.add(iuFecha1);
         
-        iuEtiquetaNivel = new IUEtiqueta(panelContenedor, "Confirme el NIVEL de las Cuentas a Emitir:", new Area(a.X(), a.Y(3) + a.AlP(66), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
-        iuEtiquetaNivel.setSubrayarTexto(true);
-        ArrayList<String> niveles = new ArrayList<>();
-        niveles.add("5");
-        niveles.add("4");
-        niveles.add("3");
-        niveles.add("2");
-        niveles.add("1");
-        iuNivel = new IUComboBox(panelContenedor, niveles, new Area(a.X(2) + a.AnP(60), a.Y(3) + a.AlP(66), a.AnP(40), a.AlP(33)), 18, 50);
-        iuNivel.setPosicionHorizontal(SwingConstants.CENTER);
+        iuEtiquetaFechaFinal = new IUEtiqueta(panelContenedor, "al:", new Area(a.X(), a.Y(4) + a.AlP(75), a.AnP(60), a.AlP(25)), 18, "RIGHT", false);        
+        iuFecha2.setBounds(a.X(2) + a.AnP(80), a.Y(4) + a.AlP(75), a.AnP(20), a.AlP(25));        
+        iuFecha2.getDateEditor().getUiComponent().setFont(new Font("Verdana", Font.PLAIN, 16));
+        iuFecha2.getDateEditor().getUiComponent().setForeground(new Color(2, 67, 109));
+        iuFecha2.getCalendarButton().setVisible(false);
+        iuFecha2.setDateFormatString("yyyy-MM-dd");
+        iuFecha2.setDate(new Date());
+        iuFecha2.getDateEditor().getUiComponent().setFocusable(false);
+        iuFecha2.getDateEditor().getUiComponent().setEnabled(false);
+        panelContenedor.add(iuFecha2);
     }
-    
     
     private void construirSegundoPanel(Area a){
         iuTituloMensaje = new IUEtiqueta(segundoPanel, "Mensajes - Instrucciones", new Area(a.X(), a.Y(), a.AnP(97), a.AlP(20)), 16, "CENTER", false);
@@ -225,8 +243,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
         campoS_N3.setForeground(Color.BLACK);
-    }    
-    
+    }
     private void algoritmosInicial(){
         panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
         panel.getActionMap().put( "ESC", new AbstractAction(){
@@ -250,12 +267,12 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     tipo = iuTipo.getSelectedItem().toString();
-                    focoCampoGrupos();
+                    focoCampoMoneda();
                 }
             }
         });
     }
-    private void focoCampoGrupos(){
+    private void focoCampoMoneda(){
         pintarBordeCampo("GRUPOS");
         deshabilitarCampoS_N();
         iuMoneda.setEditar(true);
@@ -267,7 +284,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     moneda = iuMoneda.getSelectedItem().toString();
-                    focoCampoNivel();
+                    focoCampoFecha1();
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoTipo();
@@ -275,22 +292,61 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
     }
-    private void focoCampoNivel(){
-        pintarBordeCampo("NIVEL");
+    
+    private void focoCampoFecha1(){
+        pintarBordeCampo("FECHA1");
         deshabilitarCampoS_N();
-        iuNivel.setEditar(true);
-        iuNivel.requestFocus();
-        iuMensaje.setTexto("ELIJA una de las OPCIONES. ENTER=Avanzar, F2=Retrocede, ESC=Suspende");
-        iuInformacion.setTexto(" ATENCION: 1=GRUPO, 2=SUBGRUPO, 3=MAYOR, 4=ANALITICO, 5=SUBANALITICO");
-        iuNivel.addKeyListener(new KeyAdapter() {
+        iuFecha1.getDateEditor().getUiComponent().setFocusable(true);
+        iuFecha1.getDateEditor().getUiComponent().setEnabled(true);
+        iuFecha1.getDateEditor().getUiComponent().requestFocus();        
+        iuMensaje.setTexto("DIGITE LA FECHA INICIAL.");
+        iuInformacion.setTexto(" ATENCION: ESC=SUSPENDE,  F2=RETROCEDE,  ENTER=AVANZA");
+        iuFecha1.getDateEditor().getUiComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    nivel = iuNivel.getSelectedItem().toString();
-                    focoCampoS_N1();
+                    try {
+                        if(!new Fecha().getFecha(iuFecha1.getDate(), "yyyy-MM-dd").isEmpty()){                            
+                            fechaInicial = new Fecha().getFecha(iuFecha1.getDate(), "yyyy-MM-dd");
+                            focoCampoFecha2();
+                        }else{
+                            iuFecha1.setDateFormatString("yyyy-MM-dd");
+                            iuFecha1.setDate(new Fecha(Ayuda.getDatoCadena("fecha", "select fecha from tabvar where tipo = 1 and numero = 1")).getDate());
+                            fechaInicial = new Fecha().getFecha(iuFecha1.getDate(), "yyyy-MM-dd");                            
+                        }
+                    } catch (Exception ex) {System.out.println("Error: "+ex.getMessage());}
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
-                    focoCampoGrupos();
+                    focoCampoMoneda();
+                }
+            }
+        });
+    }
+    private void focoCampoFecha2(){
+        pintarBordeCampo("FECHA2");
+        deshabilitarCampoS_N();
+        iuFecha2.getDateEditor().getUiComponent().setFocusable(true);
+        iuFecha2.getDateEditor().getUiComponent().setEnabled(true);
+        iuFecha2.getDateEditor().getUiComponent().requestFocus();        
+        iuMensaje.setTexto("DIGITE LA FECHA FINAL.");
+        iuInformacion.setTexto(" ATENCION: ESC=SUSPENDE,  F2=RETROCEDE,  ENTER=AVANZA");
+        iuFecha2.getDateEditor().getUiComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    try {
+                        if(!new Fecha().getFecha(iuFecha2.getDate(), "yyyy-MM-dd").isEmpty()){
+                            fechaFinal = new Fecha().getFecha(iuFecha2.getDate(), "yyyy-MM-dd");
+                            focoCampoS_N1();
+                        }else{
+                            iuFecha2.setDateFormatString("yyyy-MM-dd");
+                            iuFecha2.setDate(new Date());
+                            fechaFinal = new Fecha().getFecha(iuFecha2.getDate(), "yyyy-MM-dd");
+                        }
+                    } catch (Exception ex) {System.out.println("Error: "+ex.getMessage());}
+                }
+                if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    focoCampoFecha1();
                 }
             }
         });
@@ -329,39 +385,21 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
     }
-    private void emitirReporte(){
-        String nombreNivel = "";
-        switch(nivel){
-            case "5":
-                nombreNivel = "SUBANALITICO";
-            break;
-            case "4":
-                nombreNivel = "ANALITICO";
-            break;
-            case "3":
-                nombreNivel = "MAYOR";
-            break;
-            case "2":
-                nombreNivel = "SUBGRUPO";
-            break;
-            case "1":
-                nombreNivel = "GRUPO";
-            break;
-        }
+    private void emitirReporte(){        
         switch(tipo){
             case "PANTALLA":                
                 actualizarPaneles();
-                IUReporteEGP iuEGP = new IUReporteEGP(this, titulo, "grande", usuario, tabvar, nombreNivel, moneda);
-                iuEGP.mostrarVentana();
+                IUReporteLD iuLibro = new IUReporteLD(this, titulo, "grande", usuario, moneda, fechaInicial, fechaFinal);
+                iuLibro.mostrarVentana();
                 actualizarPaneles();
             break;
             case "EXPORTABLE":
                 dispose();
-                //exportarArchivoTXT(Integer.parseInt(grupo), Integer.parseInt(nivel));
+                //exportarArchivoTXT(Integer.parseInt(grupo), Integer.parseInt(forma));
             break;
             case "IMPRESORA":                
                 dispose();
-                //reporte(Integer.parseInt(grupo), Integer.parseInt(nivel), nombreNivel);
+                //reporte(Integer.parseInt(grupo), Integer.parseInt(forma), nombreNivel);
             break;
             default:
             break;
@@ -444,18 +482,14 @@ public class REstadoPerdidaGanancia extends IUSecundario{
     */
     private void restringirCampos(String campo, boolean state){
         iuTipo.setEditar(false);
-        iuMoneda.setEditar(false);
-        iuNivel.setEditar(false);
+        iuMoneda.setEditar(false);        
         switch(campo){
             case "TIPO":
                 iuTipo.setEditar(state);
             break;
             case "GRUPOS":
                 iuMoneda.setEditar(state);
-            break;
-            case "NIVEL":
-                iuNivel.setEditar(state);
-            break;
+            break;            
             default:
             break;
         }
@@ -464,8 +498,9 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         Border borde = new LineBorder(Color.blue, 2); 
         
         iuTipo.setBorder(iuTipo.getBordeComponente());
-        iuMoneda.setBorder(iuMoneda.getBordeComponente());
-        iuNivel.setBorder(iuNivel.getBordeComponente());
+        iuMoneda.setBorder(iuMoneda.getBordeComponente());        
+        iuFecha1.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        iuFecha2.setBorder(new LineBorder(Color.LIGHT_GRAY));
         
         switch(campo){
             case "TIPO":
@@ -474,8 +509,11 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             case "GRUPOS":
                 iuMoneda.setBorder(borde);
             break;
-            case "NIVEL":
-                iuNivel.setBorder(borde);
+            case "FECHA1":
+                iuFecha1.setBorder(borde);
+            break;
+            case "FECHA2":
+                iuFecha2.setBorder(borde);
             break;
             default:
             break;

@@ -20,10 +20,10 @@ import java.util.logging.Logger;
 public class Conexion {
     
     private Connection conexion;
-    private final String base_datos = "bd_siscon";
-    private final String usuario = "root";
-    private final String contrasena = "";
-    private final String servidor = "jdbc:mysql://localhost/"+base_datos;
+    public static String base_datos = "bd_siscon";
+    public static String usuario = "mysql";//public static String usuario = "root";
+    public static String contrasena = "mysql";//public static String contrasena = "";
+    private static String servidor = "jdbc:mysql://localhost/"+base_datos;
     
     private PreparedStatement consulta;
     private ResultSet resultado;

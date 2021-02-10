@@ -844,9 +844,9 @@ public class VNuevoPlanCuentas  extends IUSecundario{
         c.setFecha2(null);
         
         setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "CONFIRMACION")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "pregunta")){
             if(CConmae.guardarConmae(c)){
-                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "CORRECTO");
+                Ayuda.mensaje(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "correcto");
                 conmae = c;
                 setEstado(true);
                 dispose();
@@ -860,9 +860,9 @@ public class VNuevoPlanCuentas  extends IUSecundario{
         conmae.setPresup(Integer.parseInt(campoPresup.getText()));
         
         setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea MODIFICAR los datos del Registro PLAN DE CUENTAS...?", "CONFIRMACION")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea MODIFICAR los datos del Registro PLAN DE CUENTAS...?", "pregunta")){
             if(CConmae.modificarConmae(conmae)){
-                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha MODIFICADO los datos del Registro CONMAE, CORRECTAMENTE...!", "CORRECTO");
+                Ayuda.mensaje(ventanaPrincipal, "Se ha MODIFICADO los datos del Registro CONMAE, CORRECTAMENTE...!", "correcto");
             }
         }
         setOpacity(1f);
@@ -871,9 +871,9 @@ public class VNuevoPlanCuentas  extends IUSecundario{
     }
     private void eliminarConmae(){
         setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR el Registro del PLAN DE CUENTAS....?", "CONFIRMACION")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea ELIMINAR el Registro del PLAN DE CUENTAS....?", "pregunta")){
             if(CConmae.eliminarConmae(conmae)){
-                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha ELIMINADO los datos del Registro CONMAE, CORRECTAMENTE...!", "CORRECTO");
+                Ayuda.mensaje(ventanaPrincipal, "Se ha ELIMINADO los datos del Registro CONMAE, CORRECTAMENTE...!", "correcto");
             }
         }
         setOpacity(1f);

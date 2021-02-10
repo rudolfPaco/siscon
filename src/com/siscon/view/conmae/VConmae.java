@@ -20,6 +20,7 @@ import com.siscon.recursos.Ayuda;
 import SIGU.tablas.RendererDatosTabla;
 import SIGU.tablas.IUTabla;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.contra.VAyudaContra;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -513,6 +514,18 @@ public class VConmae extends IUSecundario{
             }
         });
         
+        VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE WHERE ACTIVI = 2 GROUP BY CUETOT");
+        iuAyuda.mostrarVentana();
+        if(iuAyuda.getEstado()){
+            Conmae c = iuAyuda.getConmae();
+            
+            campoG.setText(String.valueOf(c.getGrup()));
+            campoS.setText(String.valueOf(c.getSubgru()));
+            campoMy.setText(String.valueOf(c.getMayor()));
+            campoAn.setText(String.valueOf(c.getCuenta()));
+            campoSa.setText(String.valueOf(c.getSubcta()));
+        }
+        
         focoCampoG();
     }
     
@@ -929,9 +942,9 @@ public class VConmae extends IUSecundario{
             c.setCredi2(0);
             c.setFecha2(null);
             setOpacity(0.5f);
-            if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "CONFIRMACION")){
+            if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que quiere GUARDAR el nuevo Registro del PLAN DE CUENTAS...?", "pregunta")){
                 if(CConmae.guardarConmae(c)){
-                    Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "CORRECTO");
+                    Ayuda.mensaje(ventanaPrincipal, "Se ha GUARDADO los datos del Registro CONMAE, CORRECTAMENTE....!", "correcto");
                     limpiarCampos();
                 }
             }
@@ -944,9 +957,9 @@ public class VConmae extends IUSecundario{
         conmae.setPresup(Integer.parseInt(campoPresup.getText()));
         
         setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea MODIFICAR los datos del Registro PLAN DE CUENTAS...?", "CONFIRMACION")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea MODIFICAR los datos del Registro PLAN DE CUENTAS...?", "pregunta")){
             if(CConmae.modificarConmae(conmae)){
-                Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha MODIFICADO los datos del Registro CONMAE, CORRECTAMENTE...!", "CORRECTO");
+                Ayuda.mensaje(ventanaPrincipal, "Se ha MODIFICADO los datos del Registro CONMAE, CORRECTAMENTE...!", "correcto");
             }
         }
         setOpacity(1f);
@@ -955,13 +968,13 @@ public class VConmae extends IUSecundario{
     }
     private void eliminarConmae(){
         setOpacity(0.5f);
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR el Registro del PLAN DE CUENTAS....?", "CONFIRMACION")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea ELIMINAR el Registro del PLAN DE CUENTAS....?", "pregunta")){
             double suma = Math.abs(conmae.getDebmes() + conmae.getCremes());
             if(suma > 0){
-                Ayuda.mostrarMensajeError(ventanaPrincipal, "G-S-My-An-Sa = "+conmae.getCuetot()+"  descripcion = "+conmae.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "Error");
+                Ayuda.mensaje(ventanaPrincipal, "G-S-My-An-Sa = "+conmae.getCuetot()+"  descripcion = "+conmae.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "error");
             }else{
                 if(CConmae.eliminarConmae(conmae)){
-                    Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha ELIMINADO los datos del Registro CONMAE, CORRECTAMENTE...!", "CORRECTO");
+                    Ayuda.mensaje(ventanaPrincipal, "Se ha ELIMINADO los datos del Registro CONMAE, CORRECTAMENTE...!", "correcto");
                 }
             }
         }

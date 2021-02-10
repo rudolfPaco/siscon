@@ -44,6 +44,12 @@ public class Contra {
     private double haberD;
     private double totalD;
     
+    private String comprobanteItem;
+    private String codigo;
+    private String debe;
+    private String haber;
+    private String dolares;
+    
     public Contra(int id) {
         this.id = id;
     }
@@ -292,6 +298,46 @@ public class Contra {
 
     public void setTotalD(double totalD) {
         this.totalD = totalD;
+    }
+
+    public String getComprobanteItem() {
+        return comprobanteItem;
+    }
+
+    public void setComprobanteItem(String comprobanteItem) {
+        this.comprobanteItem = comprobanteItem;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getDebe() {
+        return debe;
+    }
+
+    public void setDebe(String debe) {
+        this.debe = debe;
+    }
+
+    public String getHaber() {
+        return haber;
+    }
+
+    public void setHaber(String haber) {
+        this.haber = haber;
+    }
+
+    public String getDolares() {
+        return dolares;
+    }
+
+    public void setDolares(String dolares) {
+        this.dolares = dolares;
     }
     
     

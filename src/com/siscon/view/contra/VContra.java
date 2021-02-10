@@ -27,9 +27,7 @@ import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.recursos.Numero_a_Letra;
 import com.siscon.view.VPrincipal;
-import com.siscon.view.conmae.VConmae;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -38,16 +36,11 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -181,7 +174,7 @@ public class VContra extends IUSecundario{
     
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "ASIENTO SIMPLE", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
+        iuTitulo = new IUEtiqueta(panelTitulo, "ASIENTO INGRESO o EGRESO", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, Ayuda.getDatoCadena("DESCRI", "SELECT DESCRI FROM TABVAR WHERE TIPO = 10 AND NUMERO = 1"), new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
         iuTitulo.setSubrayarTexto(true);
@@ -847,7 +840,7 @@ public class VContra extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     switch(campoS_N9.getText()){
                         case "S":
-                            Ayuda.mostrarMensajeError(ventanaPrincipal, "Error: USTED NO PUEDE ELIMINAR EL ASIENTO. DEBE REALIZAR CONTRA ASIENTOS, PARA ESTA PROCEDEMIENTO.", "ERROR");
+                            Ayuda.mensaje(ventanaPrincipal, "Error: USTED NO PUEDE ELIMINAR EL ASIENTO. DEBE REALIZAR CONTRA ASIENTOS, PARA ESTA PROCEDEMIENTO.", "error");
                             actualizarPaneles();
                             inhabilitarCampos(true);
                             limpiarCampos();
@@ -1222,33 +1215,33 @@ public class VContra extends IUSecundario{
                         if((montoTotal == debeTotal && montoTotal  == haberTotal)){ // && dolaresTotal == 0
                             actualizarPaneles();
                             if(!modificable){
-                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "CONFIRMACION")){
+                                if(Ayuda.mensaje(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea GUARDAR EL ASIENTO.?", "pregunta")){
                                     if(!getEstado()){
                                         setEstado(true);
                                         guardarContra();
                                         actualizarPaneles();
-                                        Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "EXCELENTE");   
+                                        Ayuda.mensaje(ventanaPrincipal, "Se ha GUARDADO CORRECTAMENTE...!", "correcto");
                                         actualizarPaneles();
                                         dispose();
                                     }
                                 }else
                                     focoCampoNro();
                             }else{
-                                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea MODIFICAR EL ASIENTO.?", "CONFIRMACION")){
+                                if(Ayuda.mensaje(ventanaPrincipal, "Se ha detectado una CUADRATURA del MONTO DEBE Y HABER CORRECTAMENTE, desea MODIFICAR EL ASIENTO.?", "pregunta")){
                                     if(!getEstado()){
                                         setEstado(true);
                                         desmayorizar();
                                         actualizarPaneles();
                                         modificarContra();
                                         guardarContra();
-                                        Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Se ha MODIFICADO CORRECTAMENTE...!", "EXCELENTE");   
+                                        Ayuda.mensaje(ventanaPrincipal, "Se ha MODIFICADO CORRECTAMENTE...!", "correcto");   
                                         actualizarPaneles();
                                         dispose();
                                     }
                                 }
                             }                            
                         }else{
-                            Ayuda.mostrarMensajeError(ventanaPrincipal, "No puede Finalizar. por que EXISTE UN DESCUADRE en los TOTALES.", "ERROR");
+                            Ayuda.mensaje(ventanaPrincipal, "No puede Finalizar. por que EXISTE UN DESCUADRE en los TOTALES.", "error");
                         }
                     }
                 }
@@ -2199,7 +2192,7 @@ public class VContra extends IUSecundario{
                         case "S":
                             //if(debeMenorIgualMonto()){
                                 if(existeItemTabla(iuCodigo.getText())){                                
-                                    if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
+                                    if(Ayuda.mensaje(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
                                         modificarRegistroTabla();
                                         sumarColumnasTotales();
                                         actualizarPaneles();

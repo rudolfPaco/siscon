@@ -9,6 +9,7 @@ import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoPrivado;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
+import SIGU.etiquetas.IUEtiquetaI;
 import SIGU.paneles.IUPanel;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
@@ -20,6 +21,7 @@ import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -31,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -44,6 +47,8 @@ public class VLogueo extends IUSecundario{
         private IUPanel panelTitulo;
         private IUEtiqueta iuTitulo;
     
+    private IUEtiquetaI imagenLogo;
+        
     private IUPanel panelDatos;
         private IUPanel panelContenedor;
             private IUEtiqueta etiquetaUsuario;
@@ -85,6 +90,8 @@ public class VLogueo extends IUSecundario{
     private void construirPanel(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(8)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(10, 3, panelTitulo.area.An() - 40, panelTitulo.area.Al() - 9));
+        
+        imagenLogo = new IUEtiquetaI(panel, new Area(a.X(), a.Y() + a.AlP(8), a.AnP(10), a.AlP(18)), "/imagenes/imagenLogo.png");
         
         panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(8), a.An(), a.AlP(65)), false);
         construirPanelDatos(new Area(a.AnP(35), a.AlP(15), (panelDatos.area.An() - 2*a.AnP(35)), (panelDatos.area.Al() - 2*a.AlP(15))));
@@ -246,8 +253,8 @@ public class VLogueo extends IUSecundario{
             public void actionPerformed( ActionEvent e ){                
                 botonEsc.doClick();                
                 setOpacity(0.6f);
-                int resp = JOptionPane.showConfirmDialog( ventanaPrincipal , "Está seguro que desea salir del sistema?" , "Confirmación" , JOptionPane.YES_NO_OPTION );                    
-                if( resp == 0 )
+                boolean resp = Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea salir del sistema SISCON", "pregunta");//JOptionPane.showConfirmDialog( ventanaPrincipal , "Está seguro que desea salir del sistema?" , "Confirmación" , JOptionPane.YES_NO_OPTION );                    
+                if( resp )
                     dispose();
                 setOpacity(1f);
             }
@@ -270,10 +277,12 @@ public class VLogueo extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!campoUsuario.getText().isEmpty()){
                         int numero = Integer.parseInt(campoUsuario.getText());
-                        if(numero > 0 && numero < 5){
+                        if(numero > 0 && numero < 99){
                             tabvar = CTabvar.getTabvar(99, numero);
-                            campoNivel.setText(tabvar.getDescri());
-                            campoUsuario.transferFocus();
+                            if(tabvar != null){
+                                campoNivel.setText(tabvar.getDescri());
+                                campoUsuario.transferFocus();
+                            }                            
                         }else
                             iuPanelMensajes.setBackground(Ayuda.COLOR_ATENCION);
                     }else{
@@ -297,7 +306,8 @@ public class VLogueo extends IUSecundario{
                             campoFecha.setDate(new Fecha().getDate(usuario.getFecusu()));
                             campoTipoCambio.setText(String.valueOf(usuario.getTipcam()));
                             campoClave.transferFocus();
-                        }
+                        }else
+                            Ayuda.mensaje(ventanaPrincipal, "Error: la clave de acceso no existe en la base de datos", "error");
                     }
                     iuPanelMensajes.setBackground(Ayuda.COLOR_ATENCION);
                 }
@@ -306,7 +316,7 @@ public class VLogueo extends IUSecundario{
     }
     private void focoCampoFecha(){
         resetearMensaje();
-        iuMensajes.setText("Digite FECHA de PROCESO (DD/MM/AAAA)");
+        iuMensajes.setText("Digite FECHA de PROCESO (DD/MM/AAAA),  F7=Fecha Actual de Hoy");
         campoFecha.getDateEditor().getUiComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -315,6 +325,9 @@ public class VLogueo extends IUSecundario{
                         campoFecha.getDateEditor().getUiComponent().transferFocus();
                     }else
                         iuPanelMensajes.setBackground(Ayuda.COLOR_ATENCION);
+                }
+                if(KeyEvent.VK_F7 == e.getKeyCode()){
+                    campoFecha.setDate(new Fecha().getDate(new Fecha().getFecha()));
                 }
             }
         });
@@ -340,26 +353,25 @@ public class VLogueo extends IUSecundario{
         botonIngresar.requestFocus();
         if(tabvar != null && usuario != null){
             setOpacity(0.5f);
-            Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "ACCESSO CORRECTO...! \nLa validacion ha sido un exito... ", "Acceso aceptado");
+            Ayuda.mensaje(ventanaPrincipal, "ACCESSO CORRECTO...! \nLa validacion ha sido un exito... ", "correcto");
             setOpacity(1f);        
-        }
-        
+        }        
     }
     private boolean validarDatosEntrada(){
         boolean verificador = false;
         if(!campoTipoCambio.getText().isEmpty()){
             if(noExisteCamposVacios()){      
                 int numero = Integer.parseInt(campoUsuario.getText());
-                if(numero > 0 && numero < 5){
+                if(numero > 0 && numero < 99){
                     String clave = Ayuda.getParseCadena(campoClave.getPassword());
                     if(clave.equalsIgnoreCase(tabvar.getObserv())){                        
                         verificador = true;
                     }else{
-                        Ayuda.mostrarMensajeError(ventanaPrincipal, "ERROR: LA CLAVE DE ACCESSO NO COINCIDE CON EL USUARIO....!", "Error de Accesso");
+                        Ayuda.mensaje(ventanaPrincipal, "ERROR: LA CLAVE DE ACCESSO NO COINCIDE CON EL USUARIO....!", "error");
                         limpiarDatos();
                     }
                 }else{
-                    Ayuda.mostrarMensajeError(ventanaPrincipal, "ERROR: EL NUMERO DE USUARIO NO CORRESPONDE A UN USUARIO ACTIVO EN EL SISTEMA....!", "Error de Accesso");
+                    Ayuda.mensaje(ventanaPrincipal, "ERROR: EL NUMERO DE USUARIO NO CORRESPONDE A UN USUARIO ACTIVO EN EL SISTEMA....!", "error");
                     limpiarDatos();
                 }
             }
@@ -410,6 +422,12 @@ public class VLogueo extends IUSecundario{
         
     }
     public Usuario getUsuario(){
+        usuario.setUsername(campoNivel.getText());
+        usuario.setPassword(campoUsuario.getText());
+        usuario.setFecusu(new Fecha().getFecha());
+        
+        CLogueo.modificarUsuario(usuario);
+        
         return usuario;
     }
     public Tabvar getTabvar(){

@@ -7,8 +7,11 @@ package com.siscon.recursos;
 
 import com.siscon.bd.Conexion;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.mensajes.IUMensaje;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,10 +21,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -31,6 +34,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -38,62 +42,117 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author neo
  */
 public class Ayuda {
+
     public static Color COLOR_FONDO = new Color(232, 237, 244);
     public static Color COLOR_TEXTO = new Color(2, 67, 109);
     public static Color COLOR_ROJO = new Color(120, 0, 0);
     public static Color COLOR_ATENCION = new Color(255, 255, 159);
 
-    public static String getTipoDoc(int numero){
+    public static String getTipoDoc(int numero) {
         String tipcon = "";
-        switch(numero){
-            case 1: 
+        switch (numero) {
+            case 1:
                 tipcon = "I";
-            break;
-            case 2: 
+                break;
+            case 2:
                 tipcon = "E";
-            break;
-            case 3: 
+                break;
+            case 3:
                 tipcon = "D";
-            break;            
+                break;
         }
         return tipcon;
     }
+
+    public static void abrir(String url) {
+
+        //ruta del archivo en el pc
+        //String file = new String("E:\\pruebaArchivo\\ArchivoPrueba.xlsx"); 
+        //rutal del archivo desde el src del proyecto
+        String fileLocal = new String(url);
+        try {
+
+            File path = new File(fileLocal);
+            Desktop.getDesktop().open(path);            
+
+        } catch (IllegalArgumentException e) {            
+            mensaje(null, "ERROR: no pudo encontrar el archivo seleccionado.", "error");
+            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(Ayuda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
-    public static String getParseCadena(char[] caracteres){
-        String dato = "";        
+    public static void utilJTablePrint(JTable jTable, String header, String footer, boolean showPrintDialog){        
+        boolean fitWidth = true;        
+        boolean interactive = true;
+        // We define the print mode (Definimos el modo de impresión)
+        JTable.PrintMode mode = fitWidth ? JTable.PrintMode.FIT_WIDTH : JTable.PrintMode.NORMAL;
+        try {
+            // Print the table (Imprimo la tabla)             
+            boolean complete = jTable.print(mode,
+                    new MessageFormat(header),
+                    new MessageFormat(footer),
+                    showPrintDialog,
+                    null,
+                    interactive);                 
+            if (complete) {
+                // Mostramos el mensaje de impresión existosa
+                JOptionPane.showMessageDialog(jTable,
+                        "Print complete (Impresión completa)",
+                        "Print result (Resultado de la impresión)",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Mostramos un mensaje indicando que la impresión fue cancelada                 
+                JOptionPane.showMessageDialog(jTable,
+                        "Print canceled (Impresión cancelada)",
+                        "Print result (Resultado de la impresión)",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (PrinterException pe) {
+            JOptionPane.showMessageDialog(jTable, 
+                    "Print fail (Fallo de impresión): " + pe.getMessage(), 
+                    "Print result (Resultado de la impresión)", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static String getParseCadena(char[] caracteres) {
+        String dato = "";
         for (int i = 0; i < caracteres.length; i++) {
             dato = dato + caracteres[i];
         }
         return dato;
     }
-    public static void mostrarMensajeError(VPrincipal ventana, String mensaje, String titulo){
-        JOptionPane.showMessageDialog( ventana, mensaje, titulo, JOptionPane.ERROR_MESSAGE );
-    }
-    public static void mostrarMensajeInformacion(VPrincipal ventana, String mensaje, String titulo){
-        JOptionPane.showMessageDialog( ventana , mensaje , titulo , JOptionPane.INFORMATION_MESSAGE );
-    }
-    public static boolean mostrarMensajeConfirmacion(VPrincipal ventana, String mensaje, String titulo){
+
+    public static boolean mensaje(VPrincipal ventana, String mensaje, String titulo) {
         boolean respuesta = false;
-        int resp = JOptionPane.showConfirmDialog( ventana , mensaje , titulo , JOptionPane.YES_NO_OPTION );
+        /*int resp = JOptionPane.showConfirmDialog( ventana , mensaje , titulo , JOptionPane.YES_NO_OPTION );
         if( resp == JOptionPane.YES_OPTION ){
+            respuesta = true;
+        }*/
+        IUMensaje iuMensaje = new IUMensaje(ventana, "mensaje de confirmacion", "grande", mensaje, titulo);
+        iuMensaje.mostrarVentana();
+        if (iuMensaje.getEstado()) {
             respuesta = true;
         }
         return respuesta;
     }
-    public static String[] toArreglo(ArrayList<String> lista){
-        String[] arreglo = new String[lista.size()+1];
+
+    public static String[] toArreglo(ArrayList<String> lista) {
+        String[] arreglo = new String[lista.size() + 1];
         int indice = 0;
         for (int i = 0; i < arreglo.length; i++) {
-            if(i == 0)
+            if (i == 0) {
                 arreglo[i] = "";
-            else{
+            } else {
                 arreglo[i] = lista.get(indice);
                 indice++;
             }
         }
         return arreglo;
     }
-    
+
     public static String examinarArchivo(JFrame ventanaPrincipal, String direccionBuscar) {
 
         String direccionArchivo = "";
@@ -117,13 +176,14 @@ public class Ayuda {
         }
         return direccionArchivo;
     }
-    public static ArrayList<String> aOpciones(ArrayList<String> lista, String primeraOpcion){
-        String[] arreglo = new String[lista.size()+1];
+
+    public static ArrayList<String> aOpciones(ArrayList<String> lista, String primeraOpcion) {
+        String[] arreglo = new String[lista.size() + 1];
         int indice = 0;
         for (int i = 0; i < arreglo.length; i++) {
-            if(i == 0)
+            if (i == 0) {
                 arreglo[i] = primeraOpcion;
-            else{
+            } else {
                 arreglo[i] = lista.get(indice);
                 indice++;
             }
@@ -135,74 +195,77 @@ public class Ayuda {
         }
         return opciones;
     }
-    public static ArrayList<String> getListColumnas(String columna, String sql){        
+
+    public static ArrayList<String> getListColumnas(String columna, String sql) {
         ArrayList<String> lista = new ArrayList<>();
         Conexion conexion = new Conexion();
-        try {            
+        try {
             PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();            
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                if(!rs.getString(columna).isEmpty())
+                if (!rs.getString(columna).isEmpty()) {
                     lista.add(rs.getString(columna));
-            }            
-        } catch (SQLException e) {            
-            System.out.println("Error Ayuda.getListColumnas: " + e.getMessage());            
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error Ayuda.getListColumnas: " + e.getMessage());
         }
         conexion.cerrar_conexion();
         return lista;
     }
-    public static String getDatoCadena(String columna, String sql){        
+
+    public static String getDatoCadena(String columna, String sql) {
         Conexion conexion = new Conexion();
         String dato = "";
-        try {            
+        try {
             PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();            
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 dato = rs.getString(columna);
             }
-        } catch (SQLException e) {            
-            System.out.println("Error Ayuda.getDatoCadena: " + e.getMessage());            
+        } catch (SQLException e) {
+            System.out.println("Error Ayuda.getDatoCadena: " + e.getMessage());
         }
         conexion.cerrar_conexion();
         return dato;
     }
-    
-    public static int getDatoEntero(String columna, String sql){        
+
+    public static int getDatoEntero(String columna, String sql) {
         Conexion conexion = new Conexion();
         int dato = 0;
-        try {            
+        try {
             PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();            
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 dato = rs.getInt(columna);
             }
-        } catch (SQLException e) {            
-            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());            
+        } catch (SQLException e) {
+            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());
         }
         conexion.cerrar_conexion();
         return dato;
     }
-    
-    public static double getDatoDecimal(String columna, String sql){        
+
+    public static double getDatoDecimal(String columna, String sql) {
         Conexion conexion = new Conexion();
         double dato = 0;
-        try {            
+        try {
             PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();            
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 dato = rs.getDouble(columna);
             }
-        } catch (SQLException e) {            
-            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());            
+        } catch (SQLException e) {
+            System.out.println("Error Ayuda.getDatoEntero: " + e.getMessage());
         }
         conexion.cerrar_conexion();
         return dato;
     }
 
     public static String cambiarFormatoFecha(String fecha) {
-        System.out.println("la fecha es: "+fecha);
-        if(!fecha.isEmpty()){
-            try {            
+        System.out.println("la fecha es: " + fecha);
+        if (!fecha.isEmpty()) {
+            try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);//yyyy-MM-dd'T'HH:mm:ss                
                 SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd");
                 long date = sdf.parse(fecha).getTime();
@@ -211,7 +274,7 @@ public class Ayuda {
             } catch (ParseException ex) {
                 Logger.getLogger(Ayuda.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        
+        }
         return fecha;
     }
 
@@ -232,55 +295,74 @@ public class Ayuda {
     }
 
     public static String FormateaFecha(String vFecha) {
-        if(!vFecha.isEmpty()){
+        if (!vFecha.isEmpty()) {
             String vDia, vMes, vAno;
             StringTokenizer tokens = new StringTokenizer(vFecha, "/");
-            
+
             vDia = tokens.nextToken();
             vMes = tokens.nextToken();
             vAno = tokens.nextToken();
             return vAno + "-" + vMes + "-" + vDia;
-        }else   
-            return "";        
+        } else {
+            return "";
+        }
     }
-    public static double acotarNumero(double numero, int cota){
+
+    public static double acotarNumero(double numero, int cota) {
         BigDecimal big = new BigDecimal(numero);
         return big.setScale(cota, RoundingMode.HALF_UP).doubleValue();
     }
-    public static String formatearNumber(double number){
+
+    public static String formatearNumber(double number) {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return df.format(number);
     }
-    public static ArrayList<String> splinter(String texto){
+
+    public static ArrayList<String> splinter(String texto) {
         String palabra = "";
         ArrayList<String> lista = new ArrayList<>();
         char[] c = texto.trim().toCharArray();
         boolean[] pasos = {false, true};
         boolean paso = true;
         int j = 0;
-        for (int i = 0; i < c.length; i++){
+        for (int i = 0; i < c.length; i++) {
             //System.out.println("i = "+i+"    "+c[i]);
-            if(c[i] == '"'){                
+            if (c[i] == '"') {
                 paso = pasos[j];
-                if(paso == true)
+                if (paso == true) {
                     j = 0;
-                else
+                } else {
                     j = 1;
-            }else{
-                if(paso == true){
-                    if(c[i] == ','){                        
+                }
+            } else {
+                if (paso == true) {
+                    if (c[i] == ',') {
                         lista.add(palabra);
                         palabra = "";
-                    }else{
-                        palabra = palabra+c[i];
+                    } else {
+                        palabra = palabra + c[i];
                     }
-                }else{
-                    palabra = palabra+c[i];
+                } else {
+                    palabra = palabra + c[i];
                 }
-            }            
+            }
         }
-        lista.add(palabra);        
+        lista.add(palabra);
         return lista;
+    }
+    public static boolean deleteTable(String sql){        
+        boolean verificador = false;        
+        Conexion conexion = new Conexion();
+        try {
+            PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
+            ps.execute();            
+            verificador = true;
+            
+        } catch (SQLException e) {
+            System.out.println("Error deleteTable(): "+e.getMessage());
+        }
+        conexion.cerrar_conexion();
+        return verificador;
     }
     /*public static void main(String[] arg) {
         String fecha = "01/01/2015";

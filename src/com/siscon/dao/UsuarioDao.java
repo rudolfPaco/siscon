@@ -66,4 +66,28 @@ public class UsuarioDao {
         conexion.cerrar_conexion();
         return verificador;
     }
+    public boolean modifyUsuario(Usuario u){
+        boolean verificador = false;
+        Conexion conexion = new Conexion();        
+        String sql = "UPDATE USUARIO SET razsoc=?, numusu=?, fecusu=?, tipcam=?, codjjc=?, dirraz=?, numnit=? where id = '"+u.getId()+"'";
+        try {
+            PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
+            
+            ps.setString(1, u.getRazsoc());
+            ps.setInt(2, u.getNumusu());
+            ps.setString(3, u.getFecusu());
+            ps.setDouble(4, u.getTipcam());
+            ps.setInt(5, u.getCodjjc());
+            ps.setString(6, u.getDirraz());
+            ps.setLong(7, u.getNumnit());
+            
+            int estado = ps.executeUpdate();
+            if(estado > 0)
+                verificador = true;
+            
+        } catch (SQLException e) {System.out.println(e);}
+        
+        conexion.cerrar_conexion();
+        return verificador;
+    }
 }

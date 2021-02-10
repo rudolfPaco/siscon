@@ -405,7 +405,7 @@ public class IUReporteBG extends IUSecundario {
             coname3.setTotal(String.valueOf(totalPasivo));
             list.add(coname3);
         }else{
-            Ayuda.mostrarMensajeError(null, "Error: No existe la tabla TABVAR...", "error");
+            Ayuda.mensaje(null, "Error: No existe la tabla TABVAR...", "error");
         }
         
         
@@ -421,6 +421,17 @@ public class IUReporteBG extends IUSecundario {
                 dispose();
             }
         });
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F10, 0 ), "F10" );
+        panel.getActionMap().put( "F10", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){
+                imprimir();
+            }
+        });
+        
         cargarDatosReporte();
+    }
+    private void imprimir(){
+        Ayuda.utilJTablePrint(iuTabla, "", "", true);
     }
 }

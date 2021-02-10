@@ -136,6 +136,17 @@ public class IUReporteEPC extends IUSecundario{
             public void actionPerformed( ActionEvent e ){
                 dispose();
             }
-        });        
-    }    
+        });
+        
+        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F10, 0 ), "F10" );
+        panel.getActionMap().put( "F10", new AbstractAction(){
+            @Override
+            public void actionPerformed( ActionEvent e ){
+                imprimir();
+            }
+        });
+    }
+    private void imprimir(){
+        Ayuda.utilJTablePrint(iuTabla, "", "", true);
+    }
 }

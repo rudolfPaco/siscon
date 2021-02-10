@@ -197,13 +197,13 @@ public class VEliminarGrupoConmae extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     int[] multipleSeleccion = iuTabla.getSelectedRows();
                     if(multipleSeleccion.length > 0){
-                        int resp = JOptionPane.showConfirmDialog( ventanaPrincipal , "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del PLAN DE CUENTAS...?", "CONFIRMACION" , JOptionPane.YES_NO_OPTION );
-                        if( resp == JOptionPane.YES_OPTION ){
+                        boolean resp = Ayuda.mensaje( ventanaPrincipal , "Esta seguro que quiere elminar los "+multipleSeleccion.length+" registros del PLAN DE CUENTAS...?", "pregunta");
+                        if( resp ){
                             for (int i = 0; i < multipleSeleccion.length; i++) {
                                 int indice = multipleSeleccion[i];
                                 Conmae c = (Conmae) iuTabla.modeloTabla.getFila(indice);
                                 if(c.getDebmes() != 0 && c.getCremes() != 0)
-                                    Ayuda.mostrarMensajeError(ventanaPrincipal, "G-S-My-An-Sa = "+c.getCuetot()+"  descripcion = "+c.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "Error");
+                                    Ayuda.mensaje(ventanaPrincipal, "G-S-My-An-Sa = "+c.getCuetot()+"  descripcion = "+c.getDescri()+"\nEsta Cuenta NO SE PUEDE ELIMNAR POR QUE tiene MOVIMIENTO.", "error");
                                 else
                                     CConmae.eliminarConmae(c);
                             }

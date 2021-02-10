@@ -106,7 +106,7 @@ public class VTablaConmae extends IUSecundario{
             @Override
             public void actionPerformed( ActionEvent e ){                
                 iuBotonGrabar.doClick();
-                if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+                if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
                     guardarArchivo();
                 }                
             }
@@ -377,7 +377,7 @@ public class VTablaConmae extends IUSecundario{
         }        
     }
     private void eliminarArchivo(){
-        if(Ayuda.mostrarMensajeConfirmacion(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
             /*ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
             listaConmae.forEach((conmae) -> {
                 CConmae.eliminarConmae(conmae);

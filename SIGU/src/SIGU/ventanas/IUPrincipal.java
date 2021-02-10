@@ -36,7 +36,7 @@ public class IUPrincipal extends JFrame{
     
     private void construirVentanaPrincipal(){        
         setSize(area.An(), area.Al());
-        setAlwaysOnTop(true);
+        //setAlwaysOnTop(true);
         setResizable(false);
         setUndecorated(true);
         setLayout(null);

@@ -20,6 +20,7 @@ import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.contra.VAyudaContra;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -51,7 +52,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author neo
  */
-public class REstadoPerdidaGanancia extends IUSecundario{
+public class REstadoCuenta extends IUSecundario{
     
     private VPrincipal ventanaPrincipal;
     private String titulo;
@@ -69,7 +70,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
                     private IUEtiqueta iuEtiquetaGrupos;
                     private IUComboBox iuMoneda;
                     private IUEtiqueta iuEtiquetaNivel;
-                    private IUComboBox iuNivel;
+                    private IUCampoTexto iuCodigo;
                 private IUPanel panelDos;
         
         private IUPanel segundoPanel;
@@ -80,22 +81,26 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             private IUCampoTexto campoS_N2;
             private IUCampoTexto campoS_N3;
     
-    private final Usuario usuario;
-    private final Tabvar tabvar;
+    private Usuario usuario;
+    private Tabvar tabvar;
+    private Conmae conmae;
     
     private String tipo;
     private String moneda;
-    private String nivel;
+    private String codigo;
+    private String visualizar;
     
-    public REstadoPerdidaGanancia(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
+    public REstadoCuenta(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
         this.tabvar = tabvar;
+        this.conmae = null;
         
         this.tipo = "";
         this.moneda = "";
-        this.nivel = "";
+        this.codigo = "";
+        this.visualizar = "";
         
         construirPanel(new Area(An()-6, Al()-29));
         algoritmosInicial();
@@ -114,14 +119,14 @@ public class REstadoPerdidaGanancia extends IUSecundario{
     
     private void construirPanelTitulo(Area a){
         iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "ESTADO DE RESULTADO o  PERDIDA y GANANCIAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
+        iuTitulo = new IUEtiqueta(panelTitulo, "ESTADO DE CUENTAS SUPERIORES", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(35), a.AlP(50)), 16, "CENTER", false);        
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Por: GRUPO - NIVEL", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);                
+        iuTitulo = new IUEtiqueta(panelTitulo, "Por: GRUPO - NIVEL 3", new Area(a.X(2) + a.AnP(25), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);                
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         
-        iuTitulo = new IUEtiqueta(panelTitulo, "REPORTE: EPG ", new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "REPORTE: ECS ", new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
     }
     private void construirPanelDatos(Area a){
         primerPanel = new IUPanel(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(85)), false);
@@ -153,16 +158,10 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         iuMoneda.setPosicionHorizontal(SwingConstants.CENTER);
         
         
-        iuEtiquetaNivel = new IUEtiqueta(panelContenedor, "Confirme el NIVEL de las Cuentas a Emitir:", new Area(a.X(), a.Y(3) + a.AlP(66), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
-        iuEtiquetaNivel.setSubrayarTexto(true);
-        ArrayList<String> niveles = new ArrayList<>();
-        niveles.add("5");
-        niveles.add("4");
-        niveles.add("3");
-        niveles.add("2");
-        niveles.add("1");
-        iuNivel = new IUComboBox(panelContenedor, niveles, new Area(a.X(2) + a.AnP(60), a.Y(3) + a.AlP(66), a.AnP(40), a.AlP(33)), 18, 50);
-        iuNivel.setPosicionHorizontal(SwingConstants.CENTER);
+        iuEtiquetaNivel = new IUEtiqueta(panelContenedor, "Ingrese el CODIGO de CUENTA: ", new Area(a.X(), a.Y(3) + a.AlP(66), a.AnP(60), a.AlP(33)), 18, "LEFT", false);
+        iuEtiquetaNivel.setSubrayarTexto(true);        
+        iuCodigo = new IUCampoTexto(panelContenedor, 8, 18, new Area(a.X(2) + a.AnP(60), a.Y(3) + a.AlP(66), a.AnP(40), a.AlP(33)), SwingConstants.CENTER);        
+        iuCodigo.setRestriccion("^([0-9]|[1-9][0-9])$");
     }
     
     
@@ -199,11 +198,11 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         campoS_N2.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_D == e.getKeyCode()){
-                    campoS_N2.setText("D");
+                if (KeyEvent.VK_S == e.getKeyCode()){
+                    campoS_N2.setText("S");
                 }
-                if(KeyEvent.VK_H == e.getKeyCode()){
-                    campoS_N2.setText("H");
+                if(KeyEvent.VK_N == e.getKeyCode()){
+                    campoS_N2.setText("N");
                 }
             }
         });
@@ -267,7 +266,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     moneda = iuMoneda.getSelectedItem().toString();
-                    focoCampoNivel();
+                    focoCampoCodigo();
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoTipo();
@@ -275,19 +274,35 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
     }
-    private void focoCampoNivel(){
+    private void focoCampoCodigo(){
         pintarBordeCampo("NIVEL");
         deshabilitarCampoS_N();
-        iuNivel.setEditar(true);
-        iuNivel.requestFocus();
-        iuMensaje.setTexto("ELIJA una de las OPCIONES. ENTER=Avanzar, F2=Retrocede, ESC=Suspende");
-        iuInformacion.setTexto(" ATENCION: 1=GRUPO, 2=SUBGRUPO, 3=MAYOR, 4=ANALITICO, 5=SUBANALITICO");
-        iuNivel.addKeyListener(new KeyAdapter() {
+        iuCodigo.setEditar(true);
+        iuCodigo.requestFocus();
+        iuMensaje.setTexto("Ingres el CODIOG de CUENTA. ");
+        iuInformacion.setTexto(" ENTER=Avanzar, F1=Ayuda, F2=Retrocede, ESC=Suspende");
+        iuCodigo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
-                    nivel = iuNivel.getSelectedItem().toString();
-                    focoCampoS_N1();
+                    if(!iuCodigo.getText().isEmpty()){
+                        codigo = iuCodigo.getText();
+                        conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                        if(conmae != null){
+                            if(conmae.getNivel() == 3)
+                                focoCampoS_N2();
+                            else
+                                focoCampoS_N1();
+                        }
+                    }                    
+                }
+                if(KeyEvent.VK_F1 == e.getKeyCode()){
+                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE WHERE NIVEL <= 3 GROUP BY CUETOT");
+                    iuAyuda.mostrarVentana();
+                    if(iuAyuda.getEstado()){
+                        codigo = String.valueOf(iuAyuda.getConmae().getCuetot());
+                        iuCodigo.setText(codigo);
+                    }
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoGrupos();
@@ -295,6 +310,38 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
     }
+    private void focoCampoS_N2(){
+        restringirCampos("", false);
+        pintarBordeCampo("");
+        campoS_N2.setVisible(true);
+        campoS_N2.setEditar(true);
+        campoS_N2.requestFocus();
+        campoS_N2.setText("S");
+        iuMensaje.setColores(Color.BLACK, new Color(255, 210, 0));
+        iuMensaje.setTexto("Desea Visualizar las CUENTAS de NIVEL INFERIOR. ?    S/N");
+        iuInformacion.setVisible(false);
+        campoS_N2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(KeyEvent.VK_ENTER == e.getKeyCode()){
+                    iuMensaje.setColores(Color.WHITE, new Color(41, 66, 99));
+                    iuInformacion.setVisible(true);
+                    switch(campoS_N2.getText()){
+                        case "S":
+                            visualizar = "SI";
+                        break;
+                        case "N":
+                            visualizar = "NO";
+                        break;
+                        default:
+                        break;
+                    }
+                    focoCampoS_N1();
+                }
+            }
+        });
+    }
+    
     private void focoCampoS_N1(){
         restringirCampos("", false);
         pintarBordeCampo("");
@@ -329,30 +376,13 @@ public class REstadoPerdidaGanancia extends IUSecundario{
             }
         });
     }
-    private void emitirReporte(){
-        String nombreNivel = "";
-        switch(nivel){
-            case "5":
-                nombreNivel = "SUBANALITICO";
-            break;
-            case "4":
-                nombreNivel = "ANALITICO";
-            break;
-            case "3":
-                nombreNivel = "MAYOR";
-            break;
-            case "2":
-                nombreNivel = "SUBGRUPO";
-            break;
-            case "1":
-                nombreNivel = "GRUPO";
-            break;
-        }
+    private void emitirReporte(){        
         switch(tipo){
             case "PANTALLA":                
                 actualizarPaneles();
-                IUReporteEGP iuEGP = new IUReporteEGP(this, titulo, "grande", usuario, tabvar, nombreNivel, moneda);
-                iuEGP.mostrarVentana();
+                System.out.println(visualizar);
+                IUReporteECS iuECS = new IUReporteECS(this, titulo, "grande", usuario, tabvar, visualizar, moneda, conmae);
+                iuECS.mostrarVentana();
                 actualizarPaneles();
             break;
             case "EXPORTABLE":
@@ -445,7 +475,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
     private void restringirCampos(String campo, boolean state){
         iuTipo.setEditar(false);
         iuMoneda.setEditar(false);
-        iuNivel.setEditar(false);
+        iuCodigo.setEditar(false);
         switch(campo){
             case "TIPO":
                 iuTipo.setEditar(state);
@@ -454,7 +484,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
                 iuMoneda.setEditar(state);
             break;
             case "NIVEL":
-                iuNivel.setEditar(state);
+                iuCodigo.setEditar(state);
             break;
             default:
             break;
@@ -465,7 +495,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
         
         iuTipo.setBorder(iuTipo.getBordeComponente());
         iuMoneda.setBorder(iuMoneda.getBordeComponente());
-        iuNivel.setBorder(iuNivel.getBordeComponente());
+        iuCodigo.setBorder(iuCodigo.getBordeComponente());
         
         switch(campo){
             case "TIPO":
@@ -475,7 +505,7 @@ public class REstadoPerdidaGanancia extends IUSecundario{
                 iuMoneda.setBorder(borde);
             break;
             case "NIVEL":
-                iuNivel.setBorder(borde);
+                iuCodigo.setBorder(borde);
             break;
             default:
             break;

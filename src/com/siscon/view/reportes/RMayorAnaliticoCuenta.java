@@ -174,7 +174,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
         
         iuEtiquetaCodigo = new IUEtiqueta(panelContenedor, "Indique el CODIGO a la cuenta deseada:", new Area(a.X(), a.Y(3) + a.AlP(30), a.AnP(60), a.AlP(15)), 18, "LEFT", false);
         iuCodigo = new IUCampoTexto(panelContenedor, 8, 20, new Area(a.X(2) + a.AnP(80), a.Y(3) + a.AlP(30), a.AnP(20), a.AlP(15)), SwingConstants.RIGHT);
-        iuCodigo.setText(codigo);
+        iuCodigo.setText(codigo);        
         
         iuEtiquetaDescripcion = new IUEtiqueta(panelContenedor, "Descripcion:", new Area(a.X(), a.Y(4) + a.AlP(45), a.AnP(20), a.AlP(15)), 18, "LEFT", false);
         iuDescipcion = new IUCampoTexto(panelContenedor, 1000, 18, new Area(a.X(2) + a.AnP(20), a.Y(4) + a.AlP(45), a.AnP(80), a.AlP(15)), SwingConstants.CENTER);
