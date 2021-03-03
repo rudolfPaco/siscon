@@ -102,8 +102,9 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
     private String moneda;
     private String codigo;
     private String descripcion;
+    private String cuetot;
     
-    public RMayorAnaliticoCuenta(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
+    public RMayorAnaliticoCuenta(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar, String cuetot) {
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
@@ -112,9 +113,11 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
         this.moneda = "";
         this.codigo = "";
         this.descripcion = "";
+        this.cuetot = cuetot;
         
         construirPanel(new Area(An()-6, Al()-29));
         algoritmosInicial();
+        
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
@@ -159,8 +162,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
         iuEtiquetaTipo = new IUEtiqueta(panelContenedor, "Tipo de Reporte que se Visualizara:", new Area(a.X(), a.Y(), a.AnP(60), a.AlP(15)), 18, "LEFT", false);
         iuEtiquetaTipo.setSubrayarTexto(true);
         ArrayList<String> tipos = new ArrayList<>();
-        tipos.add("PANTALLA");        
-        tipos.add("IMPRESORA");
+        tipos.add("PANTALLA"); 
         iuTipo = new IUComboBox(panelContenedor, tipos, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(15)), 18, 50);
         iuTipo.setPosicionHorizontal(SwingConstants.CENTER);
         
@@ -282,6 +284,9 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
                 dispose();
             }
         });
+        if(!cuetot.isEmpty()){
+            iuCodigo.setText(cuetot);
+        }
         focoCampoTipo();
     }
     private void focoCampoTipo(){
@@ -344,7 +349,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
                             iuMensaje.setTexto("ERROR: ESTA CUENTA NO TIENE ACTIVIDAD....");
                             iuInformacion.setTexto("");
                         }else{
-                            ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA WHERE CUETOT = "+codigo);
+                            ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM contra WHERE CUETOT = "+codigo);
                             if(listaContras.isEmpty()){
                                 iuMensaje.setTexto("ERROR: CUENTA SIN MOVIMIENTO....");
                                 iuInformacion.setTexto("");
@@ -505,7 +510,7 @@ public class RMayorAnaliticoCuenta extends IUSecundario{
         }
     }
     private void exportarArchivoTXT(int grup, int niv){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .TXT", "txt");
         chooser.setFileFilter(filter);

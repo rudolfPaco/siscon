@@ -78,7 +78,7 @@ public class IUBoton extends JButton {
         setFont(new Font("Verdana", Font.PLAIN, sizeText));
         setForeground(colorTexto);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
-        setHorizontalTextPosition(positionTextH);
+        setHorizontalAlignment(positionTextH);
         setVerticalTextPosition(positionTextV);
         setIconTextGap(distanciaTextIcon);
         setMnemonic(mnemonic);

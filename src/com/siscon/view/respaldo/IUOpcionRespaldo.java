@@ -76,18 +76,16 @@ public class IUOpcionRespaldo extends IUSecundario{
         construirPanelBoton(new Area(panelBoton.area.AnP(40), 2, panelBoton.area.An() - panelBoton.area.AnP(40)*2, panelBoton.area.Al() - 4));
     }
     private void construirPanelDatos(Area a){
-        botonRestaurar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "Restaurar B.D.", "/imagenes/restaurar.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");        
-        botonRestaurar.setBackground(Ayuda.COLOR_ATENCION);
-        botonBackup = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "Backup B.D.", "/imagenes/backup.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
-        botonLimpiarBD = new IUBoton(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(50), a.An(), a.AlP(25)), "Limpiar B.D.", "/imagenes/erase.png", 20, 50, 30, SwingConstants.RIGHT, SwingConstants.CENTER, '0', "");
+        botonRestaurar = new IUBoton(panelDatos, new Area(a.X(), a.Y(), a.An(), a.AlP(25)), "Restaurar B.D.", "/imagenes/restaurar.png", 20, 50, 30, SwingConstants.CENTER, SwingConstants.CENTER, '0', "restaura todas las tablas y datos del SISTEMA CONTABLE");
+        botonBackup = new IUBoton(panelDatos, new Area(a.X(), a.Y(2) + a.AlP(25), a.An(), a.AlP(25)), "Backup B.D.", "/imagenes/backup.png", 20, 50, 30, SwingConstants.CENTER, SwingConstants.CENTER, '0', "realiza un BACKUP de todos los datos y tablas del SISTEMA CONTABLE");
+        botonLimpiarBD = new IUBoton(panelDatos, new Area(a.X(), a.Y(3) + a.AlP(50), a.An(), a.AlP(25)), "Limpiar B.D.", "/imagenes/erase.png", 20, 50, 30, SwingConstants.CENTER, SwingConstants.CENTER, '0', "ELIMINA todos los datos y tablas del SISTEMA CONTABLE");
     }
     private void construirPanelBoton(Area a){
-        botonSalir = new IUBoton(panelBoton, new Area(a.X(), a.Y(), a.An(), a.Al()), "Salir", "/imagenes/cerrar.png", 16, 30, 20, SwingConstants.RIGHT, SwingConstants.CENTER, '{', "");        
+        botonSalir = new IUBoton(panelBoton, new Area(a.X(), a.Y(), a.An(), a.Al()), "Salir", "/imagenes/cerrar.png", 16, 30, 20, SwingConstants.CENTER, SwingConstants.CENTER, '{', "");        
         botonSalir.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );        
     }
     private void algoritmoInicial(){
-        botonRestaurar.requestFocus();
-        botonRestaurar.setBackground(Ayuda.COLOR_ATENCION);
+        botonRestaurar.requestFocus();        
     }
     private void seleccionarBoton(){
         switch(indice){

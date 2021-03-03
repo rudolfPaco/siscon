@@ -19,6 +19,7 @@ import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.recursos.ImprimirPanel;
 import com.siscon.view.VPrincipal;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
@@ -91,7 +92,7 @@ public class RLibroDiario extends IUSecundario{
     private String tipo;
     private String moneda;
     private String fechaInicial;
-    private String fechaFinal;
+    private String fechaFinal;    
     
     public RLibroDiario(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario) {
         super(ventanaPrincipal, titulo, tipoSize);
@@ -100,10 +101,10 @@ public class RLibroDiario extends IUSecundario{
         this.tipo = "";
         this.moneda = "";
         this.fechaInicial = "";
-        this.fechaFinal = "";
+        this.fechaFinal = "";        
         
         construirPanel(new Area(An()-6, Al()-29));
-        algoritmosInicial();
+        algoritmosInicial();        
     }
     private void construirPanel(Area a){
         panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
@@ -398,8 +399,13 @@ public class RLibroDiario extends IUSecundario{
                 //exportarArchivoTXT(Integer.parseInt(grupo), Integer.parseInt(forma));
             break;
             case "IMPRESORA":                
-                dispose();
-                //reporte(Integer.parseInt(grupo), Integer.parseInt(forma), nombreNivel);
+                actualizarPaneles();
+                IUReporteLDIMP iuLDIMP = new IUReporteLDIMP(this, titulo, new Area(Ayuda.anp(50), Ayuda.al()), usuario, moneda, fechaInicial, fechaFinal);
+                iuLDIMP.mostrarVentana();
+                if(iuLDIMP.getEstado()){
+                    ImprimirPanel imprimirDocumentos = new ImprimirPanel(iuLDIMP.getIUPanel());
+                }                    
+                actualizarPaneles();
             break;
             default:
             break;
@@ -425,7 +431,7 @@ public class RLibroDiario extends IUSecundario{
         }
     }
     private void exportarArchivoTXT(int grup, int niv){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .TXT", "txt");
         chooser.setFileFilter(filter);

@@ -6,8 +6,10 @@
 package com.siscon.controller;
 
 import SIGU.main.Principal;
+import com.siscon.recursos.Ayuda;
 import com.siscon.view.VLogueo;
 import com.siscon.view.VPrincipal;
+import com.siscon.view.mensajes.IUMensaje;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -29,11 +31,17 @@ public class CPrincipal {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        VLogueo iuLogueo = new VLogueo(null, "Sistema Contable SISCON Ver. 7.2 ® Diseño: Juan Jose Caballero Reyna | Programacion: Rudolf Felipez Mancilla", "grande");
-        iuLogueo.mostrarVentana();
-        if(iuLogueo.getEstado()){
-            VPrincipal iuPrincipal = new VPrincipal(iuLogueo.getTabvar(), iuLogueo.getUsuario(), "Sistema Contable SISCON Ver. 7.2 ® Diseño: Juan Jose Caballero Reyna | Programacion: Rudolf Felipez Mancilla" , "/imagenes/icono.png");
-            iuPrincipal.mostrar();
-        }        
+        String codigo = Ayuda.getCodigoAcceso();
+        if(codigo.equalsIgnoreCase("QGPMalpbkn7nqypjMo3JRA==")){
+            VLogueo iuLogueo = new VLogueo(null, "Sistema Contable SISCON Ver. 7.2 ® Diseño: Juan Jose Caballero Reyna | Programacion: Rudolf Felipez Mancilla", "grande");
+            iuLogueo.mostrarVentana();
+            if(iuLogueo.getEstado()){
+                VPrincipal iuPrincipal = new VPrincipal(iuLogueo.getTabvar(), iuLogueo.getUsuario(), "Sistema Contable SISCON Ver. 7.2 ® Diseño: Juan Jose Caballero Reyna | Programacion: Rudolf Felipez Mancilla" , "/imagenes/icono.png");
+                iuPrincipal.mostrar();
+            }
+        }else{
+            IUMensaje mensaje = new IUMensaje(null, "error", "mediano", "ERROR, debe ingresar la LLAVE DE ACCESO AL SISTEMA", "error");
+            mensaje.mostrarVentana();
+        }       
     }
 }

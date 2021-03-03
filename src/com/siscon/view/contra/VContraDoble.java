@@ -36,7 +36,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -153,7 +156,7 @@ public class VContraDoble extends IUSecundario{
         this.usuario = usuario;
         this.tabvar = tabvar;
         this.tabvarCheque = null;
-        this.listaTabvar = CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = 2");
+        this.listaTabvar = CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = 2");
         this.listaAsientos = new ArrayList<>();
         this.listaContras = new ArrayList<>();
         this.indice = 1;
@@ -773,7 +776,7 @@ public class VContraDoble extends IUSecundario{
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!iuNum.getText().isEmpty()){
-                        if(CContra.getContra("SELECT * FROM CONTRA WHERE NUMCOM = "+iuNum.getText()) != null)
+                        if(CContra.getContra("SELECT * FROM contra WHERE NUMCOM = "+iuNum.getText()) != null)
                             focoCampoS_N7();
                         else
                             focoCampoMonto();
@@ -1166,7 +1169,7 @@ public class VContraDoble extends IUSecundario{
         iuNro.requestFocus();        
         
         iuMensaje.setTexto("CAMPO No: REGISTRO DEL COMPROBANTE.");
-        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F7=Finalizar, ESC=Suspender");
+        iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F7=Finalizar, F11=Llamar Calculadora y  ESC=Suspender");
         iuNro.setText(String.valueOf(indice));        
         iuNro.addKeyListener(new KeyAdapter() {
             @Override
@@ -1213,6 +1216,16 @@ public class VContraDoble extends IUSecundario{
                         }
                     }
                 }
+                if (KeyEvent.VK_F11 == e.getKeyCode()) {
+                    try {
+                        Process p = Runtime.getRuntime().exec("calc");
+                        p.waitFor();
+                    } catch (IOException ex) {
+                        Logger.getLogger(VContra.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VContra.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
     }
@@ -1224,16 +1237,16 @@ public class VContraDoble extends IUSecundario{
         iuCodigo.requestFocus();
         iuMensaje.setTexto("CAMPO CODIGO: Puede elegir Asientos Tipo o consultar a la Ayuda.");
         if(indice > 1)
-            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F10=BANCO, ESC=Suspender o Finalizar");
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F10=BANCO, F11=Llamar Calculadora y  ESC=Suspender o Finalizar");
         else
-            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F8=ASIENTOS TIPO, ESC=Suspender o Finalizar");        
+            iuInformacion.setTexto(" ATENCION: ENTER=Avanzar, F1=Ayuda, F2=Retrocede, F8=ASIENTOS TIPO, F11=Llamar Calculadora y  ESC=Suspender o Finalizar");        
         iuCodigo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!iuCodigo.getText().isEmpty()){
-                        if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()+" AND ACTIVI = 2").isEmpty()){
-                            iuDescripcion.setText(Ayuda.getDatoCadena("descri", "SELECT DESCRI FROM CONMAE WHERE CUETOT = "+iuCodigo.getText()));
+                        if(!Ayuda.getDatoCadena("CUETOT", "SELECT CUETOT FROM conmae WHERE CUETOT = "+iuCodigo.getText()+" AND ACTIVI = 2").isEmpty()){
+                            iuDescripcion.setText(Ayuda.getDatoCadena("descri", "SELECT DESCRI FROM conmae WHERE CUETOT = "+iuCodigo.getText()));
                             focoCampoS_N2();
                         }
                     }
@@ -1246,7 +1259,7 @@ public class VContraDoble extends IUSecundario{
                     Conmae c = new Conmae(indice);
                     setOpacity(0.5f);
                     actualizarPaneles();
-                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE WHERE ACTIVI = 2 GROUP BY CUETOT");
+                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM conmae WHERE ACTIVI = 2 GROUP BY CUETOT");
                     iuAyuda.mostrarVentana();
                     if(iuAyuda.getEstado()){
                         c = iuAyuda.getConmae();                        
@@ -1266,6 +1279,16 @@ public class VContraDoble extends IUSecundario{
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
                     focoCampoNro();
+                }
+                if (KeyEvent.VK_F11 == e.getKeyCode()) {
+                    try {
+                        Process p = Runtime.getRuntime().exec("calc");
+                        p.waitFor();
+                    } catch (IOException ex) {
+                        Logger.getLogger(VContra.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VContra.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 /*if(KeyEvent.VK_F7 == e.getKeyCode()){
                     Ayuda.mostrarMensajeInformacion(ventanaPrincipal, "Atencion: Para seleccionar el codigo de asiento NECESARIAMENTE DEBE CREAR UNA NUEVA CUENTA, en el plan de cuentas respectivamente.", "ADVERTENCIA");                    
@@ -1663,7 +1686,7 @@ public class VContraDoble extends IUSecundario{
 
                     long codigo = apropiacion.getCodigo();
 
-                    Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
                     nivel = conmae.getNivel();
 
                     double salact = conmae.getSalact();
@@ -1749,7 +1772,7 @@ public class VContraDoble extends IUSecundario{
                                 default:
                                 break;
                             }
-                            conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                            conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
 
                             salact = conmae.getSalact();
                             salac2 = conmae.getSalac2();
@@ -1855,7 +1878,7 @@ public class VContraDoble extends IUSecundario{
 
                     long codigo = apropiacion.getCodigo();
 
-                    Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
                     Contra contra = new Contra(0);            
 
                     nivel = conmae.getNivel();
@@ -1988,7 +2011,7 @@ public class VContraDoble extends IUSecundario{
                                     default:
                                     break;
                                 }
-                                conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                                conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
 
                                 salact = conmae.getSalact();
                                 salac2 = conmae.getSalac2();
@@ -2154,7 +2177,7 @@ public class VContraDoble extends IUSecundario{
                         case "S":
                             //if(debeMenorIgualMonto()){
                                 if(existeItemTabla(iuCodigo.getText())){                                
-                                    if(Ayuda.mensaje(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "PRECAUCION")){
+                                    if(Ayuda.mensaje(ventanaPrincipal, "Atencion: Esta APROPIACION ya existe en la TABLA.\n DESEA MODIFICAR ESTA APROPIACION. ?", "pregunta")){
                                         modificarRegistroTabla();
                                         sumarColumnasTotales();
                                         actualizarPaneles();
@@ -2305,7 +2328,7 @@ public class VContraDoble extends IUSecundario{
             iuNumLiteral.setText("");
             iuConcepto.setText("");
                         
-            Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
+            Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+contra.getCuetot());
             Asiento apropiacion = new Asiento(i+1);
             if(conmae != null){                
                 apropiacion.setCodigo(contra.getCuetot());

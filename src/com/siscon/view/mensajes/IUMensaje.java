@@ -66,7 +66,7 @@ public class IUMensaje extends IUSecundario{
         construirPaneles(new Area(panel.area.AnP(30), panel.area.AlP(25), panel.area.An() - panel.area.AnP(30)*2, panel.area.Al() - panel.area.AlP(25)*2));        
     }
     private void construirPaneles(Area a){        
-        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.Al()), false, Ayuda.COLOR_FONDO);
+        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.Al()), true, Ayuda.COLOR_FONDO);
         construirPanelDatos(new Area(panelDatos.area.AnP(1), panelDatos.area.AlP(1), panelDatos.area.An() - panelDatos.area.AnP(1)*2, panelDatos.area.Al() - panelDatos.area.AlP(1)*2));
     }
     private void construirPanelDatos(Area a){

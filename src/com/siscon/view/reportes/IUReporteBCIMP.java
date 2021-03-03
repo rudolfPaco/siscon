@@ -5,16 +5,7 @@
  */
 package com.siscon.view.reportes;
 
-/**
- *
- * @author neo
- */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
@@ -30,11 +21,13 @@ import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.recursos.ImprimirPanel;
-import com.siscon.recursos.TablePrintable;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.print.Printable;
-import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import javax.swing.AbstractAction;
@@ -47,8 +40,7 @@ import javax.swing.SwingConstants;
  *
  * @author neo
  */
-public class IUReporteBC extends IUSecundario{
-    
+public class IUReporteBCIMP extends IUSecundario{
     private RBalanceComprobacion ventanaPrincipal;
     private String titulo;
     
@@ -72,8 +64,11 @@ public class IUReporteBC extends IUSecundario{
     private final String forma;
     private String header = "";
     
-    public IUReporteBC(RBalanceComprobacion ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar, String moneda, String forma) {
-        super(ventanaPrincipal, titulo, tipoSize);
+    private IUPanel panelBoton;
+    private IUBoton botonImprimir;
+    
+    public IUReporteBCIMP(RBalanceComprobacion ventanaPrincipal, String titulo, Area area, Usuario usuario, Tabvar tabvar, String moneda, String forma) {
+        super(ventanaPrincipal, titulo, area);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
         this.tabvar = tabvar;
@@ -81,11 +76,15 @@ public class IUReporteBC extends IUSecundario{
         this.forma = forma;
         
         construirPanel(new Area(An()-6, Al()-29));
-        algoritmosInicial();        
+        algoritmosInicial();
+        setEventos();
     }
     private void construirPanel(Area a){
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        panel = new IUPanel(this, new Area(0, 0, (int)Ayuda.fromCMToPPI(22), (int)Ayuda.fromCMToPPI(27)), false);
+        construirPaneles(new Area(10, 10, panel.area.An() - 10*3, panel.area.Al() - 10*3));
+        
+        panelBoton = new IUPanel(this, new Area((int)Ayuda.fromCMToPPI(23) + 5, (int)Ayuda.fromCMToPPI(1), 130, 100), true);
+        botonImprimir = new IUBoton(panelBoton, new Area(panelBoton.area.An(), panelBoton.area.Al()), "IMPRIMIR", "", 16, 0, 0, SwingConstants.CENTER, SwingConstants.CENTER, '0', "");
     }
     private void construirPaneles(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
@@ -96,14 +95,14 @@ public class IUReporteBC extends IUSecundario{
     }
     
     private void construirPanelTitulo(Area a){
-        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: BC ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: "+moneda+"   |   Forma: "+forma, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "BALANCE DE COMPROBACION", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 16, "CENTER", false);                
+        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: BC ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: "+moneda+"   |   Forma: "+forma, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "BALANCE DE COMPROBACION", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 8, "CENTER", false);                
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Por Cuentas Activas", new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", Ayuda.COLOR_ROJO);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Por Cuentas Activas", new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "CENTER", Ayuda.COLOR_ROJO);
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
-        iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);                 
+        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 8, "RIGHT", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 8, "RIGHT", false);                 
         header = "              BALANCE DE COMPROBACION             ";
     }
     private void construirPanelDatos(Area a){
@@ -205,14 +204,7 @@ public class IUReporteBC extends IUSecundario{
                 }
             }
             
-        }) {
-            @Override
-            public Printable getPrintable(JTable.PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
-                MessageFormat messageHeader = new MessageFormat(header);
-                //return new TablePrintable(this, printMode, messageHeader, footerFormat);
-                return new ImprimirPanel(panel);
-            }
-        };
+        });
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(4, SwingConstants.RIGHT);
@@ -224,20 +216,21 @@ public class IUReporteBC extends IUSecundario{
         for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
             iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
         }
-        
+        iuTabla.setFuente(new Font("Arial", Font.PLAIN, 7));
+        iuTabla.setFuenteCabecera(new Font("Araial", Font.PLAIN, 7), Color.lightGray, Ayuda.COLOR_TEXTO, true, 7, Ayuda.COLOR_FONDO);
         panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(96), a.An(), a.AlP(4)), true, Ayuda.COLOR_ATENCION);
         construirPanelTotal(new Area(2, 2, panelTotal.area.An() - 12, panelTotal.area.Al() - 4));
         sumarTotales();
     }
     private void construirPanelTotal(Area a){
-        iuTotal = new IUEtiqueta(panelTotal, "T O T A L E S "+moneda.toUpperCase(), new Area(a.X(), a.Y(), a.AnP(60), a.Al()), 20, "CENTER", true);
-        iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotal = new IUEtiqueta(panelTotal, "T O T A L E S "+moneda.toUpperCase(), new Area(a.X(), a.Y(), a.AnP(60), a.Al()), 7, "CENTER", true);
+        iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(2) + a.AnP(60), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalDebitos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
-        iuTotalCreditos  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotalCreditos  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(3) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalCreditos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
-        iuTotalSaldosDebe  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
+        iuTotalSaldosDebe  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalSaldosDebe.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
-        iuTotalSaldosHaber  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
+        iuTotalSaldosHaber  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(5) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalSaldosHaber.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
     }
     private void sumarTotales(){
@@ -276,22 +269,18 @@ public class IUReporteBC extends IUSecundario{
             public void actionPerformed( ActionEvent e ){
                 dispose();
             }
-        });        
-        
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F10, 0 ), "F10" );
-        panel.getActionMap().put( "F10", new AbstractAction(){
+        });
+    }
+    private void setEventos(){
+        botonImprimir.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed( ActionEvent e ){
-                imprimir();
+            public void mousePressed(MouseEvent e) {
+                setEstado(true);
+                dispose();
             }
         });
     }
-    public IUPanel getIUPanel(int x, int y, int ancho, int alto){
-        panel = new IUPanel(this, new Area(x, y, ancho, alto), true);
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+    public IUPanel getIUPanel(){
         return panel;
-    }
-    private void imprimir(){
-        Ayuda.utilJTablePrint(iuTabla, header, "", true);
     }
 }

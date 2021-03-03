@@ -43,6 +43,23 @@ public class IUSecundario extends JDialog{
         
         construirVentanaSecundaria();        
     }
+    public IUSecundario(JDialog ventanaPrincipal, String titulo, Area area){
+        super(ventanaPrincipal, titulo, true);        
+        this.estado = false;
+        this.tipoSize = "";
+        
+        construirVentana(area);
+    }
+    private void construirVentana(Area area){
+        this.area = area;
+        setSize(new Dimension(area.An(), area.Al()));
+        setUndecorated(true);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(this);
+        //setAlwaysOnTop(true);        
+        setResizable(false);        
+        setLayout(null);
+    }
     private void construirVentanaSecundaria(){
         switch(tipoSize){
             case "grande":

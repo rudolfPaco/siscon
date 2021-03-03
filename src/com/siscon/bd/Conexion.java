@@ -20,10 +20,10 @@ import java.util.logging.Logger;
 public class Conexion {
     
     private Connection conexion;
-    public static String base_datos = "bd_siscon";
-    public static String usuario = "mysql";//public static String usuario = "root";
-    public static String contrasena = "mysql";//public static String contrasena = "";
-    private static String servidor = "jdbc:mysql://localhost/"+base_datos;
+    public  String base_datos = "bd_siscon";
+    public  String usuario = "mysql";//public static String usuario = "root";
+    public  String contrasena = "mysql";//public static String contrasena = "";
+    private String servidor = "jdbc:mysql://localhost:3306/"+base_datos;
     
     private PreparedStatement consulta;
     private ResultSet resultado;
@@ -52,5 +52,14 @@ public class Conexion {
     }
     public Connection getConexion(){
         return conexion;
+    }
+    public String getUsername(){
+        return usuario;
+    }
+    public String getPassword(){
+        return contrasena;
+    }
+    public String getBD(){
+        return base_datos;
     }
 }

@@ -21,6 +21,8 @@ import SIGU.tablas.RendererDatosTabla;
 import SIGU.tablas.IUTabla;
 import com.siscon.view.VPrincipal;
 import com.siscon.view.contra.VAyudaContra;
+import com.siscon.view.reportes.RLibroDiario;
+import com.siscon.view.reportes.RMayorAnaliticoCuenta;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -154,6 +156,8 @@ public class VConmae extends IUSecundario{
     private ArrayList<String> lista4 = new ArrayList<>();
     private ArrayList<String> lista5 = new ArrayList<>();
     
+    private String codigo;
+    
     public VConmae(VPrincipal ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar) {
         super(ventanaPrincipal, titulo, tipoSize);
                
@@ -170,7 +174,8 @@ public class VConmae extends IUSecundario{
         this.indice = 0;
         this.restringir = true;
         this.descripcion = "";
-        this.OPCION = "";        
+        this.OPCION = ""; 
+        this.codigo = "";
         construirPanel(new Area(An()-6, Al()-29));
         algoritmoInicial();
     }
@@ -513,19 +518,6 @@ public class VConmae extends IUSecundario{
                 dispose();
             }
         });
-        
-        VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE WHERE ACTIVI = 2 GROUP BY CUETOT");
-        iuAyuda.mostrarVentana();
-        if(iuAyuda.getEstado()){
-            Conmae c = iuAyuda.getConmae();
-            
-            campoG.setText(String.valueOf(c.getGrup()));
-            campoS.setText(String.valueOf(c.getSubgru()));
-            campoMy.setText(String.valueOf(c.getMayor()));
-            campoAn.setText(String.valueOf(c.getCuenta()));
-            campoSa.setText(String.valueOf(c.getSubcta()));
-        }
-        
         focoCampoG();
     }
     
@@ -534,7 +526,7 @@ public class VConmae extends IUSecundario{
         campoG.setEditar(true);
         campoG.requestFocus();
         iuMensaje.setTexto("Digite GRUPO (n1)");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F3]=Limpia Campos o [Esc]=Suspende Programa.");          
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F3]=Limpia Campos, [F4]=Restaurar Descripcion [Esc]=Suspende Programa.");          
         campoG.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -544,12 +536,12 @@ public class VConmae extends IUSecundario{
                         
                         //actualizarPaneles();
                         campoNivel.setText("1");
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));                        
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" GROUP BY CUETOT "));                        
                         campoG.setText(String.valueOf(G));
                         
-                        Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        Conmae c = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(c != null){
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);
                             descripcion = c.getDescri();
                         }
                         focoCampoS();
@@ -558,20 +550,47 @@ public class VConmae extends IUSecundario{
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
                     limpiarCampos();
                 }
+                if(KeyEvent.VK_F4 == e.getKeyCode()){
+                    restaurarDescripcion();
+                }
                 if(KeyEvent.VK_F7 == e.getKeyCode()){
                     campoG.setText(String.valueOf(G));
                     campoS.setText(String.valueOf(S));
                     campoMy.setText(String.valueOf(My));
                     campoAn.setText(String.valueOf(An));
                     campoSa.setText(String.valueOf(Sa));
-                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = 0 AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 1);
-                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 2);
-                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = 0 AND SUBCTA = 0"), 3);
-                    cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 4);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = 0 AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 1);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = 0 AND CUENTA = 0 AND SUBCTA = 0"), 2);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = 0 AND SUBCTA = 0"), 3);
+                    cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 4);
                     focoCampoSa();
                 }
+                if(KeyEvent.VK_F1 == e.getKeyCode()){
+                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM conmae WHERE ACTIVI = 2 GROUP BY CUETOT");
+                    iuAyuda.mostrarVentana();
+                    if(iuAyuda.getEstado()){
+                        Conmae c = iuAyuda.getConmae();
+
+                        campoG.setText(String.valueOf(c.getGrup()));
+                        campoS.setText(String.valueOf(c.getSubgru()));
+                        campoMy.setText(String.valueOf(c.getMayor()));
+                        campoAn.setText(String.valueOf(c.getCuenta()));
+                        campoSa.setText(String.valueOf(c.getSubcta()));
+                    }
+
+                    //focoCampoG();
+                }
+                
             }
         });
+    }
+    private void restaurarDescripcion(){
+        campoSa.requestFocus();
+        campoG.setText(String.valueOf(G));
+        campoS.setText(String.valueOf(S));
+        campoMy.setText(String.valueOf(My));
+        campoAn.setText(String.valueOf(An));
+        campoSa.setText(String.valueOf(Sa));
     }
     private void focoCampoS(){ 
         campoS.setEditar(true);
@@ -592,11 +611,11 @@ public class VConmae extends IUSecundario{
                         
                         if(S > 0){
                             campoNivel.setText("2");
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));                            
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));                            
                             campoG.setText(String.valueOf(G));
                             campoS.setText(String.valueOf(S));
                             
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 2);
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 2);
                         }else{
                             establecerNivel("S");
                             iuTabla.actualizarTabla(new ArrayList());
@@ -636,12 +655,12 @@ public class VConmae extends IUSecundario{
                             campoNivel.setText("3");
                             
                             //actualizarPaneles();
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" GROUP BY CUETOT "));                            
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" GROUP BY CUETOT "));                            
                             campoG.setText(String.valueOf(G));
                             campoS.setText(String.valueOf(S));
                             campoMy.setText(String.valueOf(My));
                             
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 3);
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 3);
                         }else{
                             establecerNivel("My");
                             iuTabla.actualizarTabla(new ArrayList());
@@ -687,13 +706,13 @@ public class VConmae extends IUSecundario{
                         }     
                         
                         
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" GROUP BY CUETOT "));                                                    
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" GROUP BY CUETOT "));                                                    
                         campoG.setText(String.valueOf(G));
                         campoS.setText(String.valueOf(S));
                         campoMy.setText(String.valueOf(My));
                         campoAn.setText(String.valueOf(An));
                         
-                        Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         
                         if(conmae != null){
                             if(conmae.getActivi() == 2){
@@ -722,7 +741,7 @@ public class VConmae extends IUSecundario{
         campoSa.setEditar(true);
         campoSa.requestFocus();
         iuMensaje.setTexto("Confirme o Digite el SUBANALITICO de la cuenta (n2).");
-        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F3]=Limpia Campos, [F5]=Seleccionar Registro en la Tabla, [Esc]=Suspende Programa");
+        iuInformacion.setTexto("ATENCION:  [Enter]=Avanza, [F2]=Retrocede, [F3]=Limpia Campos, [F5]=Seleccionar Registro en la Tabla, [F7]=Conectar Mayor Analitico, [Esc]=Suspende Programa");        
         campoSa.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -747,14 +766,14 @@ public class VConmae extends IUSecundario{
                             
                         
                         
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));                        
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));                        
                         campoG.setText(String.valueOf(G));
                         campoS.setText(String.valueOf(S));
                         campoMy.setText(String.valueOf(My));
                         campoAn.setText(String.valueOf(An));
                         campoSa.setText(String.valueOf(Sa));
                         
-                        Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(conmae != null){
                             if(conmae.getActivi() == 2 && restringir){
                                 iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, tome en cuenta a futuros procesos. Vuelva a presionar la tecla Enter.");
@@ -771,16 +790,40 @@ public class VConmae extends IUSecundario{
                     }
                 }
                 if(KeyEvent.VK_F2 == e.getKeyCode()){
+                    Sa = Integer.parseInt(campoSa.getText());
                     focoCampoAn();
                 }
                 if(KeyEvent.VK_F3 == e.getKeyCode()){
+                    Sa = Integer.parseInt(campoSa.getText());
                     limpiarCampos();
                 }
                 if(KeyEvent.VK_F5 == e.getKeyCode() || KeyEvent.VK_UP == e.getKeyCode() || KeyEvent.VK_DOWN == e.getKeyCode()){
+                    Sa = Integer.parseInt(campoSa.getText());
                     focoCampoTabla("Sa", 4);
+                }
+                if(KeyEvent.VK_F7 == e.getKeyCode()){
+                    Sa = Integer.parseInt(campoSa.getText());
+                    codigo = ""+G+S+"0"+My+"0"+An+"0"+campoSa.getText();
+                    if(!campoSa.getText().isEmpty()){
+                        conectarMayorAnalatico(codigo);
+                    }else{
+                        actualizarPaneles();
+                        Ayuda.mensaje(ventanaPrincipal, "ERROR, Debe escribir todos los campos correctamente, G, S, My, An, Sa", "error");
+                        campoSa.requestFocus();
+                        campoG.setText(String.valueOf(G));
+                        campoS.setText(String.valueOf(S));
+                        campoMy.setText(String.valueOf(My));
+                        campoAn.setText(String.valueOf(An));
+                        campoSa.setText(String.valueOf(Sa));
+                    }                    
                 }
             }
         });
+    }
+    private void conectarMayorAnalatico(String codigo){
+        
+        RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(ventanaPrincipal, titulo, "grande", usuario, tabvar, codigo);
+        iuM.mostrarVentana();
     }
     private void establecerNivel(String nivel){
         switch(nivel){

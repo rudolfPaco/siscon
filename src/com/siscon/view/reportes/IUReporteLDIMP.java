@@ -5,6 +5,7 @@
  */
 package com.siscon.view.reportes;
 
+import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
@@ -20,28 +21,26 @@ import com.siscon.model.LibroDiario;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
 import com.siscon.recursos.TablePrintable;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.print.Printable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTable.PrintMode;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 
 /**
  *
  * @author neo
  */
-public class IUReporteLD extends IUSecundario {
-
+public class IUReporteLDIMP extends IUSecundario{
     private RLibroDiario ventanaPrincipal;
     private String titulo;
 
@@ -63,9 +62,12 @@ public class IUReporteLD extends IUSecundario {
     private final String fechaInicial;
     private final String fechaFinal;
     private String header = "";
+    
+    private IUPanel panelBoton;
+    private IUBoton botonImprimir;
 
-    public IUReporteLD(RLibroDiario ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, String moneda, String fechaInicial, String fechaFinal) {
-        super(ventanaPrincipal, titulo, tipoSize);
+    public IUReporteLDIMP(RLibroDiario ventanaPrincipal, String titulo, Area area, Usuario usuario, String moneda, String fechaInicial, String fechaFinal) {
+        super(ventanaPrincipal, titulo, area);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
         this.moneda = moneda;
@@ -74,11 +76,15 @@ public class IUReporteLD extends IUSecundario {
 
         construirPanel(new Area(An() - 6, Al() - 29));
         algoritmosInicial();
+        setEventos();
     }
 
     private void construirPanel(Area a) {
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        panel = new IUPanel(this, new Area(0, 0, (int)Ayuda.fromCMToPPI(22), (int)Ayuda.fromCMToPPI(27)), false);
+        construirPaneles(new Area(10, 10, panel.area.An() - 10*3, panel.area.Al() - 10*3));
+        
+        panelBoton = new IUPanel(this, new Area((int)Ayuda.fromCMToPPI(23) + 5, (int)Ayuda.fromCMToPPI(1), 130, 100), true);
+        botonImprimir = new IUBoton(panelBoton, new Area(panelBoton.area.An(), panelBoton.area.Al()), "IMPRIMIR", "", 16, 0, 0, SwingConstants.CENTER, SwingConstants.CENTER, '0', "");
     }
 
     private void construirPaneles(Area a) {
@@ -90,14 +96,14 @@ public class IUReporteLD extends IUSecundario {
     }
 
     private void construirPanelTitulo(Area a) {
-        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Form: LDC" + "   |   Tipo Cambio: " + Ayuda.formatearNumber(usuario.getTipcam()), new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "LIBRO DIARIO DE COMPROBANTES", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 16, "CENTER", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Form: LDC" + "   |   Tipo Cambio: " + Ayuda.formatearNumber(usuario.getTipcam()), new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "LIBRO DIARIO DE COMPROBANTES", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 8, "CENTER", false);
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Del:  " + fechaInicial + "   al   " + fechaFinal, new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Del:  " + fechaInicial + "   al   " + fechaFinal, new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "CENTER", false);
 
-        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: " + moneda, new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 8, "RIGHT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: " + moneda, new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 8, "RIGHT", false);
         header = "              LIBRO DIARIO DE COMPROBANTES                ";
     }
 
@@ -155,6 +161,8 @@ public class IUReporteLD extends IUSecundario {
         for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
             iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
         }
+        iuTabla.setFuente(new Font("Arial", Font.PLAIN, 7));
+        iuTabla.setFuenteCabecera(new Font("Araial", Font.PLAIN, 7), Color.lightGray, Ayuda.COLOR_TEXTO, true, 7, Ayuda.COLOR_FONDO);
         iuTabla.setShowVerticalLines(false);
         iuTabla.setShowHorizontalLines(false);
         iuTabla.setShowGrid(false);
@@ -319,19 +327,19 @@ public class IUReporteLD extends IUSecundario {
                 dispose();
             }
         });
-
-        panel.getInputMap(JButton.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "F10");
-        panel.getActionMap().put("F10", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                imprimir();
-            }
-        });
-
         cargarDatosReporte();
     }
 
-    private void imprimir() {
-        Ayuda.utilJTablePrint(iuTabla, header, "", true);
+    private void setEventos(){
+        botonImprimir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                setEstado(true);
+                dispose();
+            }
+        });
+    }
+    public IUPanel getIUPanel(){
+        return panel;
     }
 }

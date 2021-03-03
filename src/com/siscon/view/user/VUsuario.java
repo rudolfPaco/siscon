@@ -299,7 +299,7 @@ public class VUsuario extends IUSecundario{
             }
         });
         if(Integer.parseInt(usuario.getPassword()) == 1)
-            cargarDatosTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = 99"));
+            cargarDatosTabla(CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = 99"));
         else
             cargarDatosTabla(CTabvar.getLista("select * from tabvar where tipo = 99 and numero = "+usuario.getPassword()));
         focoCampoNro();
@@ -636,7 +636,7 @@ public class VUsuario extends IUSecundario{
         panel.removeAll();        
         construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
         if(Integer.parseInt(usuario.getPassword()) == 1)
-            cargarDatosTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = 99"));
+            cargarDatosTabla(CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = 99"));
         else
             cargarDatosTabla(CTabvar.getLista("select * from tabvar where tipo = 99 and numero = "+usuario.getPassword()));
         tabla.modeloTabla.fireTableDataChanged();

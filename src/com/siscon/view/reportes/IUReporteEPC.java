@@ -96,7 +96,7 @@ public class IUReporteEPC extends IUSecundario{
         new String[]{"Nro", "G-S-My-An-Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "SALDO (Bs.-)"}, 
         new Class[]{Integer.class, String.class, String.class, Integer.class, Integer.class, String.class}, 
         new int[]{5, 15, 50, 10, 10, 10}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grupos+" AND NIVEL <= "+nivel+" GROUP BY CUETOT"), 
+        CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+grupos+" AND NIVEL <= "+nivel+" GROUP BY CUETOT"), 
         new ModeloTabla<Conmae>(){
             
             @Override

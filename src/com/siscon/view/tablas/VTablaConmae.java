@@ -90,7 +90,7 @@ public class VTablaConmae extends IUSecundario{
         construirPanelBotones(new Area(2, 2, panelBotones.area.An() - 10, panelBotones.area.Al() - 4));
     }
     private void construirPanelBotones(Area a){
-        iuBotonEliminar = new IUBoton(panelBotones, new Area(a.X() + a.AnP(20), a.Y(), a.AnP(20), a.Al()), "F3 ELIMINAR", "/imagenes/delete.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'E', "boton que elimina todos los registros de la tabla");
+        iuBotonEliminar = new IUBoton(panelBotones, new Area(a.X() + a.AnP(20), a.Y(), a.AnP(20), a.Al()), "F3 ELIMINAR", "/imagenes/delete.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'E', "boton que elimina todos los registros de la tabla");
         iuBotonEliminar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F3, 0 ), "F3" );
         iuBotonEliminar.getActionMap().put( "F3", new AbstractAction(){
             @Override
@@ -100,19 +100,19 @@ public class VTablaConmae extends IUSecundario{
             }
         });
         
-        iuBotonGrabar = new IUBoton(panelBotones, new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(20), a.Al()), "GRABAR", "/imagenes/save.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'G', "boton que guarda todos los registros que estan en la tabla");
+        iuBotonGrabar = new IUBoton(panelBotones, new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(20), a.Al()), "GRABAR", "/imagenes/save.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'G', "boton que guarda todos los registros que estan en la tabla");
         iuBotonGrabar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_G, 0 ), "G" );
         iuBotonGrabar.getActionMap().put( "G", new AbstractAction(){
             @Override
             public void actionPerformed( ActionEvent e ){                
                 iuBotonGrabar.doClick();
-                if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "CONFIRMACION")){
+                if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea GUARDAR los REGISTROS DE LA TABLA...?", "pregunta")){
                     guardarArchivo();
                 }                
             }
         });
         
-        iuBotonCargar = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(20), a.Al()), "CARGAR .TXT", "/imagenes/bajar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'C', "boton que carga el archivo principal .txt");
+        iuBotonCargar = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(20), a.Al()), "CARGAR .TXT", "/imagenes/bajar.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'C', "boton que carga el archivo principal .txt");
         iuBotonCargar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_C, 0 ), "C" );
         iuBotonCargar.getActionMap().put( "C", new AbstractAction(){
             @Override
@@ -122,7 +122,7 @@ public class VTablaConmae extends IUSecundario{
             }
         });
         
-        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "ESC", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "boton para salir de la ventana");        
+        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(4) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "ESC", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'S', "boton para salir de la ventana");        
         iuBotonSalir.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
         iuBotonSalir.getActionMap().put( "ESC", new AbstractAction(){
             @Override
@@ -133,7 +133,7 @@ public class VTablaConmae extends IUSecundario{
         });
     }
     private void construirPanelTabla(Area a){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae");
         
         iuTabla = new IUTabla(panelTabla,
                 new Area(a.X(), a.Y(), a.An(), a.Al()), 
@@ -377,7 +377,7 @@ public class VTablaConmae extends IUSecundario{
         }        
     }
     private void eliminarArchivo(){
-        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "CONFIRMAR")){
+        if(Ayuda.mensaje(ventanaPrincipal, "Esta seguro que desea ELIMINAR TODOS LOS REGISTROS DE LA TABLA CONMAE....?", "pregunta")){
             /*ArrayList<Conmae> listaConmae = CConmae.getLista("SELECT * FROM CONMAE");
             listaConmae.forEach((conmae) -> {
                 CConmae.eliminarConmae(conmae);

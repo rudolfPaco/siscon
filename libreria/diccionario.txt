@@ -8,45 +8,33 @@ public <sentence> =
 [<dato3>]
 [<dato4>]
 [<dato5>]
+[<dato6>]
+[<dato7>]
+[<dato8>]
+[<dato9>]
+[<dato10>]
 [<dato11>]
+[<dato12>]
 [<dato13>]
+[<dato14>]
 [<dato15>]
-[<dato16>]
-[<dato17>]
-[<dato18>]
-[<dato19>]
-[<dato20>]
-[<dato21>]
-[<dato25>]
-[<dato26>]
-[<dato27>]
-[<dato28>]
-[<dato29>];
+[<dato16>];
  
 <dato0>=Plan Cuentas;
 <dato1>=Plan Cuentas;
-<dato2>=2;
-<dato3>=Parametros Tablas;
-<dato4>=Objetos;
-<dato5>=Emision Plan Cuentas;
-<dato6>=Clases;
-<dato7>=Horario;
-<dato8>=Canario;
-<dato9>=Radio;
-<dato10>=Television;
-<dato11>=Asiento Ingreso o Egreso;
-<dato12>=Industrial;
-<dato13>=Asiento de Diario;
-<dato14>=Comida;
-<dato15>=Libro Diario;
-<dato16>=Libro Mayor;
-<dato17>=Balance Comprobacion;
-<dato18>=Perdidas y Ganancias;
-<dato19>=Balance General;
-<dato20>=salir;
-<dato21>=Claves de Acceso;
-<dato25>=Verificacion Asientos;
-<dato26>=Actualizacion Diferida;
-<dato27>=Comida;
-<dato28>=Cargar Tablas al Sistema;
-<dato29>=1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 25 | 26 | 28 | 29;
+<dato2>=Parametros Tablas;
+<dato3>=Emision Plan Cuentas;
+<dato4>=Asiento Ingreso o Egreso;
+<dato5>=Asiento de Diario;
+<dato6>=Libro Diario;
+<dato7>=Libro Mayor;
+<dato8>=Balance Comprobacion;
+<dato9>=Perdidas y Ganancias;
+<dato10>=Balance General;
+<dato11>=Claves de Acceso;
+<dato12>=Verificacion Asientos;
+<dato13>=Actualizacion Diferida;
+<dato14>=Cargar Tablas al Sistema;
+<dato15>=salir;
+<dato16>=0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+

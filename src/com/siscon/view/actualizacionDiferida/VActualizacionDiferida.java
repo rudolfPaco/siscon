@@ -320,7 +320,7 @@ public class VActualizacionDiferida extends IUSecundario{
         focoCampoS_N1();
     }
     private void cargarComprobantes(){
-        ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA");
+        ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM contra");
         int cantComprobantes = 1;// CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM").size();
         double debe = 0;
         double haber = 0;
@@ -493,7 +493,7 @@ public class VActualizacionDiferida extends IUSecundario{
             @Override
             protected Object doInBackground() throws Exception {
                 
-                ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE");
+                ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae");
                 
                 for (Conmae c : lista) {
                     c.setSalini(0);            
@@ -559,7 +559,7 @@ public class VActualizacionDiferida extends IUSecundario{
             String cuenta = "";
             @Override
             protected Object doInBackground() throws Exception {
-                ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE");                
+                ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae");                
                 for (Conmae c : lista) {
 
                     c.setAntdia(c.getSalini());
@@ -717,7 +717,7 @@ public class VActualizacionDiferida extends IUSecundario{
                 
                 iuCant.setText(String.valueOf(numero));
                 
-                ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA");                                                
+                ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM contra");
                 long acumulativo = listaContras.get(0).getNumcom();
                 int nivel = 0;
                 for (Contra contra : listaContras) {
@@ -725,7 +725,7 @@ public class VActualizacionDiferida extends IUSecundario{
                     long codigo = contra.getCuetot();
                     int numcom = contra.getNumcom();
 
-                    Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                    Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
 
                     nivel = conmae.getNivel();
                     //la fecha del contra se mantiene

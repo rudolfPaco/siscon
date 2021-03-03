@@ -531,10 +531,10 @@ public class VNuevoPlanCuentas  extends IUSecundario{
                         
                         campoNivel.setText("1");
                         
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" GROUP BY CUETOT "));
-                        Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" GROUP BY CUETOT "));
+                        Conmae c = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(c != null){
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 1);
                             descripcion = c.getDescri();
                         }
                         focoCampoS();
@@ -565,8 +565,8 @@ public class VNuevoPlanCuentas  extends IUSecundario{
                         
                         if(S > 0){
                             campoNivel.setText("2");
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 2);
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" GROUP BY CUETOT "));
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 2);
                         }else{
                             iuTabla.actualizarTabla(new ArrayList());
                         }
@@ -603,8 +603,8 @@ public class VNuevoPlanCuentas  extends IUSecundario{
                         
                         if(My > 0){
                             campoNivel.setText("3");
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" GROUP BY CUETOT "));
-                            cargarDatos(CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 3);
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" GROUP BY CUETOT "));
+                            cargarDatos(CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa), 3);
                         }else{
                             iuTabla.actualizarTabla(new ArrayList());
                         }                        
@@ -645,8 +645,8 @@ public class VNuevoPlanCuentas  extends IUSecundario{
                         }else{
                             iuTabla.actualizarTabla(new ArrayList());
                         }     
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" GROUP BY CUETOT "));                            
-                        Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" GROUP BY CUETOT "));                            
+                        Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         
                         if(conmae != null){
                             if(conmae.getActivi() == 2){
@@ -694,8 +694,8 @@ public class VNuevoPlanCuentas  extends IUSecundario{
                         else
                             iuTabla.actualizarTabla(new ArrayList());
                         
-                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));
-                        Conmae conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
+                        iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa+" GROUP BY CUETOT "));
+                        Conmae conmae = CConmae.getConmae("SELECT * FROM conmae WHERE GRUP = "+G+" AND SUBGRU = "+S+" AND MAYOR = "+My+" AND CUENTA = "+An+" AND SUBCTA = "+Sa);
                         if(conmae != null){
                             if(conmae.getActivi() == 2 && restringir){
                                 iuMensaje.setTexto("ATENCION: la Cuenta tiene ACTIVIDAD, tome en cuenta a futuros procesos. Vuelva a presionar la tecla Enter.");

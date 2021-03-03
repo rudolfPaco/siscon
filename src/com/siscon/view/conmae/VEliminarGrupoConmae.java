@@ -147,7 +147,7 @@ public class VEliminarGrupoConmae extends IUSecundario{
         new String[]{"CODIGO", "G", "S", "My", "An", "Sa", "DESCRIPCION", "NIVEL", "ACTIVIDAD", "PRESUP"}, 
         new Class[]{Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class, Integer.class, Integer.class, Integer.class}, 
         new int[]{11, 5, 5, 5, 5, 5, 37, 9, 9, 9}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "), 
+        CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "), 
         new ModeloTabla<Conmae>(){
             
             @Override
@@ -208,7 +208,7 @@ public class VEliminarGrupoConmae extends IUSecundario{
                                     CConmae.eliminarConmae(c);
                             }
                             JOptionPane.showMessageDialog( ventanaPrincipal , "Se ha ELIMINADO (EL) LOS "+multipleSeleccion.length+" Registros de la TABLA CONMAE.", "CORRECTO" , JOptionPane.INFORMATION_MESSAGE );
-                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "));
+                            iuTabla.actualizarTabla(CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+conmae.getGrup()+" GROUP BY CUETOT "));
                         }
                                                 
                     }

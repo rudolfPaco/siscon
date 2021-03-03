@@ -102,7 +102,7 @@ public class VAsientoTipo extends IUSecundario{
         new String[]{"NUMERO", "DESCRIPCION"}, 
         new Class[]{Integer.class, String.class}, 
         new int[]{30, 70}, 
-        CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO >= 70 AND TIPO <= 90 GROUP BY OBSERV ORDER BY OBSERV DESC"), 
+        CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO >= 70 AND TIPO <= 90 GROUP BY OBSERV ORDER BY OBSERV DESC"), 
         new ModeloTabla<Tabvar>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
@@ -185,9 +185,9 @@ public class VAsientoTipo extends IUSecundario{
                 ArrayList<Tabvar> listaTabvar = CTabvar.getLista("select * from tabvar where tipo = "+t.getTipo());
                 ArrayList<Conmae> listaConmae = new ArrayList<>();
                 listaTabvar.forEach((tabvar) -> {                    
-                    Conmae c = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+tabvar.getCodcon());
+                    Conmae c = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+tabvar.getCodcon());
                     if(c != null){
-                        listaConmae.add(CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+tabvar.getCodcon()));
+                        listaConmae.add(CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+tabvar.getCodcon()));
                     }
                 });
                 iuTabla2.actualizarTabla(listaConmae);

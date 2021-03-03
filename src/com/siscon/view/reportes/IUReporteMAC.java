@@ -20,11 +20,15 @@ import com.siscon.model.Contra;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.recursos.TablePrintable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.print.Printable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -58,6 +62,7 @@ public class IUReporteMAC extends IUSecundario{
     private String codigo;
     private String descripcion;
     private double saldo1;
+    private String header = "";
     
     public IUReporteMAC(RMayorAnaliticoCuenta ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar, String moneda, String codigo, String descripcion) {
         super(ventanaPrincipal, titulo, tipoSize);
@@ -93,6 +98,7 @@ public class IUReporteMAC extends IUSecundario{
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);                 
+        header = "              MAYOR ANALITICO             ";
     }
     private void construirPanelDatos(Area a){
         
@@ -105,7 +111,7 @@ public class IUReporteMAC extends IUSecundario{
         new String[]{"FECHA", "NRO. DOC.", "CONCEPTO", "DEBE (BOB.)", "HABER (BOB.)", "SALDO (BOB.)", "DEBE ($US.)", "HABER ($US.)", "SALDO ($US.)", "T/C"}, 
         new Class[]{String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class}, 
         new int[]{8, 8, 31, 8, 8, 8, 8, 8, 8, 5}, 
-        CContra.getListaContra("SELECT * FROM CONTRA WHERE CUETOT = "+codigo), 
+        CContra.getListaContra("SELECT * FROM contra WHERE CUETOT = "+codigo), 
         new ModeloTabla<Contra>(){
             
             @Override
@@ -138,7 +144,13 @@ public class IUReporteMAC extends IUSecundario{
                         return null;                
                 }
             }            
-        });
+        }) {
+            @Override
+            public Printable getPrintable(JTable.PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
+                MessageFormat messageHeader = new MessageFormat(header);
+                return new TablePrintable(this, printMode, messageHeader, footerFormat);
+            }
+        };
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(4, SwingConstants.RIGHT);
@@ -167,7 +179,7 @@ public class IUReporteMAC extends IUSecundario{
         double totalBolivianos = 0;
         double totalDolares = 0;        
         
-        ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM CONTRA WHERE CUETOT = "+codigo+" order by fecha");
+        ArrayList<Contra> listaContras = CContra.getListaContra("SELECT * FROM contra WHERE CUETOT = "+codigo+" order by fecha");
         ArrayList<Contra> lista = new ArrayList<>();
         
         for (Contra contra : listaContras) {
@@ -211,6 +223,6 @@ public class IUReporteMAC extends IUSecundario{
         calcularReporte();
     }
     private void imprimir(){
-        Ayuda.utilJTablePrint(iuTabla, "", "", true);
+        Ayuda.utilJTablePrint(iuTabla, header, "", true);
     }
 }

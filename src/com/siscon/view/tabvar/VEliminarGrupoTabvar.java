@@ -143,7 +143,7 @@ public class VEliminarGrupoTabvar extends IUSecundario{
         new String[]{"TIPO", "NUMERO", "DESCRIPCION", "CODCON", "CORREL", "MONTO", "OBSERVACION", "FECHA", "FECHA2", "MONTO2", "TIPCAM", "NUMNIT"}, 
         new Class[]{Integer.class, Integer.class, String.class, Integer.class, Integer.class, Double.class, String.class, String.class, String.class, Double.class, Integer.class, Integer.class}, 
         new int[]{5,5,19,7,5,8,19,8,8,5,5,8}, 
-        CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+tabvar.getTipo()), 
+        CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = "+tabvar.getTipo()), 
         new ModeloTabla<Tabvar>(){
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
@@ -203,7 +203,7 @@ public class VEliminarGrupoTabvar extends IUSecundario{
                                 CTabvar.eliminarTabvar(t);
                             }
                             JOptionPane.showMessageDialog( ventanaPrincipal , "Se ha ELIMINADO LAS "+multipleSeleccion.length+" Registros de la TABLA TABVAR.", "CORRECTO" , JOptionPane.INFORMATION_MESSAGE );
-                            iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+tabvar.getTipo()));
+                            iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = "+tabvar.getTipo()));
                         }
                     }
                 }

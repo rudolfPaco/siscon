@@ -43,7 +43,7 @@ public class UsuarioDao {
     public boolean saveUsuario(Usuario c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "INSERT INTO USUARIO VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);            
                         
@@ -69,7 +69,7 @@ public class UsuarioDao {
     public boolean modifyUsuario(Usuario u){
         boolean verificador = false;
         Conexion conexion = new Conexion();        
-        String sql = "UPDATE USUARIO SET razsoc=?, numusu=?, fecusu=?, tipcam=?, codjjc=?, dirraz=?, numnit=? where id = '"+u.getId()+"'";
+        String sql = "UPDATE usuario SET razsoc=?, numusu=?, fecusu=?, tipcam=?, codjjc=?, dirraz=?, numnit=? where id = '"+u.getId()+"'";
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
             

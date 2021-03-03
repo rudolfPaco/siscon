@@ -21,6 +21,8 @@ import com.siscon.view.actualizacionDiferida.VActualizacionDiferida;
 import com.siscon.view.conmae.VConmae;
 import com.siscon.view.contra.VContra;
 import com.siscon.view.contra.VContraDoble;
+import com.siscon.view.indicesEstados.VIndicesEstados;
+import com.siscon.view.integracionSistemas.VIntegracionSistemas;
 import com.siscon.view.reportes.RBalanceComprobacion;
 import com.siscon.view.reportes.RBalanceGeneral;
 import com.siscon.view.reportes.REmisionPC;
@@ -44,27 +46,33 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-/*import javax.speech.AudioException;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.speech.AudioException;
 import javax.speech.Central;
 import javax.speech.EngineException;
 import javax.speech.EngineModeDesc;
+import javax.speech.EngineStateError;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Recognizer;
 import javax.speech.recognition.Result;
 import javax.speech.recognition.ResultAdapter;
 import javax.speech.recognition.ResultEvent;
 import javax.speech.recognition.ResultToken;
-import javax.speech.recognition.RuleGrammar;*/
+import javax.speech.recognition.RuleGrammar;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -117,7 +125,7 @@ public class VPrincipal extends IUPrincipal {
     private final Tabvar tabvar;
     private final Usuario usuario;
 
-    //static Recognizer recognizer;
+    static Recognizer recognizer;
     String gst;
 
     /**
@@ -153,7 +161,7 @@ public class VPrincipal extends IUPrincipal {
         panel.getActionMap().put("F1", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ayuda.abrir("plantilla.txt");
+                Ayuda.abrir("manual20.docx");
             }
         });
     }
@@ -212,14 +220,14 @@ public class VPrincipal extends IUPrincipal {
         tituloA = new IUEtiqueta(panelA, "PROCESOS", new Area(a.X() + a.AnP(30), a.Y(4), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
         tituloA.setSubrayarTexto(true);
         iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y() + a.AlP(21), a.An(), a.AlP(7)), "01. Plan Cuentas", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "02. Presupuestos", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "02. Presupuestos", 16, SwingConstants.LEFT, Color.DARK_GRAY, Color.LIGHT_GRAY, true));
         iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "03. Parametros - Tablas", 16, SwingConstants.LEFT, Color.WHITE, true));
 
         tituloA = new IUEtiqueta(panelA, "REPORTES", new Area(a.X() + a.AnP(30), a.Y(7) + a.AlP(42), a.AnP(40), a.AlP(7)), 20, "CENTER", new Color(120, 0, 0));
         tituloA.setSubrayarTexto(true);
         iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(4) + a.AlP(63), a.An(), a.AlP(7)), "05. Emision Plan Cuentas", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(5) + a.AlP(70), a.An(), a.AlP(7)), "06. Control Presupuesto", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(7) + a.AlP(84), a.An(), a.AlP(7)), "08. Tipo de Cambio", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(5) + a.AlP(70), a.An(), a.AlP(7)), "06. Control Presupuesto", 16, SwingConstants.LEFT, Color.DARK_GRAY, Color.LIGHT_GRAY, true));
+        iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(7) + a.AlP(84), a.An(), a.AlP(7)), "08. Tipo de Cambio", 16, SwingConstants.LEFT, Color.DARK_GRAY, Color.LIGHT_GRAY, true));
         iuLista.add(new IUPanelEtiqueta(panelA, new Area(a.X(), a.Y(8) + a.AlP(91), a.An(), a.AlP(7)), "09. Estado de Cuenta", 16, SwingConstants.LEFT, Color.WHITE, true));
     }
 
@@ -241,7 +249,7 @@ public class VPrincipal extends IUPrincipal {
 
     private void construirPanelC(Area a) {
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y() + a.AlP(21), a.An(), a.AlP(7)), "21. Claves de Acceso", 16, SwingConstants.LEFT, Color.WHITE, true));
-        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "22. Manejo Archivos...", 16, SwingConstants.LEFT, Color.WHITE, true));
+        iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(2) + a.AlP(28), a.An(), a.AlP(7)), "22. Manejo Archivos...", 16, SwingConstants.LEFT, Color.DARK_GRAY, Color.LIGHT_GRAY, true));
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(3) + a.AlP(35), a.An(), a.AlP(7)), "23. Indices - Estados...", 16, SwingConstants.LEFT, Color.WHITE, true));
 
         iuLista.add(new IUPanelEtiqueta(panelC, new Area(a.X(), a.Y(4) + a.AlP(63), a.An(), a.AlP(7)), "25. Verificacion Asientos", 16, SwingConstants.LEFT, Color.WHITE, true));
@@ -276,7 +284,7 @@ public class VPrincipal extends IUPrincipal {
 
     private void construirPanelEntrada(Area a) {
         iuEntrada = new IUComboBox(panelEntrada, getOpciones(), new Area(a.X(), a.Y(), a.AnP(30), a.AlP(50)), 16, 2);
-
+        
     }
 
     private void salirSistema() {
@@ -307,19 +315,24 @@ public class VPrincipal extends IUPrincipal {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (KeyEvent.VK_ENTER == e.getKeyCode()) {
-                    componenteSeleccionado(iuEntrada.getSelectedItem().toString());
+                    String dato = iuEntrada.getSelectedItem().toString();
+                    iuEntrada.hidePopup();
+                    componenteSeleccionado(dato);
                 }
             }
         });
     }
 
     private void seleccionarOpcion(String opcion) {
-        iuLista.forEach((iuDato) -> {
+        iuLista.forEach((IUPanelEtiqueta iuDato) -> {
             String dato = iuDato.getTexto().substring(0, 2);
             if (opcion.equalsIgnoreCase(dato)) {
                 iuDato.setBackground(Color.yellow);
             } else {
-                iuDato.setBackground(Color.WHITE);
+                if(dato.equalsIgnoreCase("02") || dato.equalsIgnoreCase("06") || dato.equalsIgnoreCase("08") || dato.equalsIgnoreCase("22"))
+                    iuDato.setBackground(Color.DARK_GRAY);
+                else
+                    iuDato.setBackground(Color.WHITE);
             }
         });
     }
@@ -332,8 +345,8 @@ public class VPrincipal extends IUPrincipal {
                 vConmae.mostrarVentana();
                 setOpacity(1f);
                 break;
-            case "02":
-                break;
+            /*case "02":
+                break;*/
             case "03":
                 setOpacity(0.6f);
                 VTabvar vTabvar = new VTabvar(this, titulo, "grande", usuario, tabvar);
@@ -346,6 +359,10 @@ public class VPrincipal extends IUPrincipal {
                 r.mostrarVentana();
                 setOpacity(1f);
                 break;
+            /*case "06":
+                break;
+            case "08":
+                break;*/
             case "09":
                 setOpacity(0.6f);
                 REstadoCuenta estadoCuentas = new REstadoCuenta(this, titulo, "grande", usuario, tabvar);
@@ -372,7 +389,7 @@ public class VPrincipal extends IUPrincipal {
                 break;
             case "16":
                 setOpacity(0.6f);
-                RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(this, titulo, "grande", usuario, tabvar);
+                RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(this, titulo, "grande", usuario, tabvar, "");
                 iuM.mostrarVentana();
                 setOpacity(1f);
                 break;
@@ -400,6 +417,12 @@ public class VPrincipal extends IUPrincipal {
                 iuUsuario.mostrarVentana();
                 setOpacity(1f);
                 break;
+            /*case "22":
+                break;*/
+            case "23":
+                VIndicesEstados iuIE = new VIndicesEstados(this, titulo, "grande", usuario, tabvar);
+                iuIE.mostrarVentana();
+                break;
             case "25":
                 VVerificacionAsientos iuVA = new VVerificacionAsientos(this, titulo, "grande", usuario, tabvar);
                 iuVA.mostrarVentana();
@@ -407,6 +430,10 @@ public class VPrincipal extends IUPrincipal {
             case "26":
                 VActualizacionDiferida iuAD = new VActualizacionDiferida(this, titulo, "grande", usuario, tabvar);
                 iuAD.mostrarVentana();
+                break;
+            case "27":
+                VIntegracionSistemas iuIS = new VIntegracionSistemas(this, titulo, "grande", usuario, tabvar);
+                iuIS.mostrarVentana();
                 break;
             case "28":
                 setOpacity(0.6f);
@@ -453,14 +480,17 @@ public class VPrincipal extends IUPrincipal {
 
                             break;
                         case "Limpiar B.D.":
-                            eliminarBD();
+                            
+                            if(Ayuda.mensaje(this, "Esta seguro que DESEA ELIMINAR los datos y las tablas del SISTEMA CONTABLE..? ", "pregunta")){
+                                eliminarBD();
+                            }
                             break;
                     }
                 }
                 setOpacity(1f);
                 break;
             default:
-                Ayuda.mensaje(this, "usted selecciono la opcion: " + opcion, "informacion");
+                Ayuda.mensaje(this, "Modulo en Construccion, No disponible por ahora. \nGRACIAS...!: ", "informacion");
                 break;
         }
     }
@@ -481,8 +511,9 @@ public class VPrincipal extends IUPrincipal {
     }
 
     private void importarBD(String direccion) {
+        Conexion c = new Conexion();
         try {
-            Process p = Runtime.getRuntime().exec("mysql -u "+Conexion.usuario+" -p"+Conexion.contrasena+" "+Conexion.base_datos);
+            Process p = Runtime.getRuntime().exec("mysql -u "+c.getUsername()+" -p"+c.getPassword()+" "+c.getBD());
             
             OutputStream os = p.getOutputStream();
             FileInputStream fis = new FileInputStream(direccion);
@@ -504,36 +535,21 @@ public class VPrincipal extends IUPrincipal {
     }
 
     private void exportarBD(String ruta) {
-        /*try {
-            Process p = Runtime.getRuntime().exec("mysqldump -u " + Conexion.usuario + " -p" + Conexion.contrasena + " " + Conexion.base_datos);//Process p = Runtime.getRuntime().exec("C:/xampp/mysql/bin/mysqldump -u "+Conexion.usuario+" -p"+Conexion.contrasena+" "+Conexion.base_datos);
-            String nombre = "\\bd_siscon.sql";
-            InputStream is = p.getInputStream();
-            FileOutputStream fos = new FileOutputStream(ruta + nombre);
-            byte[] buffer = new byte[1024];
-
-            int leido = is.read(buffer);
-            while (leido > 0) {
-                fos.write(buffer, 0, leido);
-                leido = is.read(buffer);
-            }
-
-            fos.close();
-            JOptionPane.showMessageDialog(null, "se ha creado un BACKUP de la base de datos correctamente...! en la ruta: " + ruta + nombre);
-
-        } catch (HeadlessException | IOException e) {
-            System.out.println(e);
-        }*/
-
+        Conexion c = new Conexion();
+        
         int BUFFER = 10485760;
         //nombre de usuario de la base de datos
-        String mysqluser = Conexion.usuario;
+        String mysqluser = c.getUsername();
         //password del usuario
-        String mysqlpassword = Conexion.contrasena;
+        String mysqlpassword = c.getPassword();
         //nombre de la base de datos
-        String mysqldb = Conexion.base_datos;
-        String dumpCommand = "C:/xampp/mysql/bin/mysqldump -u " + mysqluser + " -p" + mysqlpassword + " --skip-comments --skip-triggers " + mysqldb;
-        
-        String nombre = "\\bd_siscon.sql";
+        String mysqldb = c.getBD();
+        String dumpCommand = "";
+        if(Ayuda.urlValidator("C:/xampp/mysql/bin/"))
+            dumpCommand = "C:/xampp/mysql/bin/mysqldump -u " + mysqluser + " -p" + mysqlpassword + " --skip-comments --skip-triggers " + mysqldb;
+        else
+            dumpCommand = "mysqldump -u " + mysqluser + " -p" + mysqlpassword + " --skip-comments --skip-triggers " + mysqldb;
+        System.out.println(dumpCommand);
         File tst = new File(ruta);
         FileWriter fw = null;
         try {
@@ -546,7 +562,7 @@ public class VPrincipal extends IUPrincipal {
         try {
             Process proc = rt.exec(dumpCommand);
             InputStream in = proc.getInputStream();
-            InputStreamReader read = new InputStreamReader(in, "latin1");
+            InputStreamReader read = new InputStreamReader(in, "utf8");
             BufferedReader br = new BufferedReader(read);
             BufferedWriter bw = new BufferedWriter(new FileWriter(tst, true));
             String line = null;
@@ -610,7 +626,7 @@ public class VPrincipal extends IUPrincipal {
                 break;
             case "Libro Mayor":
 
-                RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(this, titulo, "grande", usuario, tabvar);
+                RMayorAnaliticoCuenta iuM = new RMayorAnaliticoCuenta(this, titulo, "grande", usuario, tabvar, "");
                 iuM.mostrarVentana();
 
                 break;
@@ -652,12 +668,62 @@ public class VPrincipal extends IUPrincipal {
                 iuOpciones.mostrarVentana();
 
                 break;
+            case "Respaldo":
+
+                setOpacity(0.6f);
+                IUOpcionRespaldo opcionBD = new IUOpcionRespaldo(this, "BASE DE DATOS", "pequeno");
+                opcionBD.mostrarVentana();
+                if (opcionBD.getEstado()) {
+                    switch (opcionBD.getOpcion()) {
+                        case "Restaurar B.D.":
+                            
+                            String ruta = "";
+                            FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de Imagen", "sql");
+                            File archivo = new File(System.getProperty("user.dir"));
+                            JFileChooser archivoRestaurar = new JFileChooser(archivo);
+                            archivoRestaurar.setFileFilter(filter);
+                            archivoRestaurar.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                            int se = archivoRestaurar.showOpenDialog(null);
+                            if (se == JFileChooser.APPROVE_OPTION) {
+                                ruta = archivoRestaurar.getSelectedFile().getPath();
+                                importarBD(ruta);
+                            }
+                            
+                            
+                            break;
+                        case "Backup B.D.":
+                            
+                            
+                            String rutaBackup = "";
+                            FileNameExtensionFilter filt = new FileNameExtensionFilter("Archivo de Imagen", "sql");
+                            File arch = new File(System.getProperty("user.dir"));
+                            JFileChooser archivoBackup = new JFileChooser(arch);
+                            archivoBackup.setFileFilter(filt);
+                            archivoBackup.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                            int respuesta = archivoBackup.showSaveDialog(null);
+                            if (respuesta == JFileChooser.APPROVE_OPTION) {
+                                rutaBackup = archivoBackup.getSelectedFile().getPath();
+                                exportarBD(rutaBackup);
+                            }
+
+                            break;
+                        case "Limpiar B.D.":
+                            
+                            if(Ayuda.mensaje(this, "Esta seguro que DESEA ELIMINAR los datos y las tablas del SISTEMA CONTABLE..? ", "pregunta")){
+                                eliminarBD();
+                            }
+                            break;
+                    }
+                }
+                setOpacity(1f);
+
+                break;
             default:
                 //Ayuda.mensaje(this, "usted selecciono la opcion: "+opcion, "informacion");
                 break;
         }
     }
-    /*private  void reconocimientoVoz() {
+    private  void reconocimientoVoz() {
         //Escucha escucha = new Escucha();
         try {
             recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
@@ -677,9 +743,11 @@ public class VPrincipal extends IUPrincipal {
             
             recognizer.requestFocus();
             recognizer.resume();
-        } catch (IOException | IllegalArgumentException | SecurityException | AudioException | EngineException | GrammarException e) {
+        } catch (IOException | IllegalArgumentException | SecurityException e) {
             System.out.println("Exception en " + e.toString());
             System.exit(0);
+        } catch (EngineException | EngineStateError | GrammarException | AudioException ex) {
+            Logger.getLogger(VPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -690,7 +758,6 @@ public class VPrincipal extends IUPrincipal {
             gst = "";
         }
 
-        @Override
         public void resultAccepted(ResultEvent re) {
             try {
                 Result res = (Result) (re.getSource());
@@ -712,7 +779,10 @@ public class VPrincipal extends IUPrincipal {
                 }
                 
                 
+                
                 System.out.println();
+                
+                
                 if (gst.trim().equals("salir")) {
                     recognizer.deallocate();
                     args[0] = "Adios!";
@@ -728,5 +798,5 @@ public class VPrincipal extends IUPrincipal {
                 System.out.println("Ha ocurrido algo inesperado " + ex);
             }
         }        
-    }*/
+    }
 }

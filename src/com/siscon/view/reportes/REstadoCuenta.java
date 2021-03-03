@@ -287,7 +287,7 @@ public class REstadoCuenta extends IUSecundario{
                 if(KeyEvent.VK_ENTER == e.getKeyCode()){
                     if(!iuCodigo.getText().isEmpty()){
                         codigo = iuCodigo.getText();
-                        conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+codigo);
+                        conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+codigo);
                         if(conmae != null){
                             if(conmae.getNivel() == 3)
                                 focoCampoS_N2();
@@ -297,7 +297,7 @@ public class REstadoCuenta extends IUSecundario{
                     }                    
                 }
                 if(KeyEvent.VK_F1 == e.getKeyCode()){
-                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM CONMAE WHERE NIVEL <= 3 GROUP BY CUETOT");
+                    VAyudaContra iuAyuda = new VAyudaContra(ventanaPrincipal, titulo, "medio-grande", "SELECT * FROM conmae WHERE NIVEL <= 3 GROUP BY CUETOT");
                     iuAyuda.mostrarVentana();
                     if(iuAyuda.getEstado()){
                         codigo = String.valueOf(iuAyuda.getConmae().getCuetot());
@@ -417,7 +417,7 @@ public class REstadoCuenta extends IUSecundario{
         }
     }
     private void exportarArchivoTXT(int grup, int niv){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .TXT", "txt");
         chooser.setFileFilter(filter);

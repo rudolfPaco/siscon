@@ -141,17 +141,17 @@ public class VLogueo extends IUSecundario{
         
         etiquetaUnidad = new IUEtiqueta(panelContenedor, "Bs/$us", new Area(a.X() + a.AnP(70), a.Y(4) + a.AlP(40), a.AnP(30), a.AlP(10)), 16, "LEFT", false);
         
-        botonEsc = new IUBoton(panelContenedor, new Area(a.X(), a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "Esc", "/imagenes/cerrar.png", 16, 30, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'E', "");
+        botonEsc = new IUBoton(panelContenedor, new Area(a.X(), a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "Esc", "/imagenes/cerrar.png", 16, 30, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'E', "");
         botonEsc.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESC" );
         
-        botonIngresar = new IUBoton(panelContenedor, new Area(a.X(2) + a.AnP(60) , a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "Aceptar", "/imagenes/aceptar.png", 16, 30, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'A', "");
+        botonIngresar = new IUBoton(panelContenedor, new Area(a.X(2) + a.AnP(60) , a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "Aceptar", "/imagenes/aceptar.png", 16, 30, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'A', "");
         botonIngresar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 ), "ENTER" );
         botonIngresar.setVisible(false);
         
-        botonLimpiar = new IUBoton(panelContenedor, new Area(a.X(2) + a.AnP(60) , a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "F3", "/imagenes/update.png", 16, 30, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'F', "");
+        botonLimpiar = new IUBoton(panelContenedor, new Area(a.X(2) + a.AnP(60) , a.Y(5) + a.AlP(60), a.AnP(40), a.AlP(15)), "F3", "/imagenes/update.png", 16, 30, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'F', "");
         botonLimpiar.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F3, 0 ), "F3" );
         
-        botonRegistrarUsuario = new IUBoton(panelContenedor, new Area(a.X(), a.Y(5) + a.AlP(60), a.An() + a.X(), a.AlP(15)), "Registrar Nuevo Usuario", "/imagenes/nuevo.png", 16, 30, 10, SwingConstants.RIGHT, SwingConstants.CENTER, '}', "");
+        botonRegistrarUsuario = new IUBoton(panelContenedor, new Area(a.X(), a.Y(5) + a.AlP(60), a.An() + a.X(), a.AlP(15)), "Registrar Nuevo Usuario", "/imagenes/nuevo.png", 16, 30, 10, SwingConstants.CENTER, SwingConstants.CENTER, '}', "");
         botonRegistrarUsuario.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 ), "ENTER" );
         botonRegistrarUsuario.setVisible(false);
     }

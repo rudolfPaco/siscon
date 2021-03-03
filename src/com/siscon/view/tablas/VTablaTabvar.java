@@ -66,12 +66,12 @@ public class VTablaTabvar extends IUSecundario{
         construirPanelBotones(new Area(2, 2, panelBotones.area.An() - 8, panelBotones.area.Al() - 4));
     }
     private void construirPanelBotones(Area a){
-        iuBotonReemplazar = new IUBoton(panelBotones, new Area(a.X(), a.Y(), a.AnP(30), a.Al()), "REEMPLAZAR", "/imagenes/edit.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'E', "boton que guarda todos los registros que estan en la tabla");
-        iuBotonCargar = new IUBoton(panelBotones, new Area(a.X(2) + a.AnP(35), a.Y(), a.AnP(40), a.Al()), "CARGAR .TXT", "/imagenes/bajar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'C', "boton que carga el archivo principal .txt");
-        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "SALIR", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.RIGHT, SwingConstants.CENTER, 'S', "boton para salir de la ventana");
+        iuBotonReemplazar = new IUBoton(panelBotones, new Area(a.X(), a.Y(), a.AnP(30), a.Al()), "REEMPLAZAR", "/imagenes/edit.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'E', "boton que guarda todos los registros que estan en la tabla");
+        iuBotonCargar = new IUBoton(panelBotones, new Area(a.X(2) + a.AnP(35), a.Y(), a.AnP(40), a.Al()), "CARGAR .TXT", "/imagenes/bajar.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'C', "boton que carga el archivo principal .txt");
+        iuBotonSalir = new IUBoton(panelBotones, new Area(a.X(3) + a.AnP(80), a.Y(), a.AnP(20), a.Al()), "SALIR", "/imagenes/cerrar.png", 16, 25, 10, SwingConstants.CENTER, SwingConstants.CENTER, 'S', "boton para salir de la ventana");
     }
     private void construirPanelTabla(Area a){
-        ArrayList<Tabvar> lista = CTabvar.getLista("SELECT * FROM TABVAR");
+        ArrayList<Tabvar> lista = CTabvar.getLista("SELECT * FROM tabvar");
         
         iuTabla = new IUTabla(panelTabla,
                 new Area(a.X(), a.Y(), a.An(), a.Al()), 
@@ -191,7 +191,7 @@ public class VTablaTabvar extends IUSecundario{
         iuTabla.actualizarTabla(lista);
     }
     private void reemplazarArchivo(){
-        ArrayList<Tabvar> listaTabvar = CTabvar.getLista("SELECT * FROM TABVAR");
+        ArrayList<Tabvar> listaTabvar = CTabvar.getLista("SELECT * FROM tabvar");
         listaTabvar.forEach((tabvar) -> {
             CTabvar.eliminarTabvar(tabvar);
         });

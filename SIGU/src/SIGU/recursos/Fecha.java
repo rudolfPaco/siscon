@@ -598,9 +598,21 @@ public class Fecha {
         SimpleDateFormat sdf = new SimpleDateFormat(formato);
         return sdf.format(date);
     }
+    public boolean estaDentroMes(Fecha fecha){
+        boolean verificador = false;        
+        String mesHoy = new Fecha().getMesAno();        
+        if(mesHoy.equalsIgnoreCase(fecha.getMesAno()))
+            verificador = true;
+        return verificador;
+    }
     /*public static void main(String[] arg){
-        Fecha fo = new Fecha();
-        System.out.println("dia="+fo.getDia());
+        Fecha fo = new Fecha("2021-03-31");
+        if(new Fecha().estaDentroMes(fo)){
+            System.out.println("SI ESTA ADENTRO DEL MES DE HOY");
+        }else{
+            System.out.println("NO, ERROR, LA FECHA ESTA FUERA DEL MES DE HOY.");
+        }
+        System.out.println("mes="+fo.getMes()+" nombre es: "+fo.getMesAno());
         System.out.println("la fecha es: "+fo.fecha());
         Fecha fecha = new Fecha("2016-02-22");
         Fecha f = new Fecha();

@@ -20,6 +20,7 @@ import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.recursos.ImprimirPanel;
 import com.siscon.view.VPrincipal;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -94,7 +95,7 @@ public class RBalanceGeneral extends IUSecundario{
         super(ventanaPrincipal, titulo, tipoSize);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
-        this.tabvar = CTabvar.getTabvar("SELECT * FROM TABVAR WHERE TIPO = 2 AND NUMERO = 4");
+        this.tabvar = CTabvar.getTabvar("SELECT * FROM tabvar WHERE TIPO = 2 AND NUMERO = 4");
         
         this.tipo = "";
         this.moneda = "";
@@ -379,8 +380,13 @@ public class RBalanceGeneral extends IUSecundario{
                 //exportarArchivoTXT(Integer.parseInt(grupo), Integer.parseInt(nivel));
             break;
             case "IMPRESORA":                
-                dispose();
-                //reporte(Integer.parseInt(grupo), Integer.parseInt(nivel), nombreNivel);
+                actualizarPaneles();
+                IUReporteBGIMP iuBGIMP = new IUReporteBGIMP(this, titulo, new Area(Ayuda.anp(50), Ayuda.al()), usuario, tabvar, nombreNivel, nivel, moneda);
+                iuBGIMP.mostrarVentana();
+                if(iuBGIMP.getEstado()){
+                    ImprimirPanel imprimirDocumentos = new ImprimirPanel(iuBGIMP.getIUPanel());
+                }                    
+                actualizarPaneles();
             break;
             default:
             break;
@@ -406,7 +412,7 @@ public class RBalanceGeneral extends IUSecundario{
         }
     }
     private void exportarArchivoTXT(int grup, int niv){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP = "+grup+" AND NIVEL <= "+niv+" GROUP BY CUETOT");
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos .TXT", "txt");
         chooser.setFileFilter(filter);

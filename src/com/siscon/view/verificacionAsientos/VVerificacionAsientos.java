@@ -444,7 +444,7 @@ public class VVerificacionAsientos extends IUSecundario{
                 iuTablaErrores.deslizador.setVisible(true);
                 iuTablaDescuadrados.modeloTabla.limpiarTabla();
                 ArrayList<Contra> listaContras = new ArrayList<>();
-                ArrayList<Contra> listaContrasDiferentes = CContra.getListaContra("SELECT * FROM CONTRA GROUP BY NUMCOM");
+                ArrayList<Contra> listaContrasDiferentes = CContra.getListaContra("SELECT * FROM contra GROUP BY NUMCOM");
 
                 String bolivianos = Ayuda.getDatoCadena("descri", "select * from tabvar where tipo = 17 and numero = 1");
                 int cantComprobantes = 0;
@@ -467,7 +467,7 @@ public class VVerificacionAsientos extends IUSecundario{
                         cantComprobantes++;
                         iuCantComprobante.setText(String.valueOf(cantComprobantes));
 
-                        listaContras = CContra.getListaContra("SELECT * FROM CONTRA WHERE NUMCOM = "+ultimoComprobante);
+                        listaContras = CContra.getListaContra("SELECT * FROM contra WHERE NUMCOM = "+ultimoComprobante);
                         if(listaContras.isEmpty()){
                             deshabilitarCampoS_N();
                             iuMensaje.setTexto("ERROR: NO EXISTE APROPIACIONES EN ESTE ASIENTO.");
@@ -498,7 +498,7 @@ public class VVerificacionAsientos extends IUSecundario{
                                 iuLeidos.setText(String.valueOf(cantComprobantesLeidos));
                                 Conmae conmae = null;
                                 try {
-                                    conmae = CConmae.getConmae("SELECT * FROM CONMAE WHERE CUETOT = "+contra.getCuetot());
+                                    conmae = CConmae.getConmae("SELECT * FROM conmae WHERE CUETOT = "+contra.getCuetot());
                                     if(conmae == null){
                                         deshabilitarCampoS_N();
                                         iuMensaje.setTexto("ERROR: NO EXISTE CUENTA EN (CONMAE).");

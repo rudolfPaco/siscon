@@ -812,7 +812,7 @@ public class VTabvar extends IUSecundario{
                         if(!campo_Observacion.isEmpty()){
                             campoOBSERVACION.setText(campo_Observacion);                            
                         }
-                        iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM TABVAR WHERE TIPO = "+campoTIPO.getText()));                       
+                        iuTabla.actualizarTabla(CTabvar.getLista("SELECT * FROM tabvar WHERE TIPO = "+campoTIPO.getText()));                       
                         
                         actualizarCamposConsultas();                        
                         

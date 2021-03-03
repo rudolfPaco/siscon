@@ -33,6 +33,7 @@ public class IUPanelEtiqueta extends JPanel{
     private String texto;
     private int size;
     private int posicionHorizontal;
+    private Color colorLetra = new Color(2, 67, 109);
            
     /**     
      * @param panel
@@ -55,6 +56,30 @@ public class IUPanelEtiqueta extends JPanel{
         
         construirPanel();
     }
+    /**     
+     * @param panel
+     * @param area
+     * @param texto
+     * @param size
+     * @param posicionHorizontal
+     * @param colorFondo
+     * @param colorLetra
+     * @param addBorde
+     */
+    public IUPanelEtiqueta(IUPanel panel, Area area, String texto, int size, int posicionHorizontal, Color colorFondo, Color colorLetra, boolean addBorde){
+        super(null);
+        this.panel = panel;
+        this.area = area;
+        this.texto = texto;
+        this.size = size;
+        this.posicionHorizontal = posicionHorizontal;
+        this.colorFondo = colorFondo;
+        this.isBorde = addBorde;
+        this.colorLetra = colorLetra;
+        
+        construirPanel();
+        
+    }
     private void construirPanel(){
         panel.agregar(this, area);
         setFocusable(false);        
@@ -67,7 +92,7 @@ public class IUPanelEtiqueta extends JPanel{
         etiqueta = new IUEtiqueta(texto);
         etiqueta.setLayout(null);
         etiqueta.setBounds(0, 0, getWidth(), getHeight());
-        etiqueta.setForeground(new Color(2, 67, 109));
+        etiqueta.setForeground(colorLetra);
         etiqueta.setFont(new Font("Verdana", Font.PLAIN, size));
         etiqueta.setHorizontalAlignment(posicionHorizontal);
         add(etiqueta);

@@ -81,7 +81,7 @@ public class TabvarDao {
     public boolean modifyTabvar(Tabvar c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "UPDATE TABVAR SET TIPO=?, NUMERO=?, DESCRI=?, CODCON=?, CORREL=?, MONTO=?, OBSERV=?, FECHA=?, FECHA2=?, MONTO2=?, TIPCAM=?, NUMNIT=? WHERE `RECORD`='"+c.getRecord()+"';";
+        String sql = "UPDATE TABVAR SET TIPO=?, NUMERO=?, DESCRI=?, CODCON=?, CORREL=?, MONTO=?, OBSERV=?, FECHA=?, FECHA2=?, MONTO2=?, TIPCAM=?, NUMNIT=? WHERE `RECORD`='".toLowerCase()+c.getRecord()+"';";
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
             
@@ -108,7 +108,7 @@ public class TabvarDao {
     }
     public boolean deleteTabvar(Tabvar t){
         boolean verificador = false;
-        String sql = "DELETE FROM TABVAR WHERE RECORD = "+t.getRecord();
+        String sql = "DELETE FROM tabvar WHERE RECORD = ".toLowerCase()+t.getRecord();
         Conexion conexion = new Conexion();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
@@ -125,7 +125,7 @@ public class TabvarDao {
     public boolean saveTabvar(Tabvar c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "INSERT INTO TABVAR VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tabvar VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".toLowerCase();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);            
                         

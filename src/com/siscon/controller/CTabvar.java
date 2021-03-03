@@ -22,7 +22,7 @@ public class CTabvar {
     
     public static Tabvar getTabvar(int tipo, int numero){
         TabvarDao tabvarDao = new TabvarDao();
-        return tabvarDao.getTabvar("SELECT * FROM TABVAR WHERE TIPO = "+tipo+" AND NUMERO = "+numero);
+        return tabvarDao.getTabvar("SELECT * FROM tabvar WHERE TIPO = "+tipo+" AND NUMERO = ".toLowerCase()+numero);
     }
     public static Tabvar getTabvar(String sql){
         TabvarDao tabvarDao = new TabvarDao();
@@ -32,7 +32,7 @@ public class CTabvar {
         String observacion = "";
         TabvarDao tabvarDao = new TabvarDao();        
         try {
-            observacion = tabvarDao.getTabvar("SELECT * FROM TABVAR WHERE TIPO = "+tipo).getObserv();
+            observacion = tabvarDao.getTabvar("SELECT * FROM tabvar WHERE TIPO = ".toLowerCase()+tipo).getObserv();
         } catch (Exception e) {}        
         return observacion;
     }

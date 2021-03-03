@@ -21,12 +21,16 @@ import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.recursos.TablePrintable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.print.Printable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -55,6 +59,7 @@ public class IUReporteEGP extends IUSecundario{
     private final Tabvar tabvar;
     private final String moneda;
     private final String forma;
+    private String header = "";
     
     public IUReporteEGP(REstadoPerdidaGanancia ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar, String forma, String moneda) {
         super(ventanaPrincipal, titulo, tipoSize);
@@ -88,6 +93,7 @@ public class IUReporteEGP extends IUSecundario{
         iuTitulo.setSubrayarTexto(true);
         iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
         iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);                 
+        header = "              ESTADO DE PERDIDAS Y GANANCIAS              ";
     }
     private void construirPanelDatos(Area a){
         
@@ -97,7 +103,7 @@ public class IUReporteEGP extends IUSecundario{
         new String[]{"G-S-My-An-Sa", "DESCRIPCION", "PARCIAL", "SUBTOTAL", "TOTAL"}, 
         new Class[]{String.class, String.class, String.class, String.class, String.class}, 
         new int[]{15, 55, 10, 10, 10}, 
-        CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT"),
+        CConmae.getLista("SELECT * FROM conmae WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT"),
         new ModeloTabla<Conmae>(){            
             
             @Override
@@ -118,7 +124,13 @@ public class IUReporteEGP extends IUSecundario{
                 }
             }
             
-        });
+        }) {
+            @Override
+            public Printable getPrintable(JTable.PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
+                MessageFormat messageHeader = new MessageFormat(header);
+                return new TablePrintable(this, printMode, messageHeader, footerFormat);
+            }
+        };
         iuTabla.setPosicionTextoHorizontal(1, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
@@ -150,7 +162,7 @@ public class IUReporteEGP extends IUSecundario{
         iuTotalSaldos.setEditar(false);
     }
     private void cargarDatosReporte(){
-        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM CONMAE WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT");
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT");
         double toting = 0;
         double totgas = 0;
         String descripcion = "";
@@ -315,6 +327,6 @@ public class IUReporteEGP extends IUSecundario{
         cargarDatosReporte();
     }
     private void imprimir(){
-        Ayuda.utilJTablePrint(iuTabla, "", "", true);
+        Ayuda.utilJTablePrint(iuTabla, header, "", true);
     }
 }

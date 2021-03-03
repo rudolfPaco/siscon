@@ -18,7 +18,7 @@ public class CLogueo {
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario usuario = null;
         try {
-            usuario = usuarioDao.getUsuario("SELECT * FROM USUARIO");
+            usuario = usuarioDao.getUsuario("SELECT * FROM usuario");
         } catch (Exception e) {
             System.out.println("Warning: no existe el usuario... getUsuario(): "+e.getMessage());
         }

@@ -22,7 +22,7 @@ public class ContraDao {
     public boolean saveContra(Contra c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "INSERT INTO CONTRA VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO contra VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);            
 
@@ -146,7 +146,7 @@ public class ContraDao {
     public boolean modifyContra(Contra c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "UPDATE CONTRA SET TIPCON=?, NUMCOM=?, CORREL=?, FECHA=?, GRUPO=?, SUBGRU=?, MAYOR=?, CUENTA=?, SUBCTA=?, APROPI=?, MONTO1=?, MONTO2=?, TIPCAM=?, INDICA=?, NOMBRE=?, GLOSA=?, CHEQUE=?, NUMCUE=?, CUETOT=?, REDUCE=?, TIPCOM=?, INTERN=?, NUMINT=?, EMPRES=? WHERE `ID`='"+c.getId()+"';";
+        String sql = "UPDATE contra SET TIPCON=?, NUMCOM=?, CORREL=?, FECHA=?, GRUPO=?, SUBGRU=?, MAYOR=?, CUENTA=?, SUBCTA=?, APROPI=?, MONTO1=?, MONTO2=?, TIPCAM=?, INDICA=?, NOMBRE=?, GLOSA=?, CHEQUE=?, NUMCUE=?, CUETOT=?, REDUCE=?, TIPCOM=?, INTERN=?, NUMINT=?, EMPRES=? WHERE `ID`='"+c.getId()+"';".toLowerCase();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
             
@@ -186,7 +186,7 @@ public class ContraDao {
     }
     public boolean deleteContra(Contra c){
         boolean verificador = false;
-        String sql = "DELETE FROM CONTRA WHERE ID = "+c.getId();
+        String sql = "DELETE FROM contra WHERE ID = "+c.getId();
         Conexion conexion = new Conexion();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
@@ -202,7 +202,7 @@ public class ContraDao {
     }
     public boolean removeAll(){
         boolean verificador = false;
-        String sql = "TRUNCATE TABLE CONTRA";
+        String sql = "TRUNCATE TABLE contra";
         Conexion conexion = new Conexion();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);

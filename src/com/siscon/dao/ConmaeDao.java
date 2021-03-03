@@ -75,7 +75,7 @@ public class ConmaeDao {
     public boolean saveConmae(Conmae c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "INSERT INTO CONMAE VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO conmae VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);            
 
@@ -180,7 +180,7 @@ public class ConmaeDao {
     public boolean modifyConmae(Conmae c){
         boolean verificador = false;
         Conexion conexion = new Conexion();
-        String sql = "UPDATE CONMAE SET GRUP=?, SUBGRU=?, MAYOR=?, CUENTA=?, SUBCTA=?, CUETOT=?, NUMCUE=?, DESCRI=?, ACTIVI=?, NIVEL=?, LUGAR=?, PRESUP=?, SALINI=?, ANTDIA=?, ANTMES=?, SALACT=?, DEBANO=?, CREANO=?, DEBMES=?, CREMES=?, DEBDIA=?, CREDIA=?, INDICA=?, SALIN2=?, DEBME2=?, ANTME2=?, CREME2=?, SALAC2=?, FECHA=?, NOMPRE=?, DEBAN2=?, CREAN2=?, ANTDI2=?, DEBDI2=?, CREDI2=?, FECHA2=? WHERE `ID`='"+c.getId()+"';";
+        String sql = "UPDATE CONMAE SET GRUP=?, SUBGRU=?, MAYOR=?, CUENTA=?, SUBCTA=?, CUETOT=?, NUMCUE=?, DESCRI=?, ACTIVI=?, NIVEL=?, LUGAR=?, PRESUP=?, SALINI=?, ANTDIA=?, ANTMES=?, SALACT=?, DEBANO=?, CREANO=?, DEBMES=?, CREMES=?, DEBDIA=?, CREDIA=?, INDICA=?, SALIN2=?, DEBME2=?, ANTME2=?, CREME2=?, SALAC2=?, FECHA=?, NOMPRE=?, DEBAN2=?, CREAN2=?, ANTDI2=?, DEBDI2=?, CREDI2=?, FECHA2=? WHERE `ID`='"+c.getId()+"';".toLowerCase();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
             
@@ -232,7 +232,7 @@ public class ConmaeDao {
     }
     public boolean deleteConmae(Conmae c){
         boolean verificador = false;
-        String sql = "DELETE FROM CONMAE WHERE ID = "+c.getId();
+        String sql = "DELETE FROM conmae WHERE ID = "+c.getId();
         Conexion conexion = new Conexion();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
@@ -248,7 +248,7 @@ public class ConmaeDao {
     }
     public boolean removeAll(){
         boolean verificador = false;
-        String sql = "TRUNCATE TABLE CONMAE";
+        String sql = "TRUNCATE TABLE conmae";
         Conexion conexion = new Conexion();
         try {
             PreparedStatement ps = conexion.getConexion().prepareStatement(sql);

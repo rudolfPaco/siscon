@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class Asiento {
     
+    private int id;
     private String tipoDoc;
     private String doc;
     private String numero;
@@ -38,6 +39,14 @@ public class Asiento {
         this.nro = nro;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getTipoDoc() {
         return tipoDoc;
     }

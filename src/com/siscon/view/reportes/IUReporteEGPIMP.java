@@ -5,12 +5,12 @@
  */
 package com.siscon.view.reportes;
 
+import SIGU.botones.IUBoton;
 import SIGU.campoTexto.IUCampoTexto;
 import SIGU.etiquetas.IUEtiqueta;
 import SIGU.paneles.IUPanel;
 import SIGU.recursos.Area;
 import SIGU.recursos.Fecha;
-import SIGU.recursos.Hora;
 import SIGU.tablas.IUTabla;
 import SIGU.tablas.ModeloTabla;
 import SIGU.tablas.RenderDatosDecimales;
@@ -21,12 +21,19 @@ import com.siscon.model.Conmae;
 import com.siscon.model.Tabvar;
 import com.siscon.model.Usuario;
 import com.siscon.recursos.Ayuda;
+import com.siscon.recursos.TablePrintable;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.print.Printable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -34,8 +41,8 @@ import javax.swing.SwingConstants;
  *
  * @author neo
  */
-public class IUReporteECS extends IUSecundario{
-    private REstadoCuenta ventanaPrincipal;
+public class IUReporteEGPIMP extends IUSecundario{
+    private REstadoPerdidaGanancia ventanaPrincipal;
     private String titulo;
     
     private IUPanel panel;
@@ -53,52 +60,57 @@ public class IUReporteECS extends IUSecundario{
     
     private final Usuario usuario;
     private final Tabvar tabvar;
-    private Conmae conmae;
-    
     private final String moneda;
-    private final String visualizar;
+    private final String forma;
+    private String header = "";
     
+    private IUPanel panelBoton;
+    private IUBoton botonImprimir;
     
-    public IUReporteECS(REstadoCuenta ventanaPrincipal, String titulo, String tipoSize, Usuario usuario, Tabvar tabvar, String visualizar, String moneda, Conmae conmae) {
-        super(ventanaPrincipal, titulo, tipoSize);
+    public IUReporteEGPIMP(REstadoPerdidaGanancia ventanaPrincipal, String titulo, Area area, Usuario usuario, Tabvar tabvar, String forma, String moneda) {
+        super(ventanaPrincipal, titulo, area);
         this.ventanaPrincipal = ventanaPrincipal;
         this.usuario = usuario;
         this.tabvar = tabvar;
         this.moneda = moneda;
-        this.visualizar = visualizar;
-        this.conmae = conmae;
+        this.forma = forma;
         
         construirPanel(new Area(An()-6, Al()-29));
-        algoritmosInicial();
+        algoritmosInicial();        
+        setEventos();
     }
     private void construirPanel(Area a){
-        panel = new IUPanel(this, new Area(a.X(), a.Y(), a.An(), a.Al()), true);        
-        construirPaneles(new Area(2, 2, panel.area.An() - 4, panel.area.Al() - 4));
+        panel = new IUPanel(this, new Area(0, 0, (int)Ayuda.fromCMToPPI(22), (int)Ayuda.fromCMToPPI(27)), false);
+        construirPaneles(new Area(10, 10, panel.area.An() - 10*3, panel.area.Al() - 10*3));
+        
+        panelBoton = new IUPanel(this, new Area((int)Ayuda.fromCMToPPI(23) + 5, (int)Ayuda.fromCMToPPI(1), 130, 100), true);
+        botonImprimir = new IUBoton(panelBoton, new Area(panelBoton.area.An(), panelBoton.area.Al()), "IMPRIMIR", "", 16, 0, 0, SwingConstants.CENTER, SwingConstants.CENTER, '0', "");
     }
     private void construirPaneles(Area a){
         panelTitulo = new IUPanel(panel, new Area(a.X(), a.Y(), a.An(), a.AlP(7)), true, Ayuda.COLOR_FONDO);
         construirPanelTitulo(new Area(panelTitulo.area.AnP(2), 2, panelTitulo.area.An() - panelTitulo.area.AnP(2)*4, panelTitulo.area.Al() - 4));
         
-        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), false, Color.WHITE);
+        panelDatos = new IUPanel(panel, new Area(a.X(), a.Y(2) + a.AlP(7), a.An(), a.AlP(93)), false, Ayuda.COLOR_FONDO);
         construirPanelDatos(new Area(2, 2, panelDatos.area.An() - 4, panelDatos.area.Al() - 4));
     }
     
     private void construirPanelTitulo(Area a){
-        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: ECS ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "NIVEL: MAYOR", new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "LEFT", false);
-        iuTitulo = new IUEtiqueta(panelTitulo, "ESTADO DE PERDIDAS Y GANACIAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 16, "CENTER", false);                
+        iuTitulo = new IUEtiqueta(panelTitulo, usuario.getRazsoc()+"  |  REPORTE: BC ".toUpperCase(), new Area(a.X(), a.Y(), a.AnP(25), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: "+moneda+"   |   Forma: "+forma, new Area(a.X(), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "LEFT", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "ESTADO DE PERDIDAS Y GANACIAS", new Area(a.X(2) + a.AnP(25), a.Y(), a.AnP(45), a.AlP(50)), 8, "CENTER", false);                
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "AL "+new Fecha().getFecha().toUpperCase()+"    Hora: "+new Hora().getHora(), new Area(a.X(2) + a.AnP(30), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 16, "CENTER", false);
+        iuTitulo = new IUEtiqueta(panelTitulo, "", new Area(a.X(2) + a.AnP(35), a.Y(2) + a.AlP(45), a.AnP(35), a.AlP(50)), 8, "CENTER", Ayuda.COLOR_ROJO);
         iuTitulo.setSubrayarTexto(true);
-        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 16, "RIGHT", false); 
-        iuTitulo = new IUEtiqueta(panelTitulo, "Moneda: "+moneda, new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 16, "RIGHT", false);                 
+        iuTitulo = new IUEtiqueta(panelTitulo, "SISTEMA CONTABLE SISCON @v7.2. 2020", new Area(a.X(3) + a.AnP(60), a.Y(), a.AnP(40), a.AlP(50)), 8, "RIGHT", false); 
+        iuTitulo = new IUEtiqueta(panelTitulo, new Fecha().getFecha1(), new Area(a.X(3) + a.AnP(60), a.Y(2) + a.AlP(45), a.AnP(40), a.AlP(50)), 8, "RIGHT", false);                 
+        header = "              ESTADO DE PERDIDAS Y GANANCIAS              ";
     }
     private void construirPanelDatos(Area a){
         
         iuTabla = new IUTabla(
         panelDatos, 
-        new Area(a.X(), a.Y(), a.An(), a.AlP(56)), 
-        new String[]{"G-S-My-An-Sa", "DESCRIPCION", "SALDO", "SUBTOTAL", "TOTAL"}, 
+        new Area(a.X(), a.Y(), a.An(), a.AlP(96)), 
+        new String[]{"G-S-My-An-Sa", "DESCRIPCION", "PARCIAL", "SUBTOTAL", "TOTAL"}, 
         new Class[]{String.class, String.class, String.class, String.class, String.class}, 
         new int[]{15, 55, 10, 10, 10}, 
         CConmae.getLista("SELECT * FROM conmae WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT"),
@@ -122,7 +134,13 @@ public class IUReporteECS extends IUSecundario{
                 }
             }
             
-        });
+        }) {
+            @Override
+            public Printable getPrintable(JTable.PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
+                MessageFormat messageHeader = new MessageFormat(header);
+                return new TablePrintable(this, printMode, messageHeader, footerFormat);
+            }
+        };
         iuTabla.setPosicionTextoHorizontal(1, SwingConstants.LEFT);
         iuTabla.setPosicionTextoHorizontal(2, SwingConstants.RIGHT);
         iuTabla.setPosicionTextoHorizontal(3, SwingConstants.RIGHT);
@@ -132,8 +150,9 @@ public class IUReporteECS extends IUSecundario{
         for (int i = 0; i < iuTabla.nombreCabecera.length; i++) {
             iuTabla.getColumnModel().getColumn(i).setCellRenderer(new RenderDatosDecimales(columnas));
         }
-        
-        panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(56), a.An(), a.AlP(4)), true, Ayuda.COLOR_ATENCION);
+        iuTabla.setFuente(new Font("Arial", Font.PLAIN, 7));
+        iuTabla.setFuenteCabecera(new Font("Araial", Font.PLAIN, 7), Color.lightGray, Ayuda.COLOR_TEXTO, true, 7, Ayuda.COLOR_FONDO);
+        panelTotal = new IUPanel(panelDatos, new Area(a.X(), a.Y() + a.AlP(96), a.An(), a.AlP(4)), true, Ayuda.COLOR_ATENCION);
         construirPanelTotal(new Area(2, 2, panelTotal.area.An() - 12, panelTotal.area.Al() - 4));
     }    
     private void construirPanelTotal(Area a){
@@ -142,29 +161,19 @@ public class IUReporteECS extends IUSecundario{
             unidad = "Bs.";
         else
             unidad = "$us.";
-        iuTotal = new IUEtiqueta(panelTotal, "TOTAL ACTIVO  "+unidad, new Area(a.X(2) + a.AnP(10), a.Y(), a.AnP(60), a.Al()), 16, "RIGHT", true);        
-        iuTotalSaldos  = new IUCampoTexto(panelTotal, 20, 18, new Area(a.X(4) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
+        iuTotal = new IUEtiqueta(panelTotal, "UTILIDAD o (-PERDIDA)  "+unidad, new Area(a.X(2) + a.AnP(40), a.Y(), a.AnP(50), a.Al()), 7, "RIGHT", true);
+        iuTotalDebitos  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(2) + a.AnP(70), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotalDebitos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
+        iuTotalDebitos.setVisible(false);
+        iuTotalCreditos  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(3) + a.AnP(80), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
+        iuTotalCreditos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
+        iuTotalCreditos.setVisible(false);
+        iuTotalSaldos  = new IUCampoTexto(panelTotal, 20, 7, new Area(a.X(4) + a.AnP(90), a.Y(), a.AnP(10), a.Al()), SwingConstants.CENTER);
         iuTotalSaldos.setRestriccion("^\\d{0,5}(\\d\\.\\d?|\\.\\d)?\\d?$");
         iuTotalSaldos.setEditar(false);
     }
     private void cargarDatosReporte(){
-        String sql = "";
-        System.out.println(conmae);
-        switch(conmae.getNivel()){
-            case 1:
-                sql = "select * from conmae where (salact + salac2) != 0 and cuetot >= "+conmae.getCuetot()+" and grup = "+conmae.getGrup()+" order by cuetot";
-            break;
-            case 2:
-                sql = "select * from conmae where (salact + salac2) != 0 and cuetot >= "+conmae.getCuetot()+" and grup = "+conmae.getGrup()+" and subgru = "+conmae.getSubgru()+" order by cuetot";
-            break;
-            case 3:
-                if(visualizar.equalsIgnoreCase("SI"))
-                    sql = "select * from conmae where (salact + salac2) != 0 and cuetot >= "+conmae.getCuetot()+" and grup = "+conmae.getGrup()+" and subgru = "+conmae.getSubgru()+" and mayor = "+conmae.getMayor()+" order by cuetot";
-                else
-                    sql = "select * from conmae where (salact + salac2) != 0 and activi = 2 and cuetot >= "+conmae.getCuetot()+" and grup = "+conmae.getGrup()+" and subgru = "+conmae.getSubgru()+" and mayor = "+conmae.getMayor()+" order by cuetot";
-            break;
-        }
-        ArrayList<Conmae> lista = CConmae.getLista(sql);
+        ArrayList<Conmae> lista = CConmae.getLista("SELECT * FROM conmae WHERE GRUP >= 3 AND SALACT != 0 ORDER BY CUETOT");
         double toting = 0;
         double totgas = 0;
         String descripcion = "";
@@ -319,17 +328,18 @@ public class IUReporteECS extends IUSecundario{
                 dispose();
             }
         });
-        panel.getInputMap( JButton.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_F10, 0 ), "F10" );
-        panel.getActionMap().put( "F10", new AbstractAction(){
-            @Override
-            public void actionPerformed( ActionEvent e ){
-                imprimir();
-            }
-        });
-        
         cargarDatosReporte();
     }
-    private void imprimir(){
-        Ayuda.utilJTablePrint(iuTabla, "", "", true);
+    private void setEventos(){
+        botonImprimir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                setEstado(true);
+                dispose();
+            }
+        });
+    }
+    public IUPanel getIUPanel(){
+        return panel;
     }
 }
