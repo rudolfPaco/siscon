@@ -431,14 +431,13 @@ public class VContra extends IUSecundario {
         iuNum.setRestriccion("^([0-9]|[1-9][0-9])$");
 
         iuEtiquetaFecha = new IUPanelEtiqueta(primerPanelC, new Area(a.X(7) + a.AnP(62), a.Y(), a.AnP(9), a.Al()), "fecha Elab.: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
-        iuFecha = new IUCampoTexto(primerPanelC, new Fecha().getFecha(), 16, new Area(a.X(8) + a.AnP(71), a.Y(), a.AnP(8) - a.X(), a.Al()));
-        iuFecha.setHorizontalAlignment(SwingConstants.CENTER);
+        iuFecha = new IUCampoTexto(primerPanelC, 50, 16, new Area(a.X(8) + a.AnP(71), a.Y(), a.AnP(8) - a.X(), a.Al()), SwingConstants.CENTER);        
         iuFecha.setFont(new Font("Verdana", Font.BOLD, 16));
-        //iuFecha.setEditar(false);
+        iuFecha.setEditar(false);
 
         iuEtiquetaMonto = new IUPanelEtiqueta(primerPanelC, new Area(a.X(7) + a.AnP(80), a.Y(), a.AnP(5), a.Al()), "Monto: ", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
         iuMonto = new IUCampoTexto(primerPanelC, 14, 16, new Area(a.X(8) + a.AnP(85), a.Y(), a.AnP(10), a.Al()), SwingConstants.RIGHT);
-        //iuMonto.setRestriccionNumeroDecimal(2);
+        iuMonto.setRestriccionNumeroDecimal(2);
         iuMonto.setFont(new Font("Verdana", Font.BOLD, 16));
         iuEtiquetaNum = new IUPanelEtiqueta(primerPanelC, new Area(a.X(9) + a.AnP(95), a.Y(), a.AnP(5), a.Al()), "Bs.-", 16, SwingConstants.CENTER, Ayuda.COLOR_FONDO, true);
     }
@@ -791,9 +790,11 @@ public class VContra extends IUSecundario {
                         if (CContra.getContra("SELECT * FROM contra WHERE NUMCOM = " + iuNum.getText()) != null) {
                             focoCampoS_N7();
                         } else {
+                            iuFecha.setText(new Fecha().getFecha());
                             focoCampoMonto();
                         }
                     } else {
+                        iuFecha.setText(new Fecha().getFecha());
                         focoCampoMonto();
                     }
                 }
@@ -855,8 +856,7 @@ public class VContra extends IUSecundario {
                 if (KeyEvent.VK_ENTER == e.getKeyCode()) {
                     switch (campoS_N8.getText()) {
                         case "S":
-                            campoModificables();
-                            focoCampoMonto();
+                            campoModificables();                            
                             break;
                         case "N":
                             focoCampoS_N9();
@@ -1106,8 +1106,7 @@ public class VContra extends IUSecundario {
                             focoCampoNro();
                             break;
                         case "N":
-                            campoModificables();
-                            focoCampoMonto();
+                            campoModificables();                            
                             break;
                         default:
                             break;
@@ -1182,6 +1181,7 @@ public class VContra extends IUSecundario {
         asiento.setTipoDoc(iuTipDoc.getSelectedItem().toString());
         asiento.setDoc(iuDoc.getText());
         asiento.setNumero(iuNum.getText());
+        asiento.setFecha(iuFecha.getText());
         asiento.setMontoIncial(iuMonto.getText());
         asiento.setOrigen(iuDocRef.getText());
         asiento.setMontoLiteral(iuNumLiteral.getText());
@@ -1219,7 +1219,7 @@ public class VContra extends IUSecundario {
         iuTipDoc.setSelectedItem(asiento.getTipoDoc());
         iuDoc.setText(asiento.getDoc());
         iuNum.setText(String.valueOf(asiento.getNumero()));
-        
+        iuFecha.setText(asiento.getFecha());
         iuMonto.setText(String.valueOf(asiento.getMontoIncial()));
         iuDocRef.setText(asiento.getOrigen());
         iuNumLiteral.setText(asiento.getMontoLiteral());
@@ -2366,7 +2366,8 @@ public class VContra extends IUSecundario {
         iuDebe.setText("");
         iuHaber.setText("");
         iuDolares.setText("");
-
+        
+        iuFecha.setText("");
         iuMonto.setText("");
         iuDocRef.setText("");
         iuNumLiteral.setText("");
@@ -2425,13 +2426,21 @@ public class VContra extends IUSecundario {
     }
 
     private void campoModificables() {
-        
-        habilitarCamposModificar();
-        modificable = true;
-
+        Contra c = CContra.getContra("SELECT * FROM contra WHERE NUMCOM = " + iuNum.getText());
+        if(new Fecha().estaDentroMes(new Fecha(c.getFecha()))){
+            habilitarCamposModificar();
+            modificable = true;
+            iuFecha.setText(new Fecha().getFecha());
+            focoCampoMonto();
+        }else{
+            limpiarCampos();
+            inhabilitarCampos(true);
+            focoCampoTipoDocumento();
+            Ayuda.mensaje(ventanaPrincipal, "ERROR, No puede realizar la MODIFICACION, por que la fecha del Documento de Comprobacion NO se encuentra dentro del MES ACTUAL.", "error");
+        }
     }
 
-    private void recuperarAsiento() {
+    private void recuperarAsiento() {        
         actualizarPaneles();
         listaContras = CContra.getListaContra("select * from contra where numcom = " + iuNum.getText() + " order by correl asc");
         listaAsientos.clear();
@@ -2457,8 +2466,7 @@ public class VContra extends IUSecundario {
                 }
                 seleccionarTipoDocumento(tipo);
                 
-                iuFecha.setText(contra.getFecha());
-                
+                iuFecha.setText(contra.getFecha());                
                 iuMonto.setText("");
                 iuNum.setText(String.valueOf(contra.getNumcom()));
                 iuDocRef.setText(contra.getNombre());

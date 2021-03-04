@@ -17,6 +17,7 @@ public class Asiento {
     private String tipoDoc;
     private String doc;
     private String numero;
+    private String fecha;
     private String montoIncial;
     private String montoLiteral;
     private String origen;
@@ -71,6 +72,14 @@ public class Asiento {
         this.numero = numero;
     }
 
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+    
     public String getMontoIncial() {
         return montoIncial;
     }
@@ -193,7 +202,7 @@ public class Asiento {
 
     @Override
     public String toString() {
-        return "Asiento{" + "tipoDoc=" + tipoDoc + ", doc=" + doc + ", numero=" + numero + ", montoIncial=" + montoIncial + ", montoLiteral=" + montoLiteral + ", origen=" + origen + ", concepto=" + concepto + ", descripcion=" + descripcion + ", nroCuenta=" + nroCuenta + ", banco=" + banco + ", cheque=" + cheque + ", lista=" + lista + ", nro=" + nro + ", codigo=" + codigo + ", cuenta=" + cuenta + ", debe=" + debe + ", haber=" + haber + ", monto=" + monto + '}';
+        return "Asiento{" + "id=" + id + ", tipoDoc=" + tipoDoc + ", doc=" + doc + ", numero=" + numero + ", fecha=" + fecha + ", montoIncial=" + montoIncial + ", montoLiteral=" + montoLiteral + ", origen=" + origen + ", concepto=" + concepto + ", descripcion=" + descripcion + ", nroCuenta=" + nroCuenta + ", banco=" + banco + ", cheque=" + cheque + ", lista=" + lista + ", nro=" + nro + ", codigo=" + codigo + ", cuenta=" + cuenta + ", debe=" + debe + ", haber=" + haber + ", monto=" + monto + '}';
     }
-    
+
 }
